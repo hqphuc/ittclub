@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dế mèn phiêu lưu ký</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #196fc5;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #555;
+            text-align: justify;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .book-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .book-image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #25c345;
+        }
+        .hidden-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #ecf0f1;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+        }
+        .book-image-container:hover .hidden-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container bg-white rounded-xl shadow-lg p-8 mt-8">
+        <h1 class="text-4xl font-bold mb-4">Trang giới thiệu sách</h1>
+        <h2 class="text-2xl font-semibold mb-6">"Dế Mèn phiêu lưu ký"</h2>
+
+        <div class="book-image-container">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRciRJxV64weWAp5CGYFUoco4st5AmJsK6fWw&s" alt="Bìa sách" class="w-1/2 md:w-1/3">
+            <div class="hidden-content absolute bottom-0 left-0 right-0 p-4 bg-gray-800 text-white bg-opacity-90 rounded-b-xl">
+                <p class="text-sm italic mt-2">Dế Mèn phiêu lưu ký kể về hành trình phiêu lưu của chú Dế Mèn – một chàng dế trẻ khỏe, tự tin nhưng từng gây ra cái chết oan cho Dế Choắt vì sự kiêu căng. Sau biến cố đó, Dế Mèn quyết định lên đường chu du, kết bạn với Dế Trũi và nhiều loài vật khác. Trên đường đi, cậu trải qua nhiều thử thách, dần trưởng thành, biết yêu thương, giúp đỡ kẻ yếu và đấu tranh chống bất công. Tác phẩm thể hiện bài học về tình bạn, lòng dũng cảm và khát vọng sống đẹp, sống có ích.</p>
+            </div>
+        </div>
+        <table>
+            <tr align="center">
+                <td>
+                    <label style="color: #3498db; font-size: large;">CÁC ĐIỂM NỔI BẬT CỦA SÁCH</label>
+                </td>
+                <td style="width: 50px;"></td>
+                <td>
+                    <label style="color: #3498db; font-size: large;">THỂ LOẠI SÁCH</label>
+                </td>
+                <td style="width: 50px;"></td>
+                <td>
+                    <label style="color: #3498db; font-size: large;">THÔNG SỐ SÁCH</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Nhân vật sinh động, giàu cá tính</li>
+                        <li>Bài học sâu sắc</li>
+                        <li>Giọng văn hóm hỉnh, hấp dẫn</li>
+                        <li>Tưởng tượng phong phú</li>
+                    </ol>
+                </td>
+                <td></td>
+                <td>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Văn học dành cho thiếu nhi</li>
+                        <li>Phiêu lưu</li>
+                        <li>Tâm lý xã hội</li>
+                    </ul>
+                </td>
+                <td></td>
+                <td>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Tác giả: Tô Hoài</li>
+                        <li>Nhà xuất bản Kim Đồng</li>
+                        <li>Năm xuất bản: 2023</li>
+                        <li>Số trang: 148</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div class="text-center mt-6">
+            <a href="https://vi.wikipedia.org/wiki/T%C3%B4_Ho%C3%A0i" class="btn">Tìm hiểu thêm về tác giả</a>
+        </div>
+        <h3 class="text-xl font-semibold mt-8 mb-4">Đăng ký nhận tin tức</h3>
+        <form action="#" method="post" class="space-y-4 p-6 bg-gray-50 rounded-lg shadow">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Họ và tên:</label>
+                <input type="text" id="name" name="name" placeholder="Nhập tên của bạn" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2">
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" id="subscribe" name="subscribe" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <label for="subscribe" class="ml-2 block text-sm text-gray-900">Tôi đồng ý nhận email từ nhà xuất bản.</label>
+            </div>
+            <div>
+                <button type="submit" class="btn">Đăng ký</button>
+            </div>
+        </form>
+        <h3 class="text-xl font-semibold mt-8 mb-4">Video giới thiệu</h3>
+        <div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/VM03KHkVXuc?si=47aMjP-n3L-W8lNz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <h3 class="text-xl font-semibold mt-8 mb-4">Audio giới thiệu</h3>
+        <div>
+            <audio controls class="w-full">
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+</body>
+</html>
