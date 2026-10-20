@@ -13,7 +13,7 @@
             --danger: #e74c3c;
             --text: #2c3e50;
         }
-        * { box-sizing: border-box; user-select: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; user-select: none; font-family: 'Segoe UI', 'Segoe UI Symbol', 'Arial Unicode MS', Tahoma, Geneva, Verdana, sans-serif; }
         body {
             margin: 0; padding: 0;
             background: linear-gradient(180deg, #87CEEB 0%, #1ca3ec 100%);
@@ -445,9 +445,9 @@
     </div>
     <div class="stats-bar">
         <div class="badge-pill">⭐ Tổng Sao (4 Đảo): <span id="star-count" style="color:#d35400;">0</span>/600</div>
-        <div class="badge-pill">🏅 Đảo hoàn thành: <span id="badge-count">0</span>/4</div>
+        <div class="badge-pill">★ Đảo hoàn thành: <span id="badge-count">0</span>/4</div>
         <button class="btn btn-yellow" onclick="showCertificateScreen()">🎓 Chứng Nhận</button>
-        <button class="btn btn-blue" onclick="goHome()">🗺️ Bản Đồ</button>
+        <button class="btn btn-blue" onclick="goHome()">🌐 Bản Đồ</button>
     </div>
 </header>
 
@@ -465,7 +465,7 @@
         </div>
 
         <div class="bot-banner">
-            <div class="bot-avatar">🤖</div>
+            <div class="bot-avatar">👾</div>
             <div class="bot-text" id="hub-bot-msg">
                 Chào Hiệp sĩ Nhí! Mỗi hòn đảo có tối đa <strong>150 Sao Xanh</strong>. Nếu em chơi lại đảo đã hoàn thành, hệ thống sẽ lấy <strong>số sao cao nhất</strong> em đạt được để tính Tổng Sao nhé!
             </div>
@@ -474,7 +474,7 @@
         <div class="islands-grid">
             <div class="island-card" id="card-island-1" onclick="startIsland(1)">
                 <span class="island-status" id="status-1">Chưa hoàn thành</span>
-                <div class="island-icon">🧊🦾</div>
+                <div class="island-icon">❄️🔧</div>
                 <h3>1. Dòng Sông Tái Chế</h3>
                 <div class="island-best-star">🏆 Kỷ lục: <span id="best-star-1">0</span>/150 ⭐</div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Dạy Cánh tay Robot AI phân loại rác để nhảy qua 15 tảng băng đang tan!</p>
@@ -501,7 +501,7 @@
 
             <div class="island-card" id="card-island-4" onclick="startIsland(4)">
                 <span class="island-status" id="status-4">Chưa hoàn thành</span>
-                <div class="island-icon">🏔️🐻‍❄️</div>
+                <div class="island-icon">⛰️🐻</div>
                 <h3>4. Ngọn Núi Khí Hậu</h3>
                 <div class="island-best-star">🏆 Kỷ lục: <span id="best-star-4">0</span>/150 ⭐</div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Leo 15 nấc thang ziczac từ chân núi lên đỉnh núi giữ băng Bắc Cực không tan chảy.</p>
@@ -513,7 +513,7 @@
     <!-- ĐẢO 1: DÒNG SÔNG TÁI CHẾ -->
     <div id="screen-island-1" class="screen">
         <div class="island-score-bar">
-            <div>🏞️ <strong>Đảo 1: Dòng Sông Tái Chế</strong></div>
+            <div>🌊 <strong>Đảo 1: Dòng Sông Tái Chế</strong></div>
             <div class="live-star-box">
                 <span>⭐ Sao lượt này: <strong id="cur-star-1">0</strong>/150</span>
                 <span id="delta-1" class="delta-badge">+10 ⭐</span>
@@ -522,14 +522,14 @@
         </div>
 
         <div class="bot-banner">
-            <div class="bot-avatar">🤖</div>
+            <div class="bot-avatar">👾</div>
             <div class="bot-text" id="bot-msg-1">
                 Pha 1 (Huấn luyện AI): Em hãy dạy cho "Cánh tay Robot AI" 6 mẫu rác cơ bản trước khi bước vào thử thách vượt 15 tảng băng đang tan nhé!
             </div>
         </div>
 
         <div id="i1-phase1">
-            <div style="font-weight:bold; margin-bottom:6px;">🧠 Độ thông minh của Cánh tay AI: <span id="ai-acc-text">0%</span></div>
+            <div style="font-weight:bold; margin-bottom:6px;">💡 Độ thông minh của Cánh tay AI: <span id="ai-acc-text">0%</span></div>
             <div class="progress-track"><div class="progress-fill" id="ai-acc-bar"></div></div>
 
             <div class="item-showcase">
@@ -538,9 +538,9 @@
             </div>
 
             <div class="bins-row">
-                <button class="bin-btn" style="background:#27ae60" onclick="trainAI('huuco')">🟢 Rác Hữu Cơ<br><small>(Thức ăn, lá cây)</small></button>
-                <button class="bin-btn" style="background:#2980b9" onclick="trainAI('taiche')">🔵 Rác Tái Chế<br><small>(Nhựa, giấy, lon)</small></button>
-                <button class="bin-btn" style="background:#c0392b" onclick="trainAI('dochai')">🔴 Rác Độc Hại<br><small>(Pin cũ, bóng đèn)</small></button>
+                <button class="bin-btn" style="background:#27ae60" onclick="trainAI('huuco')">● Rác Hữu Cơ<br><small>(Thức ăn, lá cây)</small></button>
+                <button class="bin-btn" style="background:#2980b9" onclick="trainAI('taiche')">● Rác Tái Chế<br><small>(Nhựa, giấy, lon)</small></button>
+                <button class="bin-btn" style="background:#c0392b" onclick="trainAI('dochai')">● Rác Độc Hại<br><small>(Pin cũ, bóng đèn)</small></button>
             </div>
         </div>
 
@@ -549,7 +549,7 @@
                 <span>🏃 Tảng băng: <strong id="ice-step-text">0/15</strong></span>
                 <span>❄️ Độ bền tảng băng đang đứng: <strong id="ice-melt-text" style="color:#2980b9;">100%</strong></span>
                 <button class="btn btn-purple" id="btn-ai-assist" onclick="useAIArmAssist(event)" style="padding:6px 14px; font-size:0.9rem;">
-                    🦾 Nhờ Cánh tay AI tự gắp (+10⭐) (<span id="ai-assist-count">2</span> lần)
+                    🔧 Nhờ Cánh tay AI tự gắp (+10⭐) (<span id="ai-assist-count">2</span> lần)
                 </button>
             </div>
 
@@ -557,18 +557,18 @@
 
             <div style="background:#f1f9f5; border:2px solid #2ecc71; border-radius:16px; padding:12px; max-width:820px; margin:8px auto;">
                 <div style="font-size:1.1rem; font-weight:800; color:#1b4f72; margin-bottom:8px;">
-                    🚧 Rác chắn ở tảng băng số <span id="next-ice-num">1</span>: <span id="current-trash-label" style="color:#e74c3c; font-size:1.25rem;">🥤 Chai nhựa</span>
+                    🚧 Rác chắn ở tảng băng số <span id="next-ice-num">1</span>: <span id="current-trash-label" style="color:#e74c3c; font-size:1.25rem;">🍶 Chai nhựa</span>
                     <br><small style="color:#555; font-weight:600;">(Chọn đúng: <strong style="color:#27ae60">+10 ⭐</strong> & nhảy tiếp | Chọn sai: <strong style="color:#c0392b">-5 ⭐</strong> & băng tan nhanh hơn!)</small>
                 </div>
                 <div class="bins-row" style="margin-top:6px;">
                     <button class="bin-btn" style="background:#27ae60" onclick="sortRiverTrash('huuco', event)">
-                        🟢 Thùng Hữu Cơ<br><small>(Lá cây, vỏ trái cây, thức ăn)</small>
+                        ● Thùng Hữu Cơ<br><small>(Lá cây, vỏ trái cây, thức ăn)</small>
                     </button>
                     <button class="bin-btn" style="background:#2980b9" onclick="sortRiverTrash('taiche', event)">
-                        🔵 Thùng Tái Chế / Nhựa<br><small>(Chai nhựa, lon, giấy, hộp sữa)</small>
+                        ● Thùng Tái Chế / Nhựa<br><small>(Chai nhựa, lon, giấy, hộp sữa)</small>
                     </button>
                     <button class="bin-btn" style="background:#c0392b" onclick="sortRiverTrash('dochai', event)">
-                        🔴 Thùng Độc Hại<br><small>(Pin cũ, bóng đèn vỡ, hóa chất)</small>
+                        ● Thùng Độc Hại<br><small>(Pin cũ, bóng đèn vỡ, hóa chất)</small>
                     </button>
                 </div>
             </div>
@@ -589,21 +589,21 @@
         <div class="island2-layout">
             <div>
                 <div class="bot-banner" id="bot-banner-2">
-                    <div class="bot-avatar">🤖</div>
+                    <div class="bot-avatar">👾</div>
                     <div class="bot-text" id="bot-msg-2">
                         Phần 1: Em hãy bấm chuyển đổi toàn bộ 6 Nhà máy than 🏭 sang nguồn năng lượng sạch (+10⭐/nhà máy), sau đó nhấn nút <strong>[✅ HOÀN THÀNH]</strong> nhé!
                     </div>
                 </div>
 
                 <div class="weather-box">
-                    <span>🌡️ Nhiệt độ Trái Đất: <strong id="temp-val" style="color:#e74c3c">+2.5°C</strong></span>
+                    <span>☀️ Nhiệt độ Trái Đất: <strong id="temp-val" style="color:#e74c3c">+2.5°C</strong></span>
                     &nbsp;|&nbsp;
                     <span>⚡ Trạm Năng lượng Xanh: <strong id="clean-power-val">0/6</strong></span>
                 </div>
 
                 <div id="i2-phase1">
                     <p style="font-weight:bold; text-align:center; margin:6px 0;">
-                        Bước 1: Nhấn vào các Nhà máy than 🏭 bên dưới để chuyển đổi sang Điện Mặt Trời ☀️, Gió 🌬️ hoặc Rừng Cây 🌳 rồi bấm nút <strong>HOÀN THÀNH</strong>
+                        Bước 1: Nhấn vào các Nhà máy than 🏭 bên dưới để chuyển đổi sang Điện Mặt Trời ☀️, Gió 💨 hoặc Rừng Cây 🌳 rồi bấm nút <strong>HOÀN THÀNH</strong>
                     </p>
                     <div class="slots-grid" id="energy-slots"></div>
                     <div style="text-align:center; margin-top:16px;">
@@ -616,7 +616,7 @@
                 <div id="i2-phase2" style="display:none;">
                     <div class="quiz-card">
                         <div style="font-weight:bold; color:#2980b9; margin-bottom:6px;">
-                            🤖 Phần 2: Thử thách Điều phối AI Năng lượng (<span id="i2-q-progress">1/9</span>)
+                            👾 Phần 2: Thử thách Điều phối AI Năng lượng (<span id="i2-q-progress">1/9</span>)
                             <br><small style="color:#555;">(Chọn đúng ngay: <strong style="color:#27ae60">+10⭐</strong> | Chọn sai: <strong style="color:#c0392b">-10⭐</strong> & AI nhắc nhở | Chọn lại đúng sau khi nhắc: <strong style="color:#e67e22">+5⭐</strong>)</small>
                         </div>
                         <h3 id="i2-q-title" style="margin:8px 0;">Câu hỏi</h3>
@@ -644,7 +644,7 @@
         </div>
 
         <div class="bot-banner" id="bot-banner-3">
-            <div class="bot-avatar">🤖</div>
+            <div class="bot-avatar">👾</div>
             <div class="bot-text" id="bot-msg-3">
                 Pha 1: Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ (Đúng +10⭐, Sai công cụ -5⭐). Sau đó trả lời 5 câu hỏi Kiểm lâm AI!
             </div>
@@ -658,7 +658,7 @@
             <div class="tool-bar">
                 <button class="tool-btn active" id="tool-scan" onclick="selectForestTool('scan')">📷 1. Quét Camera AI (Miễn phí)</button>
                 <button class="tool-btn" id="tool-water" onclick="selectForestTool('water')">🚁 2. Máy bay chữa cháy (Chữa 🔥)</button>
-                <button class="tool-btn" id="tool-seed" onclick="selectForestTool('seed')">🌱 3. Gieo hạt giống (Trồng 🪵)</button>
+                <button class="tool-btn" id="tool-seed" onclick="selectForestTool('seed')">🌱 3. Gieo hạt giống (Trồng 🍂)</button>
                 <button class="tool-btn" id="tool-rescue" onclick="selectForestTool('rescue')">🚑 4. Cứu hộ động vật (Cứu 🐼)</button>
             </div>
 
@@ -679,7 +679,7 @@
     <!-- ĐẢO 4: NGỌN NÚI KHÍ HẬU (TRÁI: MÔ HÌNH NÚI ZICZAC - PHẢI: CÂU HỎI) -->
     <div id="screen-island-4" class="screen">
         <div class="island-score-bar">
-            <div>🏔️ <strong>Đảo 4: Ngọn Núi Khí Hậu</strong></div>
+            <div>⛰️ <strong>Đảo 4: Ngọn Núi Khí Hậu</strong></div>
             <div class="live-star-box">
                 <span>⭐ Sao lượt này: <strong id="cur-star-4">0</strong>/150</span>
                 <span id="delta-4" class="delta-badge">+10 ⭐</span>
@@ -689,7 +689,7 @@
 
         <div class="island4-layout">
             <div class="mountain-visual-box">
-                <div class="mountain-legend">🏔️ Hành trình từ Chân núi (#1) ➔ Đỉnh núi (#15)</div>
+                <div class="mountain-legend">⛰️ Hành trình từ Chân núi (#1) ➔ Đỉnh núi (#15)</div>
                 <svg id="mountain-svg" viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="mtnGrad" x1="0" y1="0" x2="0" y2="1">
@@ -714,7 +714,7 @@
                     <polygon points="160,28 195,425 302,425" fill="url(#mtnShadow)" opacity="0.65"/>
                     <polygon points="160,28 118,145 142,132 160,152 178,132 202,145" fill="#ffffff" opacity="0.92"/>
 
-                    <text x="160" y="24" font-size="20" text-anchor="middle">🐻‍❄️🛰️</text>
+                    <text x="160" y="24" font-size="20" text-anchor="middle">🐻📡</text>
 
                     <g id="mountain-zigzag-layer"></g>
                 </svg>
@@ -722,7 +722,7 @@
 
             <div class="quiz-right-panel">
                 <div class="bot-banner" id="bot-banner-4" style="margin-bottom:0;">
-                    <div class="bot-avatar">🤖</div>
+                    <div class="bot-avatar">👾</div>
                     <div class="bot-text" id="bot-msg-4">
                         Em đang ở chân núi (Bậc #1). Hãy trả lời đúng các câu hỏi để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé! (Đúng <strong>+10 ⭐</strong>, Sai <strong>-5 ⭐</strong> và AI sẽ giải thích vì sao sai).
                     </div>
@@ -745,7 +745,7 @@
     <!-- MÀN HÌNH GIẤY CHỨNG NHẬN -->
     <div id="screen-cert" class="screen">
         <div class="cert-box">
-            <div style="font-size:3.5rem;">🌍🏆🤖</div>
+            <div style="font-size:3.5rem;">🌍🏆👾</div>
             <h2 style="color:#27ae60; margin:5px 0;">GIẤY CHỨNG NHẬN</h2>
             <h3 style="margin:5px 0; color:#2c3e50;">ĐẠI SỨ NHÍ AI VÌ TRÁI ĐẤT XANH</h3>
             <p>Trao tặng cho Hiệp sĩ Môi trường:</p>
@@ -754,11 +754,11 @@
                 Đã xuất sắc vận dụng <strong>Trí tuệ nhân tạo (AI)</strong> để bảo vệ môi trường, chống biến đổi khí hậu và lan tỏa lối sống phát triển bền vững!
             </p>
             <div style="margin:15px 0; font-size:1.15rem; font-weight:bold; color:#d35400; background:#fff9e6; padding:12px; border-radius:12px; border:2px solid #f1c40f;">
-                ⭐ Tổng Sao Kỷ Lục: <span id="cert-stars">0</span>/600 &nbsp;|&nbsp; 🏅 Đảo đã giải cứu: <span id="cert-badges">0</span>/4
+                ⭐ Tổng Sao Kỷ Lục: <span id="cert-stars">0</span>/600 &nbsp;|&nbsp; ★ Đảo đã giải cứu: <span id="cert-badges">0</span>/4
                 <div style="font-size:0.9rem; color:#555; margin-top:6px;" id="cert-detail-breakdown"></div>
             </div>
             <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-                <button class="btn btn-green" onclick="window.print()">🖨️ In / Lưu PDF Chứng Nhận</button>
+                <button class="btn btn-green" onclick="window.print()">📄 In / Lưu PDF Chứng Nhận</button>
                 <button class="btn btn-red" onclick="resetProgress()">🔄 Xóa Kỷ Lục & Chơi Lại</button>
             </div>
         </div>
@@ -774,7 +774,7 @@
         <div class="modal-desc" id="modal-desc-text"></div>
         <div class="modal-score-box" id="modal-score-text"></div>
         <div class="modal-hint">
-            💡 Sau khi đóng bảng này, em hãy nhấn nút <strong>[🗺️ Bản Đồ]</strong> ở góc trên màn hình để quay ra chọn đảo tiếp theo nhé!
+            💡 Sau khi đóng bảng này, em hãy nhấn nút <strong>[🌐 Bản Đồ]</strong> ở góc trên màn hình để quay ra chọn đảo tiếp theo nhé!
         </div>
         <button class="btn btn-green" style="min-width: 140px; font-size: 1.1rem;" onclick="closeCompletionModal()">OK</button>
     </div>
@@ -1029,7 +1029,7 @@
        ========================================== */
     const trainItems = [
         { emoji: '🍌', name: 'Vỏ chuối chín', type: 'huuco', hint: 'Vỏ trái cây dễ phân hủy thành phân bón hữu cơ.' },
-        { emoji: '🥤', name: 'Chai nhựa dùng 1 lần', type: 'taiche', hint: 'Chai nhựa có thể tái chế thành vật dụng mới.' },
+        { emoji: '🍶', name: 'Chai nhựa dùng 1 lần', type: 'taiche', hint: 'Chai nhựa có thể tái chế thành vật dụng mới.' },
         { emoji: '🔋', name: 'Viên pin tiểu cũ', type: 'dochai', hint: 'Pin chứa chì và hóa chất độc hại cho nguồn nước.' },
         { emoji: '📰', name: 'Giấy báo cũ', type: 'taiche', hint: 'Giấy báo tái chế giúp cứu hàng triệu cây xanh.' },
         { emoji: '🍎', name: 'Lõi táo thừa', type: 'huuco', hint: 'Thức ăn thừa thuộc nhóm rác hữu cơ.' },
@@ -1037,21 +1037,21 @@
     ];
 
     const riverTrashPool = [
-        { emoji: '🥤', name: 'Ly nhựa trà sữa', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🍌', name: 'Vỏ chuối chín', type: 'huuco', binName: 'Thùng Hữu Cơ 🟢' },
-        { emoji: '🔋', name: 'Pin cũ rỉ sét', type: 'dochai', binName: 'Thùng Độc Hại 🔴' },
-        { emoji: '🥫', name: 'Vỏ lon nước ngọt', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🍂', name: 'Lá cây khô & vỏ cam', type: 'huuco', binName: 'Thùng Hữu Cơ 🟢' },
-        { emoji: '🧴', name: 'Chai nhựa dầu gội', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🧪', name: 'Lọ hóa chất hết hạn', type: 'dochai', binName: 'Thùng Độc Hại 🔴' },
-        { emoji: '📦', name: 'Thùng giấy carton', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🍉', name: 'Vỏ dưa hấu', type: 'huuco', binName: 'Thùng Hữu Cơ 🟢' },
-        { emoji: '📰', name: 'Tờ báo cũ', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🍎', name: 'Lõi táo thừa', type: 'huuco', binName: 'Thùng Hữu Cơ 🟢' },
-        { emoji: '💡', name: 'Bóng đèn huỳnh quang hỏng', type: 'dochai', binName: 'Thùng Độc Hại 🔴' },
-        { emoji: '🥛', name: 'Vỏ hộp sữa giấy', type: 'taiche', binName: 'Thùng Tái Chế 🔵' },
-        { emoji: '🥬', name: 'Rau củ bị héo', type: 'huuco', binName: 'Thùng Hữu Cơ 🟢' },
-        { emoji: '🌡️', name: 'Nhiệt kế thủy ngân vỡ', type: 'dochai', binName: 'Thùng Độc Hại 🔴' }
+        { emoji: '🍶', name: 'Ly nhựa trà sữa', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '🍌', name: 'Vỏ chuối chín', type: 'huuco', binName: 'Thùng Hữu Cơ ●' },
+        { emoji: '🔋', name: 'Pin cũ rỉ sét', type: 'dochai', binName: 'Thùng Độc Hại ●' },
+        { emoji: '📦', name: 'Vỏ lon nước ngọt', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '🍂', name: 'Lá cây khô & vỏ cam', type: 'huuco', binName: 'Thùng Hữu Cơ ●' },
+        { emoji: '💧', name: 'Chai nhựa dầu gội', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '☣️', name: 'Lọ hóa chất hết hạn', type: 'dochai', binName: 'Thùng Độc Hại ●' },
+        { emoji: '📦', name: 'Thùng giấy carton', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '🍉', name: 'Vỏ dưa hấu', type: 'huuco', binName: 'Thùng Hữu Cơ ●' },
+        { emoji: '📰', name: 'Tờ báo cũ', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '🍎', name: 'Lõi táo thừa', type: 'huuco', binName: 'Thùng Hữu Cơ ●' },
+        { emoji: '💡', name: 'Bóng đèn huỳnh quang hỏng', type: 'dochai', binName: 'Thùng Độc Hại ●' },
+        { emoji: '🥛', name: 'Vỏ hộp sữa giấy', type: 'taiche', binName: 'Thùng Tái Chế ●' },
+        { emoji: '🌿', name: 'Rau củ bị héo', type: 'huuco', binName: 'Thùng Hữu Cơ ●' },
+        { emoji: '☀️', name: 'Nhiệt kế thủy ngân vỡ', type: 'dochai', binName: 'Thùng Độc Hại ●' }
     ];
 
     let trainIdx = 0;
@@ -1088,7 +1088,7 @@
         if (trainIdx >= trainItems.length) {
             playSound('win');
             document.getElementById('bot-msg-1').innerText =
-                "Pha 2 (Vượt 15 tảng băng đang tan): Mỗi lần chọn đúng thùng rác cho Cánh tay AI 🦾 mở đường, em được +10 ⭐ (Tối đa 150 ⭐). Chọn sai bị -5 ⭐!";
+                "Pha 2 (Vượt 15 tảng băng đang tan): Mỗi lần chọn đúng thùng rác cho Cánh tay AI 🔧 mở đường, em được +10 ⭐ (Tối đa 150 ⭐). Chọn sai bị -5 ⭐!";
             document.getElementById('i1-phase1').style.display = 'none';
             document.getElementById('i1-phase2').style.display = 'block';
             startIceJumpingPhase();
@@ -1186,7 +1186,7 @@
             addCanvasFeedback(nextBlock.x, nextBlock.y - 40, "+10 ⭐", "#2ecc71");
             triggerArmAndJump(nextBlock, chosenBinType);
             document.getElementById('bot-msg-1').innerText =
-                `🦾 Chính xác (+10 ⭐)! Cánh tay AI đã gắp [${trash.emoji} ${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}!`;
+                `🔧 Chính xác (+10 ⭐)! Cánh tay AI đã gắp [${trash.emoji} ${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}!`;
         } else {
             playSound('err');
             addRunStars(1, -5, event);
@@ -1207,7 +1207,7 @@
         addRunStars(1, 10, event);
         addCanvasFeedback(nextBlock.x, nextBlock.y - 40, "+10 ⭐ (AI)", "#f1c40f");
         document.getElementById('bot-msg-1').innerText =
-            `🤖 Cánh tay AI tự động phân loại [${nextBlock.trash.emoji} ${nextBlock.trash.name}] vào ${nextBlock.trash.binName} (+10 ⭐)!`;
+            `👾 Cánh tay AI tự động phân loại [${nextBlock.trash.emoji} ${nextBlock.trash.name}] vào ${nextBlock.trash.binName} (+10 ⭐)!`;
         triggerArmAndJump(nextBlock, nextBlock.trash.type);
     }
 
@@ -1300,13 +1300,13 @@
             ctx.restore();
 
             if (idx === TOTAL_ICE_STEPS) {
-                ctx.font = "28px Segoe UI Emoji";
+                ctx.font = "28px Segoe UI Symbol, Segoe UI, Arial";
                 ctx.textAlign = "center";
-                ctx.fillText("🏝️🏁", b.x, b.y - 24);
+                ctx.fillText("🌴🏁", b.x, b.y - 24);
             }
 
             if (!b.cleared && b.trash) {
-                ctx.font = idx === currentStep + 1 ? "34px Segoe UI Emoji" : "24px Segoe UI Emoji";
+                ctx.font = idx === currentStep + 1 ? "34px Segoe UI Symbol, Segoe UI, Arial" : "24px Segoe UI Symbol, Segoe UI, Arial";
                 ctx.textAlign = "center";
                 ctx.fillText(b.trash.emoji, b.x, b.y - 6);
 
@@ -1329,7 +1329,7 @@
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 12px Segoe UI";
         ctx.textAlign = "center";
-        ctx.fillText("CÁNH TAY ROBOT AI 🦾", armBaseX, 16);
+        ctx.fillText("CÁNH TAY ROBOT AI 🔧", armBaseX, 16);
 
         if (armAnim.active) {
             armAnim.progress += 0.08;
@@ -1344,8 +1344,8 @@
             ctx.lineTo(curArmX, curArmY);
             ctx.stroke();
 
-            ctx.font = "28px Segoe UI Emoji";
-            ctx.fillText("🦾", curArmX, curArmY + 8);
+            ctx.font = "28px Segoe UI Symbol, Segoe UI, Arial";
+            ctx.fillText("🔧", curArmX, curArmY + 8);
 
             if (armAnim.progress >= 0.5 && currentStep + 1 <= TOTAL_ICE_STEPS && !iceBlocks[currentStep + 1].cleared) {
                 iceBlocks[currentStep + 1].cleared = true;
@@ -1384,9 +1384,9 @@
             }
         }
 
-        ctx.font = "38px Segoe UI Emoji";
+        ctx.font = "38px Segoe UI Symbol, Segoe UI, Arial";
         ctx.textAlign = "center";
-        ctx.fillText("🤖", playerPos.x, playerPos.y - 8);
+        ctx.fillText("👾", playerPos.x, playerPos.y - 8);
 
         for (let i = riverFloatingTexts.length - 1; i >= 0; i--) {
             const ft = riverFloatingTexts[i];
@@ -1440,7 +1440,7 @@
     const slotTypes = {
         'coal': { emoji: '🏭', name: 'Nhà máy Than (Xả CO₂)' },
         'solar': { emoji: '☀️', name: 'Pin Mặt Trời' },
-        'wind': { emoji: '🌬️', name: 'Tua-bin Gió' },
+        'wind': { emoji: '💨', name: 'Tua-bin Gió' },
         'tree': { emoji: '🌳', name: 'Rừng Hấp Thụ CO₂' }
     };
 
@@ -1496,9 +1496,9 @@
             ]
         },
         {
-            q: "2. Khi [Gió biển thổi mạnh 🌬️ vào ban đêm], AI nên điều chỉnh hệ thống thế nào?",
+            q: "2. Khi [Gió biển thổi mạnh 💨 vào ban đêm], AI nên điều chỉnh hệ thống thế nào?",
             opts: [
-                { t: "🌬️ Chuyển sang dùng điện từ Tua-bin Gió", ok: true },
+                { t: "💨 Chuyển sang dùng điện từ Tua-bin Gió", ok: true },
                 { t: "🔥 Đốt dầu diesel phát điện", ok: false, why: "Đốt dầu diesel gây ô nhiễm không khí và tiếng ồn, trong khi sức gió biển ban đêm là nguồn năng lượng sạch hoàn toàn miễn phí!" }
             ]
         },
@@ -1520,7 +1520,7 @@
             q: "5. Khi nhiệt độ ngoài trời mát mẻ (24°C), AI điều khiển điều hòa ở mức nào để tiết kiệm điện?",
             opts: [
                 { t: "❄️ Chuyển sang chế độ quạt gió tự nhiên hoặc 26-27°C", ok: true },
-                { t: "🥶 Hạ nhiệt độ xuống 16°C", ok: false, why: "Hạ điều hòa xuống 16°C khi trời đã mát vừa gây tốn điện gấp nhiều lần vừa dễ làm học sinh bị cảm lạnh!" }
+                { t: "❄️ Hạ nhiệt độ xuống 16°C", ok: false, why: "Hạ điều hòa xuống 16°C khi trời đã mát vừa gây tốn điện gấp nhiều lần vừa dễ làm học sinh bị cảm lạnh!" }
             ]
         },
         {
@@ -1534,14 +1534,14 @@
             q: "7. Khi lượng điện mặt trời tạo ra vào buổi trưa dư thừa, hệ thống AI nên làm gì?",
             opts: [
                 { t: "🔋 Tích trữ vào Pin lưu trữ năng lượng để dùng buổi tối", ok: true },
-                { t: "🗑️ Bỏ phí nguồn điện đó", ok: false, why: "Buổi tối không có ánh nắng mặt trời, nếu bỏ phí điện ban trưa thì tối lại phải đốt than phát điện!" }
+                { t: "♻️ Bỏ phí nguồn điện đó", ok: false, why: "Buổi tối không có ánh nắng mặt trời, nếu bỏ phí điện ban trưa thì tối lại phải đốt than phát điện!" }
             ]
         },
         {
             q: "8. Trồng thêm rừng cây 🌳 quanh thành phố giúp ích gì cho Tháp Năng Lượng Xanh?",
             opts: [
                 { t: "🌳 Cây xanh hấp thụ khí CO₂ và làm mát thành phố", ok: true },
-                { t: "🪵 Cây làm tốn diện tích đất", ok: false, why: "Cây xanh là 'lá phổi' tự nhiên giúp hút khí độc CO₂, tỏa khí Oxy và giảm nhiệt độ cho cả thành phố!" }
+                { t: "🍂 Cây làm tốn diện tích đất", ok: false, why: "Cây xanh là 'lá phổi' tự nhiên giúp hút khí độc CO₂, tỏa khí Oxy và giảm nhiệt độ cho cả thành phố!" }
             ]
         },
         {
@@ -1731,7 +1731,7 @@
             opts: [
                 { t: "📷 Tự động nhận diện khói cháy rừng từ camera vệ tinh/drone sớm nhất", ok: true },
                 {
-                    t: "🪓 Tự động chặt cây trong rừng",
+                    t: "✂️ Tự động chặt cây trong rừng",
                     ok: false,
                     why: "Chặt phá cây rừng sẽ làm mất nơi ở của muôn loài và làm Trái Đất nóng lên! AI được tạo ra để giám sát và bảo vệ rừng chứ không phải để phá rừng."
                 }
@@ -1829,7 +1829,7 @@
                 d.innerText = cell.issue === 'none' ? '🌲' : '🌳⚠️';
             } else {
                 if (cell.issue === 'fire') d.innerText = '🔥';
-                else if (cell.issue === 'barren') d.innerText = '🪵';
+                else if (cell.issue === 'barren') d.innerText = '🍂';
                 else if (cell.issue === 'animal') d.innerText = '🐼';
                 else d.innerText = '🌳';
             }
@@ -1846,7 +1846,7 @@
             playSound('ok');
             if (banner3) banner3.classList.remove('warn');
             if (cell.issue === 'fire') document.getElementById('bot-msg-3').innerText = "📷 AI phát hiện: ĐÁM CHÁY RỪNG 🔥! Hãy chọn [2. Máy bay chữa cháy 🚁]!";
-            else if (cell.issue === 'barren') document.getElementById('bot-msg-3').innerText = "📷 AI phát hiện: ĐỒI TRỌC 🪵! Hãy chọn [3. Gieo hạt giống 🌱]!";
+            else if (cell.issue === 'barren') document.getElementById('bot-msg-3').innerText = "📷 AI phát hiện: ĐỒI TRỌC 🍂! Hãy chọn [3. Gieo hạt giống 🌱]!";
             else if (cell.issue === 'animal') document.getElementById('bot-msg-3').innerText = "📷 AI phát hiện: GẤU TRÚC GẶP NẠN 🐼! Hãy chọn [4. Cứu hộ động vật 🚑]!";
             else document.getElementById('bot-msg-3').innerText = "📷 AI nhận diện: Cây rừng khỏe mạnh bình thường 🌲.";
             renderForest();
@@ -1977,7 +1977,7 @@
             opts: [
                 { text: "🍼 Mang theo bình nước cá nhân dùng nhiều lần", ok: true },
                 {
-                    text: "🛍️ Dùng thật nhiều ly nhựa và túi nilon dùng 1 lần",
+                    text: "👜 Dùng thật nhiều ly nhựa và túi nilon dùng 1 lần",
                     ok: false,
                     why: "Ly nhựa và túi nilon dùng 1 lần phải mất hàng trăm năm mới phân hủy, khi trôi ra biển sẽ gây nguy hiểm cho rùa biển và cá!"
                 }
@@ -1986,7 +1986,7 @@
         {
             q: "3. Trí tuệ nhân tạo (AI) giúp ích gì trong việc ứng phó với biến đổi khí hậu?",
             opts: [
-                { text: "🛰️ Phân tích dữ liệu vệ tinh để dự báo bão lũ, cháy rừng sớm", ok: true },
+                { text: "📡 Phân tích dữ liệu vệ tinh để dự báo bão lũ, cháy rừng sớm", ok: true },
                 {
                     text: "🎮 Chỉ dùng để chơi game giải trí",
                     ok: false,
@@ -2010,7 +2010,7 @@
             opts: [
                 { text: "🌱 Đáp ứng nhu cầu hiện tại nhưng vẫn giữ gìn môi trường cho tương lai", ok: true },
                 {
-                    text: "🪓 Khai thác cạn kiệt tài nguyên thiên nhiên ngay hôm nay",
+                    text: "✂️ Khai thác cạn kiệt tài nguyên thiên nhiên ngay hôm nay",
                     ok: false,
                     why: "Nếu khai thác cạn kiệt rừng, nước và khoáng sản ngay hôm nay thì thế hệ tương lai sẽ không còn tài nguyên để sinh sống!"
                 }
@@ -2041,9 +2041,9 @@
         {
             q: "8. Vì sao băng ở hai cực Trái Đất lại bị tan chảy nhanh trong những năm gần đây?",
             opts: [
-                { text: "🌡️ Do hiệu ứng nhà kính làm nhiệt độ Trái Đất nóng lên", ok: true },
+                { text: "☀️ Do hiệu ứng nhà kính làm nhiệt độ Trái Đất nóng lên", ok: true },
                 {
-                    text: "🐻‍❄️ Do gấu Bắc Cực làm vỡ băng",
+                    text: "🐻 Do gấu Bắc Cực làm vỡ băng",
                     ok: false,
                     why: "Gấu Bắc Cực là nạn nhân bị mất nơi sinh sống! Nguyên nhân thật sự là do khói thải CO₂ từ nhà máy, xe cộ gây hiệu ứng nhà kính làm Trái Đất nóng lên."
                 }
@@ -2054,7 +2054,7 @@
             opts: [
                 { text: "👜 Túi vải sử dụng nhiều lần hoặc giỏ đi chợ", ok: true },
                 {
-                    text: "🛍️ Xin thật nhiều túi nilon nhỏ cho mỗi món đồ",
+                    text: "👜 Xin thật nhiều túi nilon nhỏ cho mỗi món đồ",
                     ok: false,
                     why: "Túi nilon làm từ dầu mỏ và rất khó phân hủy, khi thải ra môi trường sẽ làm tắc nghẽn cống thoát nước và gây ô nhiễm đất!"
                 }
@@ -2065,7 +2065,7 @@
             opts: [
                 { text: "💧 Cảm biến AI tưới nước tiết kiệm vừa đủ cho từng gốc cây", ok: true },
                 {
-                    text: "🧪 Phun thuốc hóa học tràn lan khắp cánh đồng",
+                    text: "☣️ Phun thuốc hóa học tràn lan khắp cánh đồng",
                     ok: false,
                     why: "Phun thuốc hóa học tràn lan sẽ làm nhiễm độc đất, nguồn nước ngầm và tiêu diệt cả các loài côn trùng có ích như ong, bướm!"
                 }
@@ -2076,7 +2076,7 @@
             opts: [
                 { text: "📄 Tận dụng cả hai mặt giấy trước khi đem đi tái chế", ok: true },
                 {
-                    text: "🗑️ Viết một chữ rồi vò nát tờ giấy vứt đi",
+                    text: "♻️ Viết một chữ rồi vò nát tờ giấy vứt đi",
                     ok: false,
                     why: "Giấy được sản xuất từ gỗ cây rừng. Lãng phí giấy đồng nghĩa với việc phải chặt hạ thêm nhiều cây xanh hơn!"
                 }
@@ -2096,7 +2096,7 @@
         {
             q: "13. Khi trời ban ngày có nhiều ánh sáng tự nhiên, em nên làm gì trong phòng học?",
             opts: [
-                { text: "🪟 Mở rèm cửa đón ánh sáng tự nhiên và tắt bớt bóng đèn điện", ok: true },
+                { text: "🏠 Mở rèm cửa đón ánh sáng tự nhiên và tắt bớt bóng đèn điện", ok: true },
                 {
                     text: "💡 Đóng kín cửa và bật toàn bộ đèn điện",
                     ok: false,
@@ -2199,7 +2199,7 @@
                 botIcon.setAttribute('y', pt.y + 6);
                 botIcon.setAttribute('text-anchor', 'middle');
                 botIcon.setAttribute('font-size', '20');
-                botIcon.textContent = '🤖';
+                botIcon.textContent = '👾';
                 g.appendChild(botIcon);
             }
 
