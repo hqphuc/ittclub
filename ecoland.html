@@ -2839,5 +2839,463 @@
     hydrateStaticLowPolyIcons();
     loadProgress();
 </script>
+<style>
+/* Phông chữ hệ thống: có sẵn trên Windows, macOS, Android, iOS, Linux */
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+* { font-family: inherit; }
+
+#bg-fx, #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#bg-fx { z-index: 0; }
+#fx { z-index: 20000; }
+header, #app { position: relative; z-index: 1; }
+
+/* Biểu tượng low-poly chèn giữa dòng chữ (thay emoji) */
+.lp-em { width: 1.25em; height: 1.25em; margin: 0 .1em; vertical-align: -.28em; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+
+/* Chuyển động */
+@keyframes lpFloat  { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-9px) rotate(3deg); } }
+@keyframes lpTwinkle{ 0%,100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.18) rotate(12deg); } }
+@keyframes lpSway   { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes lpSlide  { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+@keyframes lpShine  { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(260%) skewX(-20deg); } }
+@keyframes lpStripe { from { background-position: 0 0; } to { background-position: 40px 0; } }
+@keyframes lpGlow   { 0%,100% { box-shadow: 0 0 0 rgba(46,204,113,0); } 50% { box-shadow: 0 0 16px rgba(46,204,113,.75); } }
+@keyframes lpPop    { 0% { transform: scale(.6) rotate(-10deg); } 70% { transform: scale(1.15) rotate(4deg); } 100% { transform: scale(1); } }
+
+.island-icon .lp-icon { animation: lpFloat 3.2s ease-in-out infinite; }
+.island-icon .lp-icon:nth-child(2) { animation-delay: -1.4s; }
+#card-island-2 .lp-icon { animation-delay: -.7s; }
+#card-island-3 .lp-icon { animation-delay: -1.1s; }
+.brand .lp-icon { animation: lpSway 3s ease-in-out infinite; }
+.badge-pill .lp-icon, .island-best-star .lp-icon, .live-star-box .lp-icon { animation: lpTwinkle 2.4s ease-in-out infinite; }
+.forest-cell .lp-icon { animation: lpSway 3.4s ease-in-out infinite; transform-origin: 50% 90%; }
+.forest-cell:nth-child(odd) .lp-icon { animation-delay: -1.6s; }
+.modal-trophy .lp-icon { animation: lpPop .6s both, lpFloat 2.2s .6s ease-in-out infinite; }
+.modal-title { animation: lpPop .5s .1s both; }
+.energy-slot.clean { animation: lpGlow 2.2s ease-in-out infinite; }
+.choice-btn { animation: lpSlide .35s both; }
+.choice-btn:nth-child(2) { animation-delay: .08s; }
+.btn, .bin-btn, .tool-btn { position: relative; overflow: hidden; }
+.btn::after, .bin-btn::after {
+  content: ""; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+  transform: translateX(-120%) skewX(-20deg); pointer-events: none;
+}
+.btn:hover::after, .bin-btn:hover::after { animation: lpShine .7s ease; }
+.progress-fill { position: relative; overflow: hidden; }
+.progress-fill::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.25) 0 10px, transparent 10px 20px);
+  background-size: 40px 40px; animation: lpStripe 1s linear infinite;
+}
+.island-card:hover { transform: perspective(700px) translateY(-8px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+.island-card.completed { background-image: linear-gradient(180deg, #e8f8f5 0%, #d1f2eb 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+  const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  /* ---------- 1. Biểu tượng bổ sung ---------- */
+  LP_SVGS.arrow = `<svg viewBox="0 0 64 64">
+    <polygon points="4,24 38,24 38,10 62,32 4,32" fill="#f1c40f"/>
+    <polygon points="4,32 62,32 38,54 38,40 4,40" fill="#d68910"/></svg>`;
+
+  /* ---------- 2. Thay MỌI emoji / ký tự đặc biệt bằng SVG low-poly ---------- */
+  const EMO = /(?:\p{Extended_Pictographic}\uFE0F?(?:\u200D\p{Extended_Pictographic}\uFE0F?)*)|[\u2713\u2715\u2794\u2B50\u2605\uFE0F]/gu;
+  const MAP = { '⭐':'star','★':'star','👉':'arrow','➔':'arrow','➡':'arrow','✓':'check','✔':'check',
+    '✕':'cross','✖':'cross','🔥':'fire','🌍':'globe','💡':'bulb','❄':'snowflake','🌡':'thermo',
+    '⚠':'warn','🏆':'trophy','🤖':'robot' };
+  const keyOf = s => { const c = s.replace(/\uFE0F/g, ''); return MAP[c] || MAP[[...c][0]] || null; };
+
+  function svgFix(n, p) {
+    if (!/[\u2713\u2714]/.test(n.nodeValue)) return;
+    const x = +p.getAttribute('x') || 0, y = (+p.getAttribute('y') || 0) - 4;
+    const g = document.createElementNS(SVGNS, 'polygon');
+    g.setAttribute('points', '-6,0 -2.5,3.5 6,-6 4,-8 -2.5,-0.5 -4,-2');
+    g.setAttribute('transform', `translate(${x},${y})`);
+    g.setAttribute('fill', '#ffffff');
+    p.parentNode.insertBefore(g, p); p.remove();
+  }
+
+  function fixText(n) {
+    let t = n.nodeValue;
+    if (/[₂₄]/.test(t)) { t = t.replace(/₂/g, '2').replace(/₄/g, '4'); n.nodeValue = t; }
+    EMO.lastIndex = 0;
+    if (!EMO.test(t)) return;
+    EMO.lastIndex = 0;
+    const p = n.parentNode; if (!p) return;
+    if (p.namespaceURI === SVGNS) { svgFix(n, p); return; }
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = EMO.exec(t))) {
+      if (m.index > last) frag.append(t.slice(last, m.index));
+      const k = keyOf(m[0]);
+      if (k && LP_SVGS[k]) {
+        const s = document.createElement('span');
+        s.className = 'lp-icon lp-em'; s.innerHTML = LP_SVGS[k]; frag.append(s);
+      }
+      last = m.index + m[0].length;
+    }
+    if (last < t.length) frag.append(t.slice(last));
+    p.replaceChild(frag, n);
+  }
+
+  function scan(root) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => /^(SCRIPT|STYLE|TEXTAREA|TITLE|NOSCRIPT)$/i.test(n.parentNode.nodeName)
+        ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const list = []; while (w.nextNode()) list.push(w.currentNode);
+    list.forEach(fixText);
+  }
+
+  const OPT = { childList: true, subtree: true, characterData: true };
+  let queued = false;
+  const mo = new MutationObserver(() => {
+    if (queued) return; queued = true;
+    requestAnimationFrame(() => { queued = false; mo.disconnect(); scan(document.body); mo.observe(document.body, OPT); });
+  });
+  scan(document.body); mo.observe(document.body, OPT);
+
+  /* ---------- 3. Canvas Đảo 1: ký tự ★ -> ngôi sao đa giác ---------- */
+  const CP = CanvasRenderingContext2D.prototype, _fill = CP.fillText, _stroke = CP.strokeText;
+  function drawStar(c, cx, cy, r) {
+    c.save(); c.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r;
+      c[i ? 'lineTo' : 'moveTo'](cx + rr * Math.cos(a), cy + rr * Math.sin(a));
+    }
+    c.closePath(); c.fillStyle = '#f1c40f'; c.strokeStyle = '#d35400'; c.lineWidth = 1.5; c.fill(); c.stroke(); c.restore();
+  }
+  function wrapText(orig, isFill) {
+    return function (t, x, y, mw) {
+      if (typeof t === 'string' && t.indexOf('★') > -1) {
+        const s = t.replace(/\s*★/g, '');
+        orig.call(this, s, x, y);
+        if (isFill) {
+          const w = this.measureText(s).width, a = this.textAlign;
+          drawStar(this, a === 'center' ? x + w / 2 + 12 : a === 'right' ? x + 12 : x + w + 12, y - 7, 9);
+        }
+        return;
+      }
+      return orig.call(this, t, x, y, mw);
+    };
+  }
+  CP.fillText = wrapText(_fill, true);
+  CP.strokeText = wrapText(_stroke, false);
+
+  /* ---------- 4. Phông nền low-poly động + hạt hiệu ứng ---------- */
+  const mk = id => { const c = document.createElement('canvas'); c.id = id; document.body.prepend(c); return c; };
+  const bg = mk('bg-fx'), fx = mk('fx'), bc = bg.getContext('2d'), fc = fx.getContext('2d');
+  let W = 0, H = 0;
+  function resize() {
+    const d = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    [bg, fx].forEach(c => { c.width = W * d; c.height = H * d; c.getContext('2d').setTransform(d, 0, 0, d, 0, 0); });
+  }
+  addEventListener('resize', resize); resize();
+
+  function poly(c, p, f) {
+    c.beginPath(); c.moveTo(p[0], p[1]);
+    for (let i = 2; i < p.length; i += 2) c.lineTo(p[i], p[i + 1]);
+    c.closePath(); c.fillStyle = f; c.fill();
+  }
+  const clouds = Array.from({ length: 6 }, () => ({ x: Math.random() * 1200, y: 30 + Math.random() * 260, s: .9 + Math.random() * 1.1, v: .12 + Math.random() * .25 }));
+  const birds = Array.from({ length: 4 }, (_, i) => ({ x: Math.random() * 1200, y: 90 + Math.random() * 160, v: .6 + Math.random() * .5, ph: i * 1.7 }));
+  const snow = Array.from({ length: 45 }, () => ({ x: Math.random() * 1400, y: Math.random() * 900, r: 2 + Math.random() * 3, v: .5 + Math.random() * 1, ph: Math.random() * 6 }));
+  let fish = null, nextFish = 120;
+
+  function drawScene(t) {
+    bc.clearRect(0, 0, W, H);
+    // Mặt trời đa giác xoay
+    const sx = W - 90, sy = 95;
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4 + t * .0003, b = a + Math.PI / 8;
+      poly(bc, [sx + 40 * Math.cos(a), sy + 40 * Math.sin(a), sx + 66 * Math.cos((a + b) / 2), sy + 66 * Math.sin((a + b) / 2), sx + 40 * Math.cos(b), sy + 40 * Math.sin(b)], 'rgba(249,231,159,.8)');
+      poly(bc, [sx, sy, sx + 36 * Math.cos(a), sy + 36 * Math.sin(a), sx + 36 * Math.cos(b), sy + 36 * Math.sin(b)], i % 2 ? '#f1c40f' : '#f9e79f');
+    }
+    // Mây
+    clouds.forEach(o => {
+      o.x += o.v; if (o.x > W + 150) o.x = -150;
+      const s = o.s * 1.6;
+      [[[10,22,24,10,42,14,55,24], '#ffffff'], [[24,10,42,14,34,24,18,24], '#e8f4f8'], [[42,14,62,18,68,26,34,24], '#d4e6f1']].forEach(([p, f]) => {
+        poly(bc, p.map((v, i) => i % 2 ? o.y + v * s : o.x + v * s), f);
+      });
+    });
+    // Chim vỗ cánh
+    birds.forEach(b => {
+      b.x += b.v; if (b.x > W + 30) b.x = -30;
+      const f = Math.sin(t * .01 + b.ph) * 7, y = b.y + Math.sin(t * .002 + b.ph) * 10;
+      poly(bc, [b.x, y, b.x - 16, y - f - 2, b.x - 11, y + 2], 'rgba(255,255,255,.92)');
+      poly(bc, [b.x, y, b.x + 16, y - f - 2, b.x + 11, y + 2], 'rgba(214,234,248,.92)');
+    });
+    // Sóng nước đa giác 3 lớp
+    for (let l = 0; l < 3; l++) {
+      const base = H - 70 + l * 24, hi = `rgba(255,255,255,${.08 + l * .05})`, lo = `rgba(10,61,98,${.12 + l * .06})`;
+      const wave = x => base + Math.sin(t * .0012 + x * .012 + l * 1.3) * 9;
+      for (let x = -70; x < W + 70; x += 70) {
+        poly(bc, [x, wave(x), x + 70, wave(x + 70), x, H], hi);
+        poly(bc, [x + 70, wave(x + 70), x + 70, H, x, H], lo);
+      }
+    }
+    // Cá nhảy
+    if (--nextFish <= 0 && !fish) { fish = { x0: 80 + Math.random() * (W - 300), p: 0 }; nextFish = 260 + Math.random() * 300; }
+    if (fish) {
+      fish.p += .016;
+      const p = fish.p, x = fish.x0 + p * 160, y = H - 60 - Math.sin(p * Math.PI) * 110;
+      bc.save(); bc.translate(x, y); bc.rotate(Math.cos(p * Math.PI) * -.9);
+      poly(bc, [-14, 0, 0, -8, 14, 0], '#f5b041'); poly(bc, [-14, 0, 14, 0, 0, 8], '#d68910');
+      poly(bc, [14, 0, 25, -8, 25, 8], '#e67e22'); bc.restore();
+      if (p >= 1) fish = null;
+    }
+    // Tuyết rơi khi ở Ngọn Núi Khí Hậu
+    const i4 = document.getElementById('screen-island-4');
+    if (i4 && i4.classList.contains('active')) {
+      snow.forEach(s => {
+        s.y += s.v; s.x += Math.sin(t * .002 + s.ph) * .6; if (s.y > H) { s.y = -10; s.x = Math.random() * W; }
+        poly(bc, [s.x, s.y - s.r, s.x + s.r, s.y, s.x, s.y + s.r, s.x - s.r, s.y], 'rgba(255,255,255,.9)');
+      });
+    }
+  }
+
+  const parts = [];
+  function burst(x, y, n, cols, pw) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * 6.283, s = pw * (.4 + Math.random());
+      parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 2, r: 4 + Math.random() * 6, rot: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 1, d: .018 + Math.random() * .012, c: cols[i % cols.length], g: .18 });
+    }
+  }
+  function confetti() {
+    const cols = ['#f1c40f', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6', '#ffffff'];
+    for (let i = 0; i < 140; i++) parts.push({ x: Math.random() * W, y: -20 - Math.random() * H * .4, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 3, r: 6 + Math.random() * 8, rot: Math.random() * 6, vr: (Math.random() - .5) * .3, life: 1, d: .006, c: cols[i % cols.length], g: .04 });
+  }
+  function drawParts() {
+    fc.clearRect(0, 0, W, H);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const q = parts[i];
+      q.vy += q.g; q.x += q.vx; q.y += q.vy; q.rot += q.vr; q.life -= q.d;
+      if (q.life <= 0 || q.y > H + 40) { parts.splice(i, 1); continue; }
+      const pts = [0, 1, 2].map(k => [q.x + q.r * Math.cos(q.rot + k * 2.094), q.y + q.r * Math.sin(q.rot + k * 2.094)]);
+      fc.globalAlpha = Math.min(1, q.life * 2);
+      poly(fc, pts.flat(), q.c);
+      poly(fc, [q.x, q.y, ...pts[0], ...pts[1]], 'rgba(255,255,255,.35)');
+    }
+    fc.globalAlpha = 1;
+  }
+
+  function loop(t) { drawScene(t); drawParts(); requestAnimationFrame(loop); }
+  if (RM) drawScene(0); else requestAnimationFrame(loop);
+
+  /* ---------- 5. Gắn hiệu ứng vào game ---------- */
+  const _add = window.addRunStars;
+  window.addRunStars = function (i, d, e) {
+    _add.apply(this, arguments);
+    if (RM) return;
+    const x = e && e.clientX ? e.clientX : innerWidth / 2, y = e && e.clientY ? e.clientY : innerHeight / 2;
+    d > 0 ? burst(x, y, 14, ['#f1c40f', '#f9e79f', '#f39c12', '#2ecc71'], 5)
+          : burst(x, y, 8, ['#e74c3c', '#c0392b', '#7f8c8d'], 3);
+  };
+  const _done = window.completeIsland;
+  window.completeIsland = function () {
+    _done.apply(this, arguments);
+    if (!RM) { confetti(); setTimeout(confetti, 500); }
+  };
+
+  // Thẻ đảo nghiêng 3D theo con trỏ
+  document.querySelectorAll('.island-card').forEach(c => {
+    c.addEventListener('pointermove', e => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 12 + 'deg');
+      c.style.setProperty('--rx', ((e.clientY - r.top) / r.height - .5) * -12 + 'deg');
+    });
+    c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+  });
+})();
+</script>
+
+<style>
+#combo-pill{position:fixed;top:96px;right:14px;z-index:9000;background:linear-gradient(135deg,#e67e22,#e74c3c);color:#fff;font-weight:900;padding:8px 16px;border-radius:30px;box-shadow:0 6px 0 rgba(0,0,0,.2);display:none;align-items:center;gap:6px;pointer-events:none}
+#combo-pill.show{display:flex;animation:lpPop .35s}
+#fact-toast{position:fixed;left:14px;bottom:14px;max-width:min(380px,calc(100vw - 28px));z-index:9500;background:#fff;border:4px solid #3498db;border-radius:20px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-weight:600;font-size:.95rem;line-height:1.4;color:#1b4f72;box-shadow:0 10px 25px rgba(0,0,0,.3);transform:translateY(150%);transition:transform .45s cubic-bezier(.175,.885,.32,1.275);pointer-events:none}
+#fact-toast.show{transform:none}
+#fact-toast b{display:block;color:#e67e22;font-size:.85rem;letter-spacing:.5px}
+#rank-line{display:flex;align-items:center;gap:12px;margin-top:12px;font-weight:800;color:#1b4f72;flex-wrap:wrap}
+#rank-line .rk{background:#fff9e6;border:2px solid #f1c40f;border-radius:14px;padding:6px 14px;color:#b9770e}
+#amb{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#snd-btn.off{opacity:.65}
+</style>
+
+<script>
+(function () {
+  'use strict';
+  const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Biểu tượng mới ---------- */
+  LP_SVGS.note = `<svg viewBox="0 0 64 64"><polygon points="24,8 52,4 52,16 24,20" fill="#f1c40f"/><polygon points="24,20 32,20 32,46 24,46" fill="#85c1e9"/><polygon points="44,16 52,16 52,42 44,42" fill="#3498db"/><polygon points="12,44 32,42 32,54 14,56" fill="#2980b9"/><polygon points="32,40 52,38 52,50 34,52" fill="#1b4f72"/></svg>`;
+
+  /* ---------- 1. Khung "Em có biết?" của Robot AI ---------- */
+  const FACTS = {
+    1: ['Một chai nhựa có thể mất khoảng 450 năm để phân hủy hoàn toàn ngoài tự nhiên.',
+        'Tái chế vỏ lon nhôm tiết kiệm khoảng 95% năng lượng so với sản xuất nhôm mới.',
+        'Pin cũ chứa kim loại nặng như chì, thủy ngân nên phải gom riêng, không bỏ chung rác sinh hoạt.',
+        'Rác hữu cơ như vỏ trái cây có thể ủ thành phân bón cho cây trồng.',
+        'Camera AI trên dây chuyền tái chế có thể nhận ra từng loại nhựa nhanh hơn mắt người.'],
+    2: ['Ánh nắng chiếu xuống Trái Đất trong khoảng 1 giờ chứa nhiều năng lượng hơn cả nhân loại dùng trong một năm.',
+        'Việt Nam có nhiều trang trại điện gió và điện mặt trời, như ở Bạc Liêu và Ninh Thuận.',
+        'Thiết bị điện để chế độ chờ vẫn âm thầm tiêu thụ điện, rút phích cắm là cách tiết kiệm đơn giản.',
+        'AI có thể dự đoán nắng và gió để điều phối điện sạch trước cả khi chúng xuất hiện.'],
+    3: ['Một cây trưởng thành hấp thụ khoảng 20 kg khí CO2 mỗi năm.',
+        'Rừng ngập mặn ven biển Việt Nam vừa chắn sóng, vừa lưu giữ rất nhiều carbon.',
+        'Vệ tinh và drone gắn AI có thể phát hiện khói cháy rừng chỉ sau vài phút.',
+        'Gấu trúc ăn tre gần như cả ngày, mất rừng tre là mất nhà của chúng.'],
+    4: ['Băng biển Bắc Cực thu hẹp dần qua từng thập kỷ vì Trái Đất nóng lên.',
+        'Thức ăn thừa ở bãi rác sinh ra khí mê-tan, một khí nhà kính rất mạnh.',
+        'Mang bình nước và túi vải cá nhân giúp giảm hàng chục túi nhựa mỗi tháng.',
+        'Các mô hình AI khí hậu giúp dự báo bão và lũ sớm hơn để cứu người.']
+  };
+  const toast = document.createElement('div');
+  toast.id = 'fact-toast';
+  document.body.appendChild(toast);
+  let toastTimer;
+  function showToast(title, text, icon) {
+    toast.innerHTML = `${lpIcon(icon || 'robot', 'lg')}<div><b>${title}</b>${text}</div>`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 6500);
+  }
+  const factIdx = { 1: 0, 2: 0, 3: 0, 4: 0 }, okCnt = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+  /* ---------- 2. Combo ---------- */
+  const pill = document.createElement('div');
+  pill.id = 'combo-pill';
+  document.body.appendChild(pill);
+  let combo = 0;
+  function setCombo(n) {
+    combo = n;
+    if (n >= 2) {
+      pill.classList.remove('show'); void pill.offsetWidth;
+      pill.innerHTML = `${lpIcon('fire', 'sm')} COMBO x${n}`;
+      pill.classList.add('show');
+    } else pill.classList.remove('show');
+  }
+
+  const _add = window.addRunStars;
+  window.addRunStars = function (isl, d, e) {
+    _add.apply(this, arguments);
+    if (d > 0) {
+      setCombo(combo + 1);
+      if (++okCnt[isl] % 3 === 0 && FACTS[isl]) {
+        const list = FACTS[isl];
+        showToast('EM CÓ BIẾT?', list[factIdx[isl]++ % list.length]);
+      }
+    } else setCombo(0);
+  };
+  const _ss = window.showScreen;
+  window.showScreen = function () { setCombo(0); toast.classList.remove('show'); return _ss.apply(this, arguments); };
+
+  /* ---------- 3. Danh hiệu + Trái Đất hồi sinh ---------- */
+  const RANKS = [[0, 'Hạt Giống Xanh'], [100, 'Mầm Non Xanh'], [250, 'Cây Con Khỏe'], [400, 'Chiến Binh Xanh'], [550, 'Hiệp Sĩ Trái Đất'], [600, 'Đại Sứ Trái Đất Xanh']];
+  const rankOf = t => { let r = 0; RANKS.forEach((x, i) => { if (t >= x[0]) r = i; }); return r; };
+  const meter = document.querySelector('.earth-meter');
+  const rankLine = document.createElement('div');
+  rankLine.id = 'rank-line';
+  meter.appendChild(rankLine);
+  let lastRank = null;
+
+  function renderRank() {
+    const t = getTotalBestStars(), r = rankOf(t), pct = Math.min(1, t / 600);
+    const next = RANKS[r + 1];
+    rankLine.innerHTML =
+      `<span class="lp-icon lp-lg" style="filter:grayscale(${(1 - pct).toFixed(2)}) sepia(${((1 - pct) * .5).toFixed(2)}) drop-shadow(0 6px 6px rgba(0,0,0,.25))">${LP_SVGS.globe}</span>` +
+      `<span class="rk">${lpIcon('medal', 'sm')} Danh hiệu: ${RANKS[r][1]}</span>` +
+      `<span style="font-weight:600;color:#555">${next ? `Còn ${next[0] - t} sao để lên hạng "${next[1]}"` : 'Em đã đạt hạng cao nhất!'}</span>`;
+    if (lastRank !== null && r > lastRank) showToast('LÊN HẠNG!', `Chúc mừng! Em đã trở thành "${RANKS[r][1]}"`, 'trophy');
+    lastRank = r;
+  }
+  const _hub = window.updateHubUI;
+  window.updateHubUI = function () { _hub.apply(this, arguments); renderRank(); };
+  const _cert = window.showCertificateScreen;
+  window.showCertificateScreen = function () {
+    _cert.apply(this, arguments);
+    document.getElementById('cert-detail-breakdown').insertAdjacentHTML('beforeend',
+      `<div style="margin-top:8px;font-weight:800;color:#27ae60">${lpIcon('medal', 'sm')} Danh hiệu: ${RANKS[rankOf(getTotalBestStars())][1]}</div>`);
+  };
+  renderRank();
+
+  /* ---------- 4. Nhạc nền tự tạo (bật/tắt) ---------- */
+  const sb = document.createElement('button');
+  sb.id = 'snd-btn'; sb.className = 'btn btn-purple off';
+  sb.innerHTML = `${lpIcon('note', 'sm')} <span>Nhạc: Tắt</span>`;
+  document.querySelector('.stats-bar').appendChild(sb);
+  let mctx = null, mtimer = null, mi = 3, tick = 0;
+  const SC = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33];
+  function note(f, dur, vol, type) {
+    const o = mctx.createOscillator(), g = mctx.createGain(), n = mctx.currentTime;
+    o.type = type; o.frequency.value = f; o.connect(g); g.connect(mctx.destination);
+    g.gain.setValueAtTime(.0001, n);
+    g.gain.exponentialRampToValueAtTime(vol, n + .05);
+    g.gain.exponentialRampToValueAtTime(.0001, n + dur);
+    o.start(n); o.stop(n + dur + .05);
+  }
+  sb.onclick = () => {
+    if (mtimer) {
+      clearInterval(mtimer); mtimer = null; if (mctx) mctx.close(); mctx = null;
+      sb.classList.add('off'); sb.querySelector('span:last-child').innerText = 'Nhạc: Tắt'; return;
+    }
+    try {
+      mctx = new (window.AudioContext || window.webkitAudioContext)();
+      mtimer = setInterval(() => {
+        mi = Math.max(0, Math.min(SC.length - 1, mi + [-2, -1, 0, 1, 2][Math.floor(Math.random() * 5)]));
+        note(SC[mi], 1.1, .04, 'triangle');
+        if (tick++ % 4 === 0) note(130.81, 1.8, .05, 'sine');
+      }, 520);
+      sb.classList.remove('off'); sb.querySelector('span:last-child').innerText = 'Nhạc: Bật';
+    } catch (e) {}
+  };
+
+  /* ---------- 5. Hạt không khí theo từng đảo ---------- */
+  if (RM) return;
+  const amb = document.createElement('canvas');
+  amb.id = 'amb'; document.body.prepend(amb);
+  const ac = amb.getContext('2d');
+  let W = 0, H = 0;
+  const fit = () => { W = amb.width = innerWidth; H = amb.height = innerHeight; };
+  addEventListener('resize', fit); fit();
+  const ps = Array.from({ length: 30 }, () => ({ x: Math.random(), y: Math.random(), v: .4 + Math.random() * .9, s: 5 + Math.random() * 9, ph: Math.random() * 6 }));
+  const poly = (p, f) => { ac.beginPath(); ac.moveTo(p[0], p[1]); for (let i = 2; i < p.length; i += 2) ac.lineTo(p[i], p[i + 1]); ac.closePath(); ac.fillStyle = f; ac.fill(); };
+  const act = id => { const e = document.getElementById('screen-island-' + id); return e && e.classList.contains('active'); };
+
+  (function loop(t) {
+    ac.clearRect(0, 0, W, H);
+    const mode = act(1) ? 1 : act(2) ? 2 : act(3) ? 3 : 0;
+    if (mode) ps.forEach((p, i) => {
+      const s = p.s;
+      if (mode === 1) { // bong bóng lục giác nổi lên
+        p.y -= p.v * .0016; if (p.y < -.05) p.y = 1.05;
+        const x = p.x * W + Math.sin(t * .001 + p.ph) * 14, y = p.y * H;
+        poly([0, 1, 2, 3, 4, 5].flatMap(k => [x + s * Math.cos(k * 1.047), y + s * Math.sin(k * 1.047)]), 'rgba(255,255,255,.28)');
+        poly([x - s * .4, y - s * .5, x, y - s * .7, x + s * .1, y - s * .3], 'rgba(255,255,255,.7)');
+      } else if (mode === 2) { // tia điện nhấp nháy bay lên
+        p.y -= p.v * .001; if (p.y < -.05) p.y = 1.05;
+        const x = p.x * W, y = p.y * H, a = .35 + .5 * Math.abs(Math.sin(t * .004 + p.ph));
+        poly([x, y - s, x + s * .6, y, x, y + s * .5, x - s * .3, y], `rgba(241,196,15,${a})`);
+      } else { // lá rụng
+        p.y += p.v * .0016; if (p.y > 1.05) p.y = -.05;
+        const x = p.x * W + Math.sin(t * .0012 + p.ph) * 40, y = p.y * H, c = i % 2 ? '#e67e22' : '#58d68d';
+        poly([x, y - s, x + s * .7, y, x, y + s, x - s * .7, y], c);
+        poly([x, y - s, x + s * .7, y, x, y], 'rgba(255,255,255,.3)');
+      }
+    });
+    requestAnimationFrame(loop);
+  })(0);
+})();
+</script>
+
 </body>
 </html>
