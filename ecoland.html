@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đảo Xanh AI - Khám Phá Phát Triển Bền Vững (Low-Poly 3D)</title>
+    <title>ECOLAND</title>
     <style>
         :root {
             --bg-ocean: #1ca3ec;
@@ -281,7 +281,21 @@
             border-color: var(--primary);
             box-shadow: 0 10px 0 #27ae60, 0 15px 25px rgba(0,0,0,0.2);
         }
-        .island-icon { margin: 14px 0 8px 0; display: flex; justify-content: center; align-items: center; gap: 6px; min-height: 76px; }
+        .island-icon { margin: 18px 0 6px 0; display: flex; justify-content: center; align-items: center; min-height: 132px; }
+        .hub-island-3d-svg {
+            width: 185px;
+            height: 135px;
+            filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
+            animation: islandHover 3.4s ease-in-out infinite;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+        }
+        #card-island-2 .hub-island-3d-svg { animation-delay: -0.8s; }
+        #card-island-3 .hub-island-3d-svg { animation-delay: -1.6s; }
+        #card-island-4 .hub-island-3d-svg { animation-delay: -2.4s; }
+        .island-card:hover .hub-island-3d-svg {
+            transform: scale(1.1) translateY(-6px);
+            filter: drop-shadow(0 16px 20px rgba(0,0,0,0.3));
+        }
         .island-status {
             position: absolute; top: 12px; right: 12px;
             font-size: 0.8rem; padding: 4px 10px; border-radius: 20px;
@@ -832,16 +846,6 @@
 <div id="ecoland-intro">
     <canvas id="intro-bg-canvas"></canvas>
 
-    <!-- Thanh trên: Đồng hồ đếm 12s & Nút bỏ qua nhanh -->
-    <div class="intro-top-bar">
-        <div class="intro-timer-pill">
-            <span>🎬 GIỚI THIỆU THẾ GIỚI ECOLAND</span>
-            <span>•</span>
-            <span id="intro-sec-counter">00:12</span>
-        </div>
-        <button class="intro-skip-btn" onclick="enterEcoLandGame()">Bỏ qua Intro ➔</button>
-    </div>
-
     <!-- Sân khấu 3D: Robot AI + 4 Hòn Đảo Low-Poly + Logo ECOLAND -->
     <div class="intro-stage">
         <!-- Tia kết nối AI từ trung tâm tới 4 đảo -->
@@ -1004,7 +1008,7 @@
                     <tspan fill="url(#ecoTopGrad)">ECO</tspan><tspan fill="url(#landTopGrad)">LAND</tspan>
                 </text>
             </svg>
-            <div class="ecoland-sub">✨ VƯƠNG QUỐC ĐẢO XANH AI • PHÁT TRIỂN BỀN VỮNG ✨</div>
+            <div class="ecoland-sub">✨ HỆ SINH THÁI XANH • PHÁT TRIỂN BỀN VỮNG ✨</div>
             <button class="btn-start-ecoland" onclick="enterEcoLandGame()">
                 <span>🚀 BẮT ĐẦU KHÁM PHÁ</span>
             </button>
@@ -1171,7 +1175,7 @@
 
 <header>
     <div class="brand">
-        <span data-lp="globe" data-size="md"></span> <span>ĐẢO XANH AI</span>
+        <span data-lp="globe" data-size="md"></span> <span>ECOLAND</span>
     </div>
     <div class="stats-bar">
         <div class="badge-pill"><span data-lp="star" data-size="sm"></span> Tổng Sao (4 Đảo): <span id="star-count" style="color:#d35400;">0</span>/600</div>
@@ -1205,49 +1209,115 @@
             <div class="island-card" id="card-island-1" onclick="startIsland(1)">
                 <span class="island-status" id="status-1">Chưa hoàn thành</span>
                 <div class="island-icon">
-                    <span data-lp="ice" data-size="lg"></span>
-                    <span data-lp="arm" data-size="lg"></span>
+                    <svg class="hub-island-3d-svg" viewBox="0 0 200 150">
+                        <!-- Đế đá nổi Low-Poly 3D -->
+                        <polygon points="20,75 65,125 100,140 50,82" fill="#2874a6"/>
+                        <polygon points="50,82 100,140 145,125 110,85" fill="#1b4f72"/>
+                        <polygon points="110,85 145,125 180,75 150,78" fill="#154360"/>
+                        <!-- Mặt đảo băng & dòng sông -->
+                        <polygon points="20,75 65,52 135,52 180,75 110,85 50,82" fill="#3498db"/>
+                        <polygon points="35,72 75,56 95,78 50,80" fill="#85c1e9"/>
+                        <polygon points="115,56 165,72 145,80 105,78" fill="#aed6f1"/>
+                        <!-- Tảng băng Low-Poly & Cánh tay Robot AI trên đảo -->
+                        <polygon points="52,58 72,44 88,58 70,66" fill="#ffffff"/>
+                        <polygon points="118,62 138,48 154,62 136,70" fill="#ebf5fb"/>
+                        <!-- Cánh tay Robot AI 3D -->
+                        <polygon points="94,64 106,64 104,36 96,36" fill="#f39c12"/>
+                        <polygon points="96,36 120,24 124,30 102,42" fill="#f1c40f"/>
+                        <polygon points="120,24 132,18 128,28" fill="#e74c3c"/>
+                        <polygon points="120,28 132,34 124,36" fill="#c0392b"/>
+                    </svg>
                 </div>
                 <h3>1. Dòng Sông Tái Chế</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-1">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Dạy Cánh tay Robot AI phân loại rác để nhảy qua 15 tảng băng đang tan!</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
+                <button class="btn btn-green" style="width:100%">Vào chơi</button>
             </div>
 
             <div class="island-card" id="card-island-2" onclick="startIsland(2)">
                 <span class="island-status" id="status-2">Chưa hoàn thành</span>
                 <div class="island-icon">
-                    <span data-lp="bolt" data-size="lg"></span>
-                    <span data-lp="solar" data-size="lg"></span>
+                    <svg class="hub-island-3d-svg" viewBox="0 0 200 150">
+                        <!-- Đế đá nổi Low-Poly 3D -->
+                        <polygon points="20,75 60,128 100,142 55,84" fill="#935116"/>
+                        <polygon points="55,84 100,142 145,126 115,84" fill="#784212"/>
+                        <polygon points="115,84 145,126 180,75 150,78" fill="#5c330d"/>
+                        <!-- Mặt cỏ xanh năng lượng -->
+                        <polygon points="20,75 65,54 135,54 180,75 115,84 55,84" fill="#2ecc71"/>
+                        <polygon points="65,54 135,54 180,75 115,84" fill="#27ae60"/>
+                        <!-- Mặt trời đa giác & Tua-bin gió + Pin mặt trời -->
+                        <polygon points="148,16 158,22 158,34 148,40 138,34 138,22" fill="#f1c40f"/>
+                        <polygon points="55,64 85,56 92,72 60,76" fill="#2980b9" stroke="#ffffff" stroke-width="1"/>
+                        <!-- Tua-bin gió 3D -->
+                        <polygon points="112,72 117,72 115,32 113,32" fill="#ecf0f1"/>
+                        <polygon points="114,32 110,10 118,10" fill="#ffffff"/>
+                        <polygon points="114,32 134,42 130,47" fill="#d5dbdb"/>
+                        <polygon points="114,32 94,42 98,47" fill="#bdc3c7"/>
+                        <circle cx="114" cy="32" r="3.5" fill="#f1c40f"/>
+                    </svg>
                 </div>
                 <h3>2. Tháp Năng Lượng Xanh</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-2">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Nạp đầy Viên Pin Năng Lượng Xanh và lập trình AI điều phối điện giảm CO₂.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
+                <button class="btn btn-green" style="width:100%">Vào chơi</button>
             </div>
 
             <div class="island-card" id="card-island-3" onclick="startIsland(3)">
                 <span class="island-status" id="status-3">Chưa hoàn thành</span>
                 <div class="island-icon">
-                    <span data-lp="tree" data-size="lg"></span>
-                    <span data-lp="camera" data-size="lg"></span>
+                    <svg class="hub-island-3d-svg" viewBox="0 0 200 150">
+                        <!-- Đế đất rừng Low-Poly 3D -->
+                        <polygon points="22,76 62,126 100,140 54,84" fill="#1e8449"/>
+                        <polygon points="54,84 100,140 144,126 116,84" fill="#196f3d"/>
+                        <polygon points="116,84 144,126 178,76 148,80" fill="#145a32"/>
+                        <!-- Mặt thảm rừng -->
+                        <polygon points="22,76 66,54 134,54 178,76 116,84 54,84" fill="#58d68d"/>
+                        <polygon points="66,54 134,54 178,76 116,84" fill="#2ecc71"/>
+                        <!-- Cây thông Low-Poly 1 -->
+                        <polygon points="68,20 48,52 68,48" fill="#58d68d"/>
+                        <polygon points="68,20 88,52 68,48" fill="#27ae60"/>
+                        <polygon points="68,34 44,66 68,62" fill="#2ecc71"/>
+                        <polygon points="68,34 92,66 68,62" fill="#1e8449"/>
+                        <!-- Cây thông Low-Poly 2 -->
+                        <polygon points="122,16 102,48 122,44" fill="#58d68d"/>
+                        <polygon points="122,16 142,48 122,44" fill="#27ae60"/>
+                        <polygon points="122,30 98,64 122,60" fill="#2ecc71"/>
+                        <polygon points="122,30 146,64 122,60" fill="#196f3d"/>
+                        <!-- Drone Camera AI bay trên rừng -->
+                        <polygon points="86,16 108,16 104,24 90,24" fill="#e74c3c"/>
+                        <circle cx="97" cy="24" r="3.5" fill="#85c1e9"/>
+                    </svg>
                 </div>
                 <h3>3. Vương Quốc Rừng Xanh</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-3">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Dùng Camera AI (Thị giác máy tính) phát hiện cháy rừng & cứu hộ thú quý.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
+                <button class="btn btn-green" style="width:100%">Vào chơi</button>
             </div>
 
             <div class="island-card" id="card-island-4" onclick="startIsland(4)">
                 <span class="island-status" id="status-4">Chưa hoàn thành</span>
                 <div class="island-icon">
-                    <span data-lp="mountain" data-size="lg"></span>
-                    <span data-lp="polar" data-size="lg"></span>
+                    <svg class="hub-island-3d-svg" viewBox="0 0 200 150">
+                        <!-- Đế băng Bắc Cực Low-Poly 3D -->
+                        <polygon points="22,82 64,128 100,142 56,88" fill="#5dade2"/>
+                        <polygon points="56,88 100,142 142,128 116,88" fill="#2e86c1"/>
+                        <polygon points="116,88 142,128 178,82 148,84" fill="#1b4f72"/>
+                        <!-- Mặt nền tuyết -->
+                        <polygon points="22,82 66,62 134,62 178,82 116,88 56,88" fill="#d6eaf8"/>
+                        <!-- Đỉnh núi băng 3D -->
+                        <polygon points="100,12 52,78 100,82" fill="#85c1e9"/>
+                        <polygon points="100,12 148,78 100,82" fill="#2874a6"/>
+                        <!-- Chóp tuyết trắng trên đỉnh núi -->
+                        <polygon points="100,12 74,48 88,42 100,50" fill="#ffffff"/>
+                        <polygon points="100,12 100,50 112,42 126,48" fill="#ebf5fb"/>
+                        <!-- Đường ziczac vàng lên đỉnh -->
+                        <polyline points="72,74 118,62 84,48 112,34 100,18" fill="none" stroke="#f1c40f" stroke-width="3" stroke-dasharray="4,3"/>
+                    </svg>
                 </div>
                 <h3>4. Ngọn Núi Khí Hậu</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-4">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Leo 15 nấc thang ziczac từ chân núi lên đỉnh núi giữ băng Bắc Cực không tan chảy.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
+                <button class="btn btn-green" style="width:100%">Vào chơi</button>
             </div>
         </div>
     </div>
@@ -2279,8 +2349,15 @@
         playSound('ok');
         document.getElementById('story-badge-text').innerText = st.badge;
         document.getElementById('story-title-text').innerText = st.title;
-        document.getElementById('story-icons-box').innerHTML =
-            st.icons.map((ic, idx) => lpIcon(ic, idx === 1 ? 'xl' : 'lg')).join('');
+        const hubCardSvg = document.querySelector(`#card-island-${num} .hub-island-3d-svg`);
+        if (hubCardSvg) {
+            document.getElementById('story-icons-box').innerHTML =
+                lpIcon('robot', 'lg') +
+                `<svg viewBox="0 0 200 150" style="width:165px; height:120px; filter:drop-shadow(0 8px 12px rgba(0,0,0,0.25));">${hubCardSvg.innerHTML}</svg>`;
+        } else {
+            document.getElementById('story-icons-box').innerHTML =
+                st.icons.map((ic, idx) => lpIcon(ic, idx === 1 ? 'xl' : 'lg')).join('');
+        }
         document.getElementById('story-context-text').innerHTML = st.context;
         document.getElementById('story-mission-text').innerHTML = st.mission;
         document.getElementById('story-modal').classList.add('show');
@@ -4685,6 +4762,290 @@ header, #app { position: relative; z-index: 1; }
   })(0);
 })();
 </script>
+<!-- =========================================================================
+     NÂNG CẤP GIAO DIỆN CHỌN ĐẢO 3D CAROUSEL (1 ĐẢO / LẦN - KHÔNG KHUNG TRẮNG)
+     Dán đoạn mã này ngay trước thẻ </body> của file ver14-dao-xanh-ai-lowpoly-v7.html
+     ========================================================================= -->
+<style>
+    /* Biến lưới 4 đảo thành sân khấu 1 đảo lơ lửng không viền trắng */
+    #screen-hub .islands-grid {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-height: 360px;
+        margin-top: 8px;
+        padding: 10px 64px;
+    }
 
+    /* Xóa bỏ hoàn toàn khung trắng, viền và bóng đổ của thẻ đảo cũ */
+    #screen-hub .island-card,
+    #screen-hub .island-card.completed {
+        display: none;
+        background: transparent !important;
+        background-image: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 10px !important;
+        width: 100%;
+        max-width: 880px;
+        cursor: default;
+        transform: none !important;
+    }
+
+    /* Chỉ hiển thị 1 đảo đang được chọn: Đảo 3D to bên trái - Thông tin bên phải */
+    #screen-hub .island-card.active-carousel-island {
+        display: grid !important;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 32px;
+        align-items: center;
+        text-align: left !important;
+        animation: carouselIslandFade 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes carouselIslandFade {
+        from { opacity: 0; transform: translateX(var(--slide-dir, 30px)) scale(0.94); }
+        to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    /* Phóng to mô hình Hòn Đảo Low-Poly 3D bên trái */
+    #screen-hub .island-icon {
+        margin: 0 !important;
+        min-height: 290px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #screen-hub .hub-island-3d-svg {
+        width: 100% !important;
+        max-width: 390px !important;
+        height: 290px !important;
+        filter: drop-shadow(0 22px 24px rgba(0, 0, 0, 0.38)) !important;
+        transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+
+    #screen-hub .island-icon:hover .hub-island-3d-svg {
+        transform: scale(1.08) translateY(-8px) !important;
+    }
+
+    /* Cột thông tin bên phải hòn đảo */
+    .island-info-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 6px;
+    }
+
+    #screen-hub .island-status {
+        position: static !important;
+        font-size: 0.92rem !important;
+        padding: 6px 16px !important;
+        border-radius: 30px !important;
+        background: rgba(15, 42, 64, 0.78) !important;
+        color: #ffffff !important;
+        border: 2px solid rgba(255, 255, 255, 0.65);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        backdrop-filter: blur(4px);
+    }
+
+    #screen-hub .island-card.completed .island-status {
+        background: #27ae60 !important;
+        border-color: #ffffff;
+    }
+
+    #screen-hub .island-info-right h3 {
+        font-size: 2rem !important;
+        font-weight: 900 !important;
+        margin: 2px 0 !important;
+        color: #ffffff !important;
+        text-shadow: 0 3px 10px rgba(10, 45, 75, 0.75), 0 1px 2px rgba(0,0,0,0.5);
+        line-height: 1.2;
+    }
+
+    #screen-hub .island-best-star {
+        font-size: 1.08rem !important;
+        padding: 7px 16px !important;
+        border-radius: 14px !important;
+        margin: 0 !important;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+    }
+
+    #screen-hub .island-info-right p {
+        font-size: 1.08rem !important;
+        line-height: 1.5 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        margin: 4px 0 8px 0 !important;
+        text-shadow: 0 2px 6px rgba(10, 45, 75, 0.8);
+    }
+
+    #screen-hub .island-info-right .btn {
+        font-size: 1.18rem !important;
+        padding: 14px 28px !important;
+        border-radius: 50px !important;
+        width: auto !important;
+        min-width: 250px;
+        border: 3px solid #ffffff !important;
+        box-shadow: 0 7px 0 #1e8449, 0 12px 24px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Nút mũi tên Qua Trái & Qua Phải */
+    .carousel-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 3px solid #ffffff;
+        background: linear-gradient(135deg, #3498db, #1b4f72);
+        color: #ffffff;
+        font-size: 1.6rem;
+        font-weight: 900;
+        cursor: pointer;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 0 #0f2c42, 0 10px 20px rgba(0,0,0,0.35);
+        transition: transform 0.15s, background 0.2s;
+    }
+    .carousel-nav-btn:hover {
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+        color: #2c3e50;
+        transform: translateY(-50%) scale(1.1);
+    }
+    .carousel-nav-btn:active {
+        transform: translateY(-46%) scale(0.96);
+    }
+    .carousel-nav-btn.prev { left: 0; }
+    .carousel-nav-btn.next { right: 0; }
+
+    /* Chấm tròn hiển thị vị trí Đảo 1..4 */
+    .carousel-dots-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 6px;
+    }
+    .carousel-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.45);
+        border: 2px solid #ffffff;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+    .carousel-dot.active {
+        width: 36px;
+        border-radius: 12px;
+        background: #f1c40f;
+        box-shadow: 0 0 12px rgba(241, 196, 15, 0.9);
+    }
+
+    @media (max-width: 760px) {
+        #screen-hub .islands-grid { padding: 10px 46px; }
+        #screen-hub .island-card.active-carousel-island {
+            grid-template-columns: 1fr;
+            text-align: center !important;
+            gap: 12px;
+        }
+        .island-info-right { align-items: center; }
+        #screen-hub .hub-island-3d-svg { height: 210px !important; max-width: 280px !important; }
+        .carousel-nav-btn { width: 42px; height: 42px; font-size: 1.2rem; }
+    }
+</style>
+
+<script>
+(function() {
+    const grid = document.querySelector('#screen-hub .islands-grid');
+    if (!grid) return;
+
+    const cards = Array.from(grid.querySelectorAll('.island-card'));
+    let currentIslandIdx = 0;
+
+    // 1. Gom toàn bộ thông tin (trạng thái, tên đảo, kỷ lục sao, mô tả, nút bấm) sang cột bên phải hòn đảo 3D
+    cards.forEach((card, idx) => {
+        const iconDiv = card.querySelector('.island-icon');
+        const infoRight = document.createElement('div');
+        infoRight.className = 'island-info-right';
+
+        Array.from(card.children).forEach(child => {
+            if (child !== iconDiv) {
+                infoRight.appendChild(child);
+            }
+        });
+        card.appendChild(infoRight);
+    });
+
+    // 2. Tạo nút mũi tên Qua Trái & Qua Phải
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'carousel-nav-btn prev';
+    prevBtn.title = 'Đảo trước (Phím mũi tên Trái)';
+    prevBtn.innerHTML = '&#10094;';
+    prevBtn.onclick = (e) => { e.stopPropagation(); switchCarouselIsland(-1); };
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'carousel-nav-btn next';
+    nextBtn.title = 'Đảo tiếp theo (Phím mũi tên Phải)';
+    nextBtn.innerHTML = '&#10095;';
+    nextBtn.onclick = (e) => { e.stopPropagation(); switchCarouselIsland(1); };
+
+    grid.appendChild(prevBtn);
+    grid.appendChild(nextBtn);
+
+    // 3. Tạo thanh chấm tròn chỉ báo 4 đảo bên dưới
+    const dotsBar = document.createElement('div');
+    dotsBar.className = 'carousel-dots-bar';
+    cards.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'carousel-dot' + (idx === 0 ? ' active' : '');
+        dot.title = 'Chuyển tới Đảo ' + (idx + 1);
+        dot.onclick = () => showCarouselIsland(idx, idx > currentIslandIdx ? 1 : -1);
+        dotsBar.appendChild(dot);
+    });
+    grid.insertAdjacentElement('afterend', dotsBar);
+
+    function showCarouselIsland(newIdx, dir = 1) {
+        currentIslandIdx = (newIdx + cards.length) % cards.length;
+        cards.forEach((c, i) => {
+            c.style.setProperty('--slide-dir', dir > 0 ? '36px' : '-36px');
+            if (i === currentIslandIdx) {
+                c.classList.add('active-carousel-island');
+            } else {
+                c.classList.remove('active-carousel-island');
+            }
+        });
+        Array.from(dotsBar.children).forEach((d, i) => {
+            d.classList.toggle('active', i === currentIslandIdx);
+        });
+    }
+
+    function switchCarouselIsland(step) {
+        if (typeof playSound === 'function') playSound('ok');
+        showCarouselIsland(currentIslandIdx + step, step);
+    }
+
+    // Hỗ trợ bấm phím mũi tên Trái / Phải khi đang ở màn hình Bản đồ chính
+    window.addEventListener('keydown', (e) => {
+        const hub = document.getElementById('screen-hub');
+        const storyModal = document.getElementById('story-modal');
+        if (!hub || !hub.classList.contains('active')) return;
+        if (storyModal && storyModal.classList.contains('show')) return;
+
+        if (e.key === 'ArrowLeft') switchCarouselIsland(-1);
+        if (e.key === 'ArrowRight') switchCarouselIsland(1);
+    });
+
+    // Khởi tạo hiển thị Đảo 1 đầu tiên
+    showCarouselIsland(0, 1);
+})();
+</script>
 </body>
 </html>
