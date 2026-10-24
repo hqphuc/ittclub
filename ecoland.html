@@ -1150,7 +1150,7 @@
             robotBox.classList.add('shift-up');
             logoBox.classList.add('appear');
             if (typeof playSound === 'function') playSound('win');
-            setNarration("🌍 Thế giới <strong>ECOLAND</strong> đã sẵn sàng! Hãy bấm nút <strong>[BẮT ĐẦU KHÁM PHÁ]</strong> để chọn đảo nhé!");
+            setNarration("🌍 Thế giới <strong>ECOLAND</strong> đã sẵn sàng! Hãy bấm nút <strong>[BẮT ĐẦU]</strong> để chọn đảo nhé!");
         }
 
         if (elapsed < TOTAL_INTRO_MS) {
@@ -5045,6 +5045,253 @@ header, #app { position: relative; z-index: 1; }
 
     // Khởi tạo hiển thị Đảo 1 đầu tiên
     showCarouselIsland(0, 1);
+})();
+</script>
+<!-- =========================================================================
+     NÂNG CẤP INTRO HỆ MẶT TRỜI 3D:
+     - Chữ ECOLAND ở gần cạnh trên màn hình
+     - 4 Hòn Đảo xoay theo quỹ đạo Elip 3D quanh Robot AI (có chiều sâu trước/sau)
+     - Nút BẮT ĐẦU nằm bên dưới Robot, bên ngoài vòng xoay của 4 đảo
+     ========================================================================= -->
+<style>
+    #ecoland-intro {
+        justify-content: flex-start !important;
+        padding: 12px 20px 16px 20px !important;
+        gap: 6px;
+    }
+
+    /* 1. Đưa chữ ECOLAND lên gần cạnh trên của màn hình */
+    #ecoland-intro .intro-logo-center {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: scale(0.85) !important;
+        margin: 0 auto !important;
+        max-width: 460px !important;
+        z-index: 20 !important;
+        order: 1;
+        opacity: 0;
+        transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+    #ecoland-intro .intro-logo-center.appear {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+    #ecoland-intro .ecoland-svg-logo {
+        max-width: 390px !important;
+        display: block;
+        margin: 0 auto;
+    }
+    #ecoland-intro .ecoland-sub {
+        margin: 2px 0 0 0 !important;
+        font-size: 0.92rem !important;
+    }
+    /* Ẩn nút bắt đầu cũ bên trong logo trên đỉnh (vì đã chuyển xuống dưới ngoài quỹ đạo) */
+    #ecoland-intro .intro-logo-center .btn-start-ecoland {
+        display: none !important;
+    }
+
+    /* 2. Sân khấu Quỹ đạo Elip Hệ Mặt Trời ở giữa */
+    #ecoland-intro .intro-stage {
+        order: 2;
+        width: 100%;
+        max-width: 980px;
+        height: 330px !important;
+        margin: 0 auto;
+        position: relative;
+        perspective: 900px;
+        flex: 1;
+        min-height: 290px;
+    }
+
+    /* Robot AI đứng cố định ở tâm Hệ Mặt Trời (z-index = 100) */
+    #ecoland-intro .intro-robot-center {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) scale(0.2) !important;
+        z-index: 100 !important;
+        margin: 0 !important;
+    }
+    #ecoland-intro .intro-robot-center.appear,
+    #ecoland-intro .intro-robot-center.shift-up {
+        opacity: 1 !important;
+        transform: translate(-50%, -50%) scale(1) !important;
+    }
+
+    /* Vành đai quỹ đạo Elip 3D bao quanh Robot AI */
+    #solar-orbit-ring-svg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 780px;
+        height: 260px;
+        pointer-events: none;
+        z-index: 50;
+        overflow: visible;
+    }
+
+    /* 4 Hòn Đảo xoay quanh tâm theo tọa độ Elip */
+    #ecoland-intro .intro-island-node {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        bottom: auto !important;
+        right: auto !important;
+        width: 165px !important;
+        margin: 0 !important;
+        transition: opacity 0.6s ease !important;
+        will-change: transform, z-index, filter;
+    }
+    #ecoland-intro .intro-island-node svg {
+        width: 150px !important;
+        height: 112px !important;
+        animation: none !important; /* Tắt nhấp nhô tĩnh để xoay quỹ đạo mượt 60fps */
+    }
+
+    /* Ẩn các tia thẳng cố định cũ */
+    #ecoland-intro #intro-beams-svg {
+        display: none !important;
+    }
+
+    /* 3. Vùng nút BẮT ĐẦU nằm bên dưới Robot, ngoài vòng xoay của 4 đảo */
+    .intro-start-outside-orbit {
+        order: 3;
+        z-index: 250;
+        margin: 4px auto 6px auto;
+        text-align: center;
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: translateY(18px) scale(0.85);
+        pointer-events: none;
+        transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .intro-start-outside-orbit.appear {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+
+    /* 4. Thanh lời thoại thuyết minh dưới cùng */
+    #ecoland-intro .intro-bottom-narration {
+        order: 4;
+        padding: 8px 18px !important;
+    }
+
+    @media (max-width: 760px) {
+        #solar-orbit-ring-svg { width: 92vw; height: 180px; }
+        #ecoland-intro .intro-island-node { width: 120px !important; }
+        #ecoland-intro .intro-island-node svg { width: 110px !important; height: 82px !important; }
+        #ecoland-intro .ecoland-svg-logo { max-width: 290px !important; }
+    }
+</style>
+
+<script>
+(function() {
+    const introEl = document.getElementById('ecoland-intro');
+    if (!introEl) return;
+
+    const stage = introEl.querySelector('.intro-stage');
+    const logoBox = document.getElementById('intro-logo-box');
+    const robotBox = document.getElementById('intro-robot-box');
+
+    // 1. Hiện ngay chữ ECOLAND ở gần cạnh trên màn hình
+    if (logoBox) {
+        setTimeout(() => logoBox.classList.add('appear'), 250);
+    }
+
+    // 2. Chèn đường vành đai quỹ đạo Elip 3D vào sân khấu
+    const orbitSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    orbitSvg.id = 'solar-orbit-ring-svg';
+    orbitSvg.setAttribute('viewBox', '0 0 780 260');
+    orbitSvg.innerHTML = `
+        <defs>
+            <linearGradient id="orbitRingGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(133, 193, 233, 0.18)"/>
+                <stop offset="50%" stop-color="rgba(46, 204, 113, 0.55)"/>
+                <stop offset="100%" stop-color="rgba(241, 196, 15, 0.85)"/>
+            </linearGradient>
+        </defs>
+        <ellipse cx="390" cy="130" rx="350" ry="102" fill="none" stroke="url(#orbitRingGrad)" stroke-width="3" stroke-dasharray="12, 8"/>
+        <ellipse cx="390" cy="130" rx="350" ry="102" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="10"/>
+    `;
+    stage.appendChild(orbitSvg);
+
+    // 3. Tạo vùng chứa nút BẮT ĐẦU nằm bên dưới Robot, bên ngoài vòng xoay 4 đảo
+    const outsideStartWrap = document.createElement('div');
+    outsideStartWrap.className = 'intro-start-outside-orbit';
+    outsideStartWrap.id = 'intro-outside-start-wrap';
+    outsideStartWrap.innerHTML = `
+        <button class="btn-start-ecoland" onclick="enterEcoLandGame()">
+            <span>🚀 BẮT ĐẦU</span>
+        </button>
+    `;
+    stage.insertAdjacentElement('afterend', outsideStartWrap);
+
+    // Hiện nút BẮT ĐẦU bên ngoài vòng xoay khi kết thúc giới thiệu 4 đảo (hoặc sau 8.5 giây)
+    setTimeout(() => {
+        outsideStartWrap.classList.add('appear');
+    }, 8500);
+
+    // 4. Chuyển động 4 Hòn Đảo xoay quanh Robot AI theo hình Elip 3D
+    const islandNodes = [
+        document.getElementById('intro-isl-1'),
+        document.getElementById('intro-isl-2'),
+        document.getElementById('intro-isl-3'),
+        document.getElementById('intro-isl-4')
+    ];
+
+    // Góc khởi đầu cách đều 90 độ (PI/2) trên đường Elip
+    const baseAngles = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+    const ORBIT_SPEED = 0.00065; // Tốc độ xoay mượt mà quanh Robot AI
+
+    function animateSolarEllipticalOrbit(now) {
+        if (!document.body.contains(introEl)) return;
+
+        const isMobile = window.innerWidth <= 760;
+        const radiusX = isMobile ? Math.min(window.innerWidth * 0.38, 175) : 345; // Bán kính ngang Elip
+        const radiusY = isMobile ? 68 : 98;                                      // Bán kính dọc Elip (nén tạo góc nhìn 3D)
+
+        // Giữ Robot AI luôn cố định ở chính giữa tâm quỹ đạo
+        if (robotBox && robotBox.classList.contains('shift-up')) {
+            robotBox.classList.remove('shift-up');
+        }
+
+        islandNodes.forEach((node, idx) => {
+            if (!node) return;
+            const angle = baseAngles[idx] + now * ORBIT_SPEED;
+
+            // Tọa độ trên đường Elip tâm (0, 0)
+            const x = Math.cos(angle) * radiusX;
+            const y = Math.sin(angle) * radiusY;
+
+            // sin(angle) từ -1 (xa nhất phía sau Robot) đến +1 (gần nhất phía trước Robot)
+            const depth = Math.sin(angle);
+
+            // Phóng to khi đảo xoay ra phía trước (1.18x) và thu nhỏ khi ra phía sau Robot (0.72x)
+            const isAppeared = node.classList.contains('appear');
+            const scale3D = isAppeared ? (0.94 + 0.24 * depth) : 0.2;
+
+            // Đảo ở nửa trước (depth > 0) có z-index > 100 (che trước Robot AI)
+            // Đảo ở nửa sau (depth < 0) có z-index < 100 (khuất sau lưng Robot AI)
+            const zIndex3D = Math.round(100 + depth * 60);
+
+            // Độ sáng tạo hiệu ứng xa gần 3D
+            const brightness = (0.88 + 0.18 * depth).toFixed(2);
+
+            node.style.zIndex = zIndex3D;
+            node.style.filter = `brightness(${brightness})`;
+            node.style.transform = `translate(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px)) scale(${scale3D.toFixed(3)})`;
+        });
+
+        requestAnimationFrame(animateSolarEllipticalOrbit);
+    }
+
+    requestAnimationFrame(animateSolarEllipticalOrbit);
 })();
 </script>
 </body>
