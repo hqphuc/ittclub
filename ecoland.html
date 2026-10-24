@@ -184,6 +184,69 @@
             font-size: 0.9rem; color: #555; margin-bottom: 16px; font-weight: 600;
         }
 
+        
+        /* POPUP CỐT TRUYỆN DẪN DẮT TRƯỚC KHI VÀO ĐẢO */
+        .story-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+            border: 5px solid #3498db;
+            border-radius: 26px;
+            max-width: 540px; width: 100%;
+            padding: 26px 24px 22px 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.38);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .story-badge {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #2980b9;
+            border: 2px solid #85c1e9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .story-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            margin: 8px 0 10px 0;
+        }
+        .story-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #1b4f72;
+            margin: 4px 0 12px 0;
+        }
+        .story-box {
+            background: #ffffff;
+            border-left: 5px solid #2ecc71;
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+        .story-line {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #2c3e50;
+            margin: 6px 0;
+            font-weight: 600;
+        }
+        .story-line strong {
+            color: #d35400;
+        }
+        .story-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         /* HUB WORLD */
         #screen-hub { background: transparent; box-shadow: none; padding: 0; }
         .earth-meter {
@@ -468,6 +531,643 @@
     </style>
 </head>
 <body>
+
+<!-- =========================================================================
+     MÀN HÌNH INTRO ĐIỆN ẢNH LOW-POLY 3D (12 GIÂY): ROBOT AI + 4 HÒN ĐẢO + ECOLAND
+     ========================================================================= -->
+<style>
+#ecoland-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 30000;
+    background: radial-gradient(circle at 50% 35%, #1b4f72 0%, #0a2538 75%, #051622 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    overflow: hidden;
+    transition: opacity 0.65s ease, transform 0.65s ease;
+}
+#ecoland-intro.hide-intro {
+    opacity: 0;
+    transform: scale(1.06);
+    pointer-events: none;
+}
+#intro-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+.intro-top-bar {
+    width: 100%;
+    max-width: 1020px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+}
+.intro-timer-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.28);
+    color: #ecf0f1;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.intro-skip-btn {
+    background: rgba(255,255,255,0.16);
+    border: 2px solid rgba(255,255,255,0.35);
+    color: #ffffff;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.intro-skip-btn:hover {
+    background: rgba(241, 196, 15, 0.9);
+    color: #2c3e50;
+    border-color: #f1c40f;
+}
+
+/* SÂN KHẤU 3D CHÍNH GIỮA */
+.intro-stage {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    height: 460px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+/* TIA NĂNG LƯỢNG NỐI ROBOT VỚI 4 ĐẢO */
+#intro-beams-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+.energy-beam {
+    stroke-dasharray: 10 8;
+    animation: beamFlow 1.2s linear infinite;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.energy-beam.active {
+    opacity: 0.85;
+}
+@keyframes beamFlow {
+    from { stroke-dashoffset: 36; }
+    to { stroke-dashoffset: 0; }
+}
+
+/* ROBOT AI TRUNG TÂM */
+.intro-robot-center {
+    position: relative;
+    z-index: 4;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.2) translateY(60px);
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.intro-robot-center.appear {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+.intro-robot-center.shift-up {
+    transform: scale(0.78) translateY(-105px);
+}
+.intro-robot-halo {
+    position: absolute;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46,204,113,0.45) 0%, rgba(52,152,219,0.18) 55%, transparent 72%);
+    animation: pulseHalo 2.2s ease-in-out infinite;
+    z-index: -1;
+}
+@keyframes pulseHalo {
+    0%, 100% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.18); opacity: 1; }
+}
+
+/* 4 HÒN ĐẢO LOW-POLY 3D XUNG QUANH */
+.intro-island-node {
+    position: absolute;
+    width: 195px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 3;
+    opacity: 0;
+    transform: scale(0.25) translateY(70px);
+    transition: all 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.intro-island-node.appear {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+.intro-island-node svg {
+    width: 175px;
+    height: 135px;
+    filter: drop-shadow(0 12px 18px rgba(0,0,0,0.45));
+    animation: islandHover 3.2s ease-in-out infinite;
+}
+@keyframes islandHover {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.intro-island-tag {
+    margin-top: -4px;
+    background: rgba(15, 42, 64, 0.88);
+    border: 2px solid #5dade2;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.86rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    white-space: nowrap;
+}
+/* Vị trí 4 góc của 4 hòn đảo */
+#intro-isl-1 { top: 15px; left: 4%; }
+#intro-isl-2 { top: 15px; right: 4%; }
+#intro-isl-3 { bottom: 18px; left: 6%; }
+#intro-isl-4 { bottom: 18px; right: 6%; }
+
+/* CHỮ ECOLAND LOW-POLY 3D & NÚT BẮT ĐẦU */
+.intro-logo-center {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.3);
+    text-align: center;
+    z-index: 6;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 92%;
+    max-width: 600px;
+}
+.intro-logo-center.appear {
+    opacity: 1;
+    transform: translate(-50%, -44%) scale(1);
+    pointer-events: auto;
+}
+.ecoland-svg-logo {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.55));
+    animation: logoFloat 3s ease-in-out infinite;
+}
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+.ecoland-sub {
+    color: #d6eaf8;
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin: 6px 0 18px 0;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.btn-start-ecoland {
+    background: linear-gradient(135deg, #f1c40f 0%, #2ecc71 100%);
+    color: #145a32;
+    font-size: 1.35rem;
+    font-weight: 900;
+    padding: 15px 42px;
+    border-radius: 50px;
+    border: 4px solid #ffffff;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #1e8449, 0 15px 30px rgba(46, 204, 113, 0.55);
+    transition: transform 0.18s, box-shadow 0.18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 1px;
+    animation: pulseStartBtn 1.6s ease-in-out infinite;
+}
+.btn-start-ecoland:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 0 #1e8449, 0 20px 35px rgba(46, 204, 113, 0.75);
+}
+.btn-start-ecoland:active {
+    transform: translateY(4px);
+    box-shadow: 0 3px 0 #1e8449;
+}
+@keyframes pulseStartBtn {
+    0%, 100% { box-shadow: 0 8px 0 #1e8449, 0 0 0 0 rgba(241, 196, 15, 0.7); }
+    50% { box-shadow: 0 8px 0 #1e8449, 0 0 0 16px rgba(241, 196, 15, 0); }
+}
+
+/* THANH LỜI THOẠI DẪN CHUYỆN DƯỚI ĐÁY INTRO */
+.intro-bottom-narration {
+    width: 100%;
+    max-width: 820px;
+    background: rgba(255,255,255,0.95);
+    border: 3px solid #3498db;
+    border-radius: 20px;
+    padding: 12px 20px;
+    z-index: 5;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+.intro-narration-text {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1b4f72;
+    text-align: center;
+    min-height: 26px;
+    margin-bottom: 8px;
+}
+.intro-timeline-track {
+    width: 100%;
+    height: 8px;
+    background: #dfe6e9;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.intro-timeline-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3498db, #2ecc71, #f1c40f);
+    transition: width 0.25s linear;
+}
+
+@media (max-width: 760px) {
+    .intro-stage { height: 420px; }
+    .intro-island-node { width: 135px; }
+    .intro-island-node svg { width: 125px; height: 95px; }
+    .intro-island-tag { font-size: 0.72rem; padding: 3px 8px; }
+    #intro-isl-1 { top: 8px; left: 1%; }
+    #intro-isl-2 { top: 8px; right: 1%; }
+    #intro-isl-3 { bottom: 8px; left: 1%; }
+    #intro-isl-4 { bottom: 8px; right: 1%; }
+    .btn-start-ecoland { font-size: 1.15rem; padding: 12px 28px; }
+}
+</style>
+
+<div id="ecoland-intro">
+    <canvas id="intro-bg-canvas"></canvas>
+
+    <!-- Thanh trên: Đồng hồ đếm 12s & Nút bỏ qua nhanh -->
+    <div class="intro-top-bar">
+        <div class="intro-timer-pill">
+            <span>🎬 GIỚI THIỆU THẾ GIỚI ECOLAND</span>
+            <span>•</span>
+            <span id="intro-sec-counter">00:12</span>
+        </div>
+        <button class="intro-skip-btn" onclick="enterEcoLandGame()">Bỏ qua Intro ➔</button>
+    </div>
+
+    <!-- Sân khấu 3D: Robot AI + 4 Hòn Đảo Low-Poly + Logo ECOLAND -->
+    <div class="intro-stage">
+        <!-- Tia kết nối AI từ trung tâm tới 4 đảo -->
+        <svg id="intro-beams-svg" viewBox="0 0 960 460" preserveAspectRatio="none">
+            <line id="beam-1" class="energy-beam" x1="480" y1="210" x2="155" y2="95" stroke="#5dade2" stroke-width="3.5"/>
+            <line id="beam-2" class="energy-beam" x1="480" y1="210" x2="805" y2="95" stroke="#f1c40f" stroke-width="3.5"/>
+            <line id="beam-3" class="energy-beam" x1="480" y1="210" x2="165" y2="365" stroke="#2ecc71" stroke-width="3.5"/>
+            <line id="beam-4" class="energy-beam" x1="480" y1="210" x2="795" y2="365" stroke="#85c1e9" stroke-width="3.5"/>
+        </svg>
+
+        <!-- ĐẢO 1: DÒNG SÔNG TÁI CHẾ (LOW-POLY 3D ISLAND) -->
+        <div class="intro-island-node" id="intro-isl-1">
+            <svg viewBox="0 0 200 150">
+                <!-- Đế đá nổi Low-Poly 3D -->
+                <polygon points="20,75 65,125 100,140 50,82" fill="#2874a6"/>
+                <polygon points="50,82 100,140 145,125 110,85" fill="#1b4f72"/>
+                <polygon points="110,85 145,125 180,75 150,78" fill="#154360"/>
+                <!-- Mặt đảo băng & dòng sông -->
+                <polygon points="20,75 65,52 135,52 180,75 110,85 50,82" fill="#3498db"/>
+                <polygon points="35,72 75,56 95,78 50,80" fill="#85c1e9"/>
+                <polygon points="115,56 165,72 145,80 105,78" fill="#aed6f1"/>
+                <!-- Tảng băng Low-Poly & Cánh tay Robot AI trên đảo -->
+                <polygon points="52,58 72,44 88,58 70,66" fill="#ffffff"/>
+                <polygon points="118,62 138,48 154,62 136,70" fill="#ebf5fb"/>
+                <!-- Cánh tay Robot AI 3D -->
+                <polygon points="94,64 106,64 104,36 96,36" fill="#f39c12"/>
+                <polygon points="96,36 120,24 124,30 102,42" fill="#f1c40f"/>
+                <polygon points="120,24 132,18 128,28" fill="#e74c3c"/>
+                <polygon points="120,28 132,34 124,36" fill="#c0392b"/>
+            </svg>
+            <div class="intro-island-tag" style="border-color:#5dade2;">1. Dòng Sông Tái Chế</div>
+        </div>
+
+        <!-- ĐẢO 2: THÁP NĂNG LƯỢNG XANH (LOW-POLY 3D ISLAND) -->
+        <div class="intro-island-node" id="intro-isl-2">
+            <svg viewBox="0 0 200 150">
+                <!-- Đế đá nổi Low-Poly 3D -->
+                <polygon points="20,75 60,128 100,142 55,84" fill="#935116"/>
+                <polygon points="55,84 100,142 145,126 115,84" fill="#784212"/>
+                <polygon points="115,84 145,126 180,75 150,78" fill="#5c330d"/>
+                <!-- Mặt cỏ xanh năng lượng -->
+                <polygon points="20,75 65,54 135,54 180,75 115,84 55,84" fill="#2ecc71"/>
+                <polygon points="65,54 135,54 180,75 115,84" fill="#27ae60"/>
+                <!-- Mặt trời đa giác & Tua-bin gió + Pin mặt trời -->
+                <polygon points="148,16 158,22 158,34 148,40 138,34 138,22" fill="#f1c40f"/>
+                <polygon points="55,64 85,56 92,72 60,76" fill="#2980b9" stroke="#ffffff" stroke-width="1"/>
+                <!-- Tua-bin gió 3D -->
+                <polygon points="112,72 117,72 115,32 113,32" fill="#ecf0f1"/>
+                <polygon points="114,32 110,10 118,10" fill="#ffffff"/>
+                <polygon points="114,32 134,42 130,47" fill="#d5dbdb"/>
+                <polygon points="114,32 94,42 98,47" fill="#bdc3c7"/>
+                <circle cx="114" cy="32" r="3.5" fill="#f1c40f"/>
+            </svg>
+            <div class="intro-island-tag" style="border-color:#f1c40f;">2. Tháp Năng Lượng Xanh</div>
+        </div>
+
+        <!-- ĐẢO 3: VƯƠNG QUỐC RỪNG XANH (LOW-POLY 3D ISLAND) -->
+        <div class="intro-island-node" id="intro-isl-3">
+            <svg viewBox="0 0 200 150">
+                <!-- Đế đất rừng Low-Poly 3D -->
+                <polygon points="22,76 62,126 100,140 54,84" fill="#1e8449"/>
+                <polygon points="54,84 100,140 144,126 116,84" fill="#196f3d"/>
+                <polygon points="116,84 144,126 178,76 148,80" fill="#145a32"/>
+                <!-- Mặt thảm rừng -->
+                <polygon points="22,76 66,54 134,54 178,76 116,84 54,84" fill="#58d68d"/>
+                <polygon points="66,54 134,54 178,76 116,84" fill="#2ecc71"/>
+                <!-- Cây thông Low-Poly 1 -->
+                <polygon points="68,20 48,52 68,48" fill="#58d68d"/>
+                <polygon points="68,20 88,52 68,48" fill="#27ae60"/>
+                <polygon points="68,34 44,66 68,62" fill="#2ecc71"/>
+                <polygon points="68,34 92,66 68,62" fill="#1e8449"/>
+                <!-- Cây thông Low-Poly 2 -->
+                <polygon points="122,16 102,48 122,44" fill="#58d68d"/>
+                <polygon points="122,16 142,48 122,44" fill="#27ae60"/>
+                <polygon points="122,30 98,64 122,60" fill="#2ecc71"/>
+                <polygon points="122,30 146,64 122,60" fill="#196f3d"/>
+                <!-- Drone Camera AI bay trên rừng -->
+                <polygon points="86,16 108,16 104,24 90,24" fill="#e74c3c"/>
+                <circle cx="97" cy="24" r="3.5" fill="#85c1e9"/>
+            </svg>
+            <div class="intro-island-tag" style="border-color:#2ecc71;">3. Vương Quốc Rừng Xanh</div>
+        </div>
+
+        <!-- ĐẢO 4: NGỌN NÚI KHÍ HẬU (LOW-POLY 3D ISLAND) -->
+        <div class="intro-island-node" id="intro-isl-4">
+            <svg viewBox="0 0 200 150">
+                <!-- Đế băng Bắc Cực Low-Poly 3D -->
+                <polygon points="22,82 64,128 100,142 56,88" fill="#5dade2"/>
+                <polygon points="56,88 100,142 142,128 116,88" fill="#2e86c1"/>
+                <polygon points="116,88 142,128 178,82 148,84" fill="#1b4f72"/>
+                <!-- Mặt nền tuyết -->
+                <polygon points="22,82 66,62 134,62 178,82 116,88 56,88" fill="#d6eaf8"/>
+                <!-- Đỉnh núi băng 3D -->
+                <polygon points="100,12 52,78 100,82" fill="#85c1e9"/>
+                <polygon points="100,12 148,78 100,82" fill="#2874a6"/>
+                <!-- Chóp tuyết trắng trên đỉnh núi -->
+                <polygon points="100,12 74,48 88,42 100,50" fill="#ffffff"/>
+                <polygon points="100,12 100,50 112,42 126,48" fill="#ebf5fb"/>
+                <!-- Đường ziczac vàng lên đỉnh -->
+                <polyline points="72,74 118,62 84,48 112,34 100,18" fill="none" stroke="#f1c40f" stroke-width="3" stroke-dasharray="4,3"/>
+            </svg>
+            <div class="intro-island-tag" style="border-color:#85c1e9;">4. Ngọn Núi Khí Hậu</div>
+        </div>
+
+        <!-- ROBOT AI TRUNG TÂM XUẤT HIỆN ĐẦU TIÊN -->
+        <div class="intro-robot-center" id="intro-robot-box">
+            <div class="intro-robot-halo"></div>
+            <svg viewBox="0 0 120 120" width="135" height="135">
+                <!-- Anten phát sáng -->
+                <polygon points="56,6 64,6 62,22 58,22" fill="#e74c3c"/>
+                <polygon points="50,2 70,2 65,12 55,12" fill="#f1c40f"/>
+                <!-- Đầu Robot Đa Diện Low-Poly 3D -->
+                <polygon points="26,24 60,18 60,58 20,54" fill="#85c1e9"/>
+                <polygon points="94,24 60,18 60,58 100,54" fill="#3498db"/>
+                <!-- Tai cảm biến -->
+                <polygon points="10,36 22,30 22,52 10,48" fill="#f39c12"/>
+                <polygon points="110,36 98,30 98,52 110,48" fill="#d68910"/>
+                <!-- Mắt LED thông minh -->
+                <polygon points="34,34 50,34 48,46 36,46" fill="#ffffff"/>
+                <polygon points="70,34 86,34 84,46 72,46" fill="#ffffff"/>
+                <rect x="39" y="37" width="7" height="7" fill="#1b4f72"/>
+                <rect x="74" y="37" width="7" height="7" fill="#1b4f72"/>
+                <!-- Thân Robot + Lõi Trái Tim Xanh -->
+                <polygon points="24,60 60,58 60,102 30,96" fill="#5dade2"/>
+                <polygon points="96,60 60,58 60,102 90,96" fill="#2980b9"/>
+                <polygon points="60,66 76,78 60,92 44,78" fill="#2ecc71"/>
+                <polygon points="60,66 76,78 60,92" fill="#27ae60"/>
+                <!-- Cánh tay vẫy chào -->
+                <polygon points="8,62 24,62 20,86 6,82" fill="#85c1e9"/>
+                <polygon points="112,50 96,62 100,82 116,66" fill="#3498db"/>
+            </svg>
+        </div>
+
+        <!-- CHỮ ECOLAND LOW-POLY 3D & NÚT BẮT ĐẦU (HIỆN RA Ở GIÂY THỨ 8.5) -->
+        <div class="intro-logo-center" id="intro-logo-box">
+            <svg class="ecoland-svg-logo" viewBox="0 0 620 135">
+                <defs>
+                    <linearGradient id="ecoTopGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#a9dfbf"/>
+                        <stop offset="45%" stop-color="#2ecc71"/>
+                        <stop offset="100%" stop-color="#1e8449"/>
+                    </linearGradient>
+                    <linearGradient id="landTopGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#fef9e7"/>
+                        <stop offset="45%" stop-color="#f1c40f"/>
+                        <stop offset="100%" stop-color="#d35400"/>
+                    </linearGradient>
+                </defs>
+                <!-- Khung khiên pha lê Low-Poly phía sau chữ -->
+                <polygon points="30,68 95,12 525,12 590,68 525,124 95,124" fill="rgba(15, 42, 64, 0.88)" stroke="#f1c40f" stroke-width="4"/>
+                <polygon points="30,68 95,12 310,12 310,124 95,124" fill="rgba(255, 255, 255, 0.06)"/>
+                <!-- Chi tiết mặt cắt đa giác ở 2 đầu khiên -->
+                <polygon points="30,68 68,38 68,98" fill="#2ecc71" opacity="0.85"/>
+                <polygon points="590,68 552,38 552,98" fill="#f39c12" opacity="0.85"/>
+
+                <!-- Bóng chữ 3D khối dày -->
+                <text x="314" y="94" text-anchor="middle" font-size="76" font-weight="900" font-family="'Segoe UI', Arial, sans-serif" letter-spacing="5" fill="#0b2536">ECOLAND</text>
+                <!-- Chữ chính ECOLAND phát sáng -->
+                <text x="310" y="88" text-anchor="middle" font-size="76" font-weight="900" font-family="'Segoe UI', Arial, sans-serif" letter-spacing="5" stroke="#ffffff" stroke-width="2.5">
+                    <tspan fill="url(#ecoTopGrad)">ECO</tspan><tspan fill="url(#landTopGrad)">LAND</tspan>
+                </text>
+            </svg>
+            <div class="ecoland-sub">✨ VƯƠNG QUỐC ĐẢO XANH AI • PHÁT TRIỂN BỀN VỮNG ✨</div>
+            <button class="btn-start-ecoland" onclick="enterEcoLandGame()">
+                <span>🚀 BẮT ĐẦU KHÁM PHÁ</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Thanh thuyết minh cốt truyện & tiến trình 12 giây -->
+    <div class="intro-bottom-narration">
+        <div class="intro-narration-text" id="intro-narration-line">
+            🤖 Khởi động hệ thống Trí tuệ nhân tạo Eco-Bot...
+        </div>
+        <div class="intro-timeline-track">
+            <div class="intro-timeline-fill" id="intro-progress-bar"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const introEl = document.getElementById('ecoland-intro');
+    if (!introEl) return;
+
+    // Vẽ bầu trời sao đa giác Low-Poly trên nền Intro
+    const icv = document.getElementById('intro-bg-canvas');
+    const ictx = icv.getContext('2d');
+    let iW = 0, iH = 0, introActive = true;
+    function resizeIntroCanvas() {
+        iW = icv.width = window.innerWidth;
+        iH = icv.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeIntroCanvas);
+    resizeIntroCanvas();
+
+    const stars = Array.from({ length: 42 }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 2 + Math.random() * 4,
+        sp: 0.002 + Math.random() * 0.004,
+        ph: Math.random() * 6.28
+    }));
+
+    function drawIntroBg(t) {
+        if (!introActive) return;
+        ictx.clearRect(0, 0, iW, iH);
+
+        // Lưới địa hình Low-Poly mờ dưới đáy
+        ictx.strokeStyle = "rgba(93, 173, 226, 0.14)";
+        ictx.lineWidth = 1.2;
+        const step = 90;
+        for (let x = 0; x < iW; x += step) {
+            ictx.beginPath();
+            ictx.moveTo(x, iH);
+            ictx.lineTo(iW / 2 + (x - iW / 2) * 0.45, iH * 0.68);
+            ictx.stroke();
+        }
+
+        // Các ngôi sao hình thoi đa giác lấp lánh
+        stars.forEach(s => {
+            const alpha = 0.25 + 0.65 * Math.abs(Math.sin(t * s.sp + s.ph));
+            const sx = s.x * iW, sy = s.y * iH * 0.85, r = s.r;
+            ictx.fillStyle = `rgba(255, 255, 255, ${alpha.toFixed(2)})`;
+            ictx.beginPath();
+            ictx.moveTo(sx, sy - r);
+            ictx.lineTo(sx + r, sy);
+            ictx.lineTo(sx, sy + r);
+            ictx.lineTo(sx - r, sy);
+            ictx.closePath();
+            ictx.fill();
+        });
+        requestAnimationFrame(drawIntroBg);
+    }
+    requestAnimationFrame(drawIntroBg);
+
+    // Kịch bản Timeline Intro 12 giây (Ngắn gọn, súc tích, đúng 10-15s)
+    const TOTAL_INTRO_MS = 12000;
+    const startTime = performance.now();
+    const robotBox = document.getElementById('intro-robot-box');
+    const logoBox = document.getElementById('intro-logo-box');
+    const narrationEl = document.getElementById('intro-narration-line');
+    const progBar = document.getElementById('intro-progress-bar');
+    const secCounter = document.getElementById('intro-sec-counter');
+
+    const triggered = { s0: false, s1: false, s2: false, s3: false, s4: false, s5: false };
+
+    function setNarration(htmlText) {
+        if (narrationEl) narrationEl.innerHTML = htmlText;
+    }
+
+    function stepIntroTimeline(now) {
+        if (!introActive) return;
+        const elapsed = Math.min(TOTAL_INTRO_MS, now - startTime);
+        const pct = (elapsed / TOTAL_INTRO_MS) * 100;
+        if (progBar) progBar.style.width = pct + '%';
+
+        const remainSec = Math.max(0, Math.ceil((TOTAL_INTRO_MS - elapsed) / 1000));
+        if (secCounter) secCounter.innerText = '00:' + (remainSec < 10 ? '0' + remainSec : remainSec);
+
+        // 0.3s: Robot AI xuất hiện ở trung tâm
+        if (elapsed >= 300 && !triggered.s0) {
+            triggered.s0 = true;
+            robotBox.classList.add('appear');
+            setNarration("🤖 Xin chào Hiệp sĩ Nhí! Mình là <strong>Robot Mầm Xanh AI</strong> – người bạn đồng hành bảo vệ Trái Đất!");
+        }
+        // 2.2s: Đảo 1 (Dòng Sông Tái Chế) hiện lên
+        if (elapsed >= 2200 && !triggered.s1) {
+            triggered.s1 = true;
+            document.getElementById('intro-isl-1').classList.add('appear');
+            document.getElementById('beam-1').classList.add('active');
+            if (typeof playSound === 'function') playSound('ok');
+            setNarration("🧊 Khởi tạo <strong>Đảo 1: Dòng Sông Tái Chế</strong> – Dạy Cánh tay Robot AI phân loại rác cứu sông băng!");
+        }
+        // 4.0s: Đảo 2 (Tháp Năng Lượng Xanh) hiện lên
+        if (elapsed >= 4000 && !triggered.s2) {
+            triggered.s2 = true;
+            document.getElementById('intro-isl-2').classList.add('appear');
+            document.getElementById('beam-2').classList.add('active');
+            if (typeof playSound === 'function') playSound('ok');
+            setNarration("⚡ Khởi tạo <strong>Đảo 2: Tháp Năng Lượng Xanh</strong> – Thay nhà máy than bằng điện mặt trời và gió!");
+        }
+        // 5.8s: Đảo 3 (Vương Quốc Rừng Xanh) hiện lên
+        if (elapsed >= 5800 && !triggered.s3) {
+            triggered.s3 = true;
+            document.getElementById('intro-isl-3').classList.add('appear');
+            document.getElementById('beam-3').classList.add('active');
+            if (typeof playSound === 'function') playSound('ok');
+            setNarration("🌳 Khởi tạo <strong>Đảo 3: Vương Quốc Rừng Xanh</strong> – Dùng Camera AI dập lửa rừng và cứu hộ thú quý!");
+        }
+        // 7.5s: Đảo 4 (Ngọn Núi Khí Hậu) hiện lên
+        if (elapsed >= 7500 && !triggered.s4) {
+            triggered.s4 = true;
+            document.getElementById('intro-isl-4').classList.add('appear');
+            document.getElementById('beam-4').classList.add('active');
+            if (typeof playSound === 'function') playSound('ok');
+            setNarration("🏔️ Khởi tạo <strong>Đảo 4: Ngọn Núi Khí Hậu</strong> – Giảm dấu chân Carbon giữ băng Bắc Cực không tan chảy!");
+        }
+        // 9.2s: Robot bay lên trên, hiện danh hiệu ECOLAND 3D và nút BẮT ĐẦU
+        if (elapsed >= 9200 && !triggered.s5) {
+            triggered.s5 = true;
+            robotBox.classList.add('shift-up');
+            logoBox.classList.add('appear');
+            if (typeof playSound === 'function') playSound('win');
+            setNarration("🌍 Thế giới <strong>ECOLAND</strong> đã sẵn sàng! Hãy bấm nút <strong>[BẮT ĐẦU KHÁM PHÁ]</strong> để chọn đảo nhé!");
+        }
+
+        if (elapsed < TOTAL_INTRO_MS) {
+            requestAnimationFrame(stepIntroTimeline);
+        }
+    }
+    requestAnimationFrame(stepIntroTimeline);
+
+    // Hàm đóng Intro và vào giao diện chọn đảo chính
+    window.enterEcoLandGame = function() {
+        if (!introActive) return;
+        introActive = false;
+        if (typeof playSound === 'function') playSound('win');
+        introEl.classList.add('hide-intro');
+        setTimeout(() => {
+            if (introEl && introEl.parentNode) introEl.remove();
+        }, 680);
+    };
+})();
+</script>
+
 
 <header>
     <div class="brand">
@@ -873,6 +1573,26 @@
         <button class="btn btn-green" style="min-width: 140px; font-size: 1.1rem;" onclick="closeCompletionModal()">OK</button>
     </div>
 </div>
+
+<!-- POPUP DẪN DẮT CÂU CHUYỆN TRƯỚC KHI BẮT ĐẦU TỪNG ĐẢO -->
+<div id="story-modal" class="modal-overlay">
+    <div class="story-card">
+        <button class="modal-close-x" onclick="closeStoryModal()" title="Quay lại bản đồ">✕</button>
+        <div class="story-badge" id="story-badge-text">CỐT TRUYỆN NHIỆM VỤ</div>
+        <div class="story-icons" id="story-icons-box"></div>
+        <div class="story-title" id="story-title-text">ĐẢO 1: DÒNG SÔNG TÁI CHẾ</div>
+        <div class="story-box">
+            <div class="story-line" id="story-context-text"></div>
+            <div class="story-line" id="story-mission-text" style="margin-top:10px; color:#1e8449;"></div>
+        </div>
+        <div class="story-actions">
+            <button class="btn btn-green" style="font-size:1.08rem; padding:12px 26px;" onclick="confirmStartIsland()">
+                <span data-lp="robot" data-size="sm"></span> Sẵn sàng lên đường!
+            </button>
+        </div>
+    </div>
+</div>
+
 
 <script>
     /* =========================================================================
@@ -1516,7 +2236,69 @@
         if (modal) modal.classList.remove('show');
     }
 
+    const ISLAND_STORIES = {
+        1: {
+            badge: "NHIỆM VỤ ĐẢO 1 • HỌC MÁY & PHÂN LOẠI RÁC",
+            title: "1. Dòng Sông Tái Chế",
+            icons: ['robot', 'ice', 'arm'],
+            context: "🌊 <strong>Nguy cơ:</strong> Trái Đất nóng lên làm băng tan thành từng tảng trôi dạt. Rác thải nhựa, rác hữu cơ và hóa chất độc hại đang làm tắc nghẽn dòng sông!",
+            mission: "🎯 <strong>Nhiệm vụ của em:</strong> Dạy cho <strong>Cánh tay Robot AI</strong> biết phân biệt 3 loại rác, sau đó cùng AI dọn sạch 15 tảng băng đang tan để giải cứu dòng sông!"
+        },
+        2: {
+            badge: "NHIỆM VỤ ĐẢO 2 • NĂNG LƯỢNG SẠCH & CẢM BIẾN AI",
+            title: "2. Tháp Năng Lượng Xanh",
+            icons: ['robot', 'bolt', 'solar'],
+            context: "🏭 <strong>Nguy cơ:</strong> 6 nhà máy đốt than đang xả khói đen CO2 mù mịt, đẩy nhiệt độ Trái Đất tăng cao lên mức báo động đỏ (+2.5°C)!",
+            mission: "🎯 <strong>Nhiệm vụ của em:</strong> Chuyển đổi toàn bộ nhà máy than sang <strong>Điện Mặt Trời, Tua-bin Gió, Rừng Cây</strong> và lập trình AI điều phối điện thông minh để nạp đầy Viên Pin Xanh!"
+        },
+        3: {
+            badge: "NHIỆM VỤ ĐẢO 3 • THỊ GIÁC MÁY TÍNH & BẢO TỒN RỪNG",
+            title: "3. Vương Quốc Rừng Xanh",
+            icons: ['robot', 'tree', 'camera'],
+            context: "🔥 <strong>Nguy cơ:</strong> Nắng nóng cực đoan làm nhiều đám cháy bùng phát trong rừng sâu, đồi trọc xuất hiện và các chú Gấu Trúc quý hiếm đang bị mắc kẹt!",
+            mission: "🎯 <strong>Nhiệm vụ của em:</strong> Dùng <strong>Camera AI (Thị giác máy tính)</strong> quét tìm 10 điểm sự cố để điều máy bay chữa cháy, gieo hạt giống, cứu hộ thú quý và vượt qua 5 câu hỏi Kiểm lâm AI!"
+        },
+        4: {
+            badge: "NHIỆM VỤ ĐẢO 4 • TƯ DUY BỀN VỮNG & DẤU CHÂN CARBON",
+            title: "4. Ngọn Núi Khí Hậu",
+            icons: ['robot', 'mountain', 'polar'],
+            context: "🐻‍❄️ <strong>Nguy cơ:</strong> Trên đỉnh núi Bắc Cực, nơi ở của Gấu Trắng đang nứt vỡ vì hiệu ứng nhà kính! Trạm Dự Báo Khí Hậu AI trên đỉnh núi đang chờ kích hoạt.",
+            mission: "🎯 <strong>Nhiệm vụ của em:</strong> Giải quyết 15 thử thách giảm <strong>Dấu chân Carbon</strong> để dẫn đường cho Robot AI leo theo 15 mốc ziczac từ chân núi lên đỉnh núi làm đông cứng lại băng tuyết!"
+        }
+    };
+
+    let pendingIslandNum = null;
+
     function startIsland(num) {
+        pendingIslandNum = num;
+        const st = ISLAND_STORIES[num];
+        if (!st) {
+            launchIsland(num);
+            return;
+        }
+        playSound('ok');
+        document.getElementById('story-badge-text').innerText = st.badge;
+        document.getElementById('story-title-text').innerText = st.title;
+        document.getElementById('story-icons-box').innerHTML =
+            st.icons.map((ic, idx) => lpIcon(ic, idx === 1 ? 'xl' : 'lg')).join('');
+        document.getElementById('story-context-text').innerHTML = st.context;
+        document.getElementById('story-mission-text').innerHTML = st.mission;
+        document.getElementById('story-modal').classList.add('show');
+    }
+
+    function closeStoryModal() {
+        const m = document.getElementById('story-modal');
+        if (m) m.classList.remove('show');
+        pendingIslandNum = null;
+    }
+
+    function confirmStartIsland() {
+        const num = pendingIslandNum;
+        closeStoryModal();
+        if (num) launchIsland(num);
+    }
+
+    function launchIsland(num) {
         if (num === 1) initIsland1();
         if (num === 2) initIsland2();
         if (num === 3) initIsland3();
