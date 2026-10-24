@@ -511,7 +511,7 @@
                 <h3>1. Dòng Sông Tái Chế</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-1">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Dạy Cánh tay Robot AI phân loại rác để nhảy qua 15 tảng băng đang tan!</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi </button>
+                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
             </div>
 
             <div class="island-card" id="card-island-2" onclick="startIsland(2)">
@@ -523,7 +523,7 @@
                 <h3>2. Tháp Năng Lượng Xanh</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-2">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Nạp đầy Viên Pin Năng Lượng Xanh và lập trình AI điều phối điện giảm CO₂.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi </button>
+                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
             </div>
 
             <div class="island-card" id="card-island-3" onclick="startIsland(3)">
@@ -535,7 +535,7 @@
                 <h3>3. Vương Quốc Rừng Xanh</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-3">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Dùng Camera AI (Thị giác máy tính) phát hiện cháy rừng & cứu hộ thú quý.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi</button>
+                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
             </div>
 
             <div class="island-card" id="card-island-4" onclick="startIsland(4)">
@@ -547,7 +547,7 @@
                 <h3>4. Ngọn Núi Khí Hậu</h3>
                 <div class="island-best-star"><span data-lp="trophy" data-size="xs"></span> Kỷ lục: <span id="best-star-4">0</span>/150 <span data-lp="star" data-size="xs"></span></div>
                 <p style="font-size:0.9rem; color:#555; margin-top:4px;">Leo 15 nấc thang ziczac từ chân núi lên đỉnh núi giữ băng Bắc Cực không tan chảy.</p>
-                <button class="btn btn-green" style="width:100%">Vào chơi </button>
+                <button class="btn btn-green" style="width:100%">Vào chơi (Tối đa 150 <span data-lp="star" data-size="xs"></span>)</button>
             </div>
         </div>
     </div>
@@ -1524,35 +1524,65 @@
     }
 
     /* ==========================================
-       ĐẢO 1: DÒNG SÔNG TÁI CHẾ (VỚI CANVAS LOW-POLY 3D)
+       ĐẢO 1: DÒNG SÔNG TÁI CHẾ (VỚI NGÂN HÀNG 45 MẪU RÁC & CANVAS LOW-POLY 3D)
+       - Mỗi lượt chơi bốc ngẫu nhiên 6 mẫu cho Pha 1 (Huấn luyện AI)
+       - Và bốc ngẫu nhiên 15 mẫu không trùng cho Pha 2 (Vượt 15 tảng băng tan)
        ========================================== */
-    const trainItems = [
-        { lp: 'banana', name: 'Vỏ chuối chín', type: 'huuco', hint: 'Vỏ trái cây dễ phân hủy thành phân bón hữu cơ.' },
-        { lp: 'cup', name: 'Chai nhựa dùng 1 lần', type: 'taiche', hint: 'Chai nhựa có thể tái chế thành vật dụng mới.' },
-        { lp: 'battery', name: 'Viên pin tiểu cũ', type: 'dochai', hint: 'Pin chứa chì và hóa chất độc hại cho nguồn nước.' },
-        { lp: 'newspaper', name: 'Giấy báo cũ', type: 'taiche', hint: 'Giấy báo tái chế giúp cứu hàng triệu cây xanh.' },
-        { lp: 'apple', name: 'Lõi táo thừa', type: 'huuco', hint: 'Thức ăn thừa thuộc nhóm rác hữu cơ.' },
-        { lp: 'bulb', name: 'Bóng đèn huỳnh quang vỡ', type: 'dochai', hint: 'Bóng đèn vỡ có thủy tinh và hóa chất độc hại.' }
+    const trashMasterBank = [
+        // --- NHÓM RÁC HỮU CƠ (15 mẫu) ---
+        { lp: 'banana', name: 'Vỏ chuối chín', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ trái cây dễ phân hủy tự nhiên thành phân bón hữu cơ cho cây trồng.' },
+        { lp: 'apple', name: 'Lõi táo thừa', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Thức ăn thừa và phần lõi trái cây thuộc nhóm rác hữu cơ dễ phân hủy.' },
+        { lp: 'leaf', name: 'Lá cây khô rụng', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Lá cây khô rụng ngoài sân trường có thể ủ thành phân mùn giàu dinh dưỡng.' },
+        { lp: 'watermelon', name: 'Vỏ dưa hấu', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ dưa hấu mềm và giàu nước, phân hủy nhanh trong thùng ủ hữu cơ.' },
+        { lp: 'veg', name: 'Rau cải bị héo', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Rau củ bị héo hoặc gốc rau thừa là nguồn nguyên liệu làm phân xanh rất tốt.' },
+        { lp: 'apple', name: 'Vỏ cam và vỏ quýt', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ cam quýt có tinh dầu thơm tự nhiên và phân hủy thành mùn hữu cơ.' },
+        { lp: 'banana', name: 'Vỏ xoài chín', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ xoài là chất thải thực vật dễ phân hủy, cần bỏ vào thùng rác hữu cơ.' },
+        { lp: 'veg', name: 'Cuống rau muống nhặt thừa', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Cuống rau nhặt bỏ khi nấu ăn là rác hữu cơ sạch, dễ ủ làm phân bón.' },
+        { lp: 'leaf', name: 'Cánh hoa tươi đã héo', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Hoa tươi sau khi héo có nguồn gốc tự nhiên, phân hủy hoàn toàn trong đất.' },
+        { lp: 'watermelon', name: 'Vỏ thanh long', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ thanh long mềm, thuộc nhóm rác hữu cơ dễ phân hủy sinh học.' },
+        { lp: 'apple', name: 'Cơm nguội & thức ăn thừa', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Thức ăn thừa cần phân loại vào thùng hữu cơ để xử lý làm phân vi sinh.' },
+        { lp: 'veg', name: 'Vỏ khoai tây, cà rốt', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ các loại củ quả gọt ra trong bếp là rác hữu cơ tiêu biểu.' },
+        { lp: 'leaf', name: 'Bã trà và bã cà phê', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Bã trà và bã cà phê rất giàu đạm tự nhiên, bón cho cây xanh cực kỳ tốt.' },
+        { lp: 'banana', name: 'Vỏ đu đủ chín', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Vỏ đu đủ dễ mục nát ngoài tự nhiên nên được xếp vào nhóm rác hữu cơ.' },
+        { lp: 'veg', name: 'Lá bắp cải già bỏ đi', type: 'huuco', binName: 'Thùng Hữu Cơ', hint: 'Lá rau già bỏ đi phân hủy nhanh và giúp làm tơi xốp đất trồng.' },
+
+        // --- NHÓM RÁC TÁI CHẾ (15 mẫu) ---
+        { lp: 'cup', name: 'Chai nhựa nước suối rỗng', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Chai nhựa PET sạch có thể tái chế thành sợi vải hoặc vật dụng nhựa mới.' },
+        { lp: 'newspaper', name: 'Giấy báo cũ', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Tái chế giấy báo cũ giúp tiết kiệm nước và cứu hàng triệu cây rừng.' },
+        { lp: 'can', name: 'Vỏ lon nước ngọt bằng nhôm', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Vỏ lon nhôm có thể tái chế vô hạn lần và tiết kiệm 95% năng lượng.' },
+        { lp: 'bottle', name: 'Chai nhựa dầu gội rỗng', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Chai nhựa dày (HDPE) sau khi tráng sạch sẽ được nhà máy tái chế lại.' },
+        { lp: 'box', name: 'Thùng giấy carton đóng hàng', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Bìa carton gấp gọn bỏ vào thùng tái chế để sản xuất bao bì giấy mới.' },
+        { lp: 'milk', name: 'Vỏ hộp sữa giấy đã uống hết', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Vỏ hộp sữa giấy tráng sạch có thể tái chế thành giấy và tấm lợp sinh thái.' },
+        { lp: 'cup', name: 'Ly nhựa trà sữa đã tráng sạch', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Ly nhựa sạch được thu gom riêng để tái chế thay vì chôn lấp gây ô nhiễm.' },
+        { lp: 'newspaper', name: 'Vở học sinh cũ viết hết', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Giấy vở cũ là nguồn bột giấy tái chế quý giá giúp bảo vệ rừng tự nhiên.' },
+        { lp: 'can', name: 'Hộp sắt đựng bánh quy', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Kim loại sắt và thép có thể nấu chảy để tái chế thành đồ dùng mới.' },
+        { lp: 'bottle', name: 'Can nhựa đựng nước giặt', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Can nhựa cứng thuộc nhóm nhựa tái chế, không nên vứt bừa bãi ra sông.' },
+        { lp: 'box', name: 'Hộp giấy đựng giày cũ', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Hộp giấy khô ráo hoàn toàn tái chế được thành giấy cuộn công nghiệp.' },
+        { lp: 'newspaper', name: 'Tạp chí và tờ rơi quảng cáo', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Tờ rơi giấy và tạp chí cũ thuộc nhóm rác tái chế, hãy gom riêng nhé!' },
+        { lp: 'can', name: 'Lon sữa đặc bằng kim loại', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Vỏ lon kim loại sau khi rửa sạch là nguyên liệu tái chế rất tốt.' },
+        { lp: 'bottle', name: 'Chai nhựa nước tương, tương ớt', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Chai gia vị bằng nhựa khi dùng hết và súc sạch sẽ tái chế được.' },
+        { lp: 'box', name: 'Lõi giấy cuộn vệ sinh', type: 'taiche', binName: 'Thùng Tái Chế', hint: 'Lõi giấy bìa cứng có thể làm đồ thủ công STEM hoặc đưa đi tái chế giấy.' },
+
+        // --- NHÓM RÁC ĐỘC HẠI / NGUY HẠI (15 mẫu) ---
+        { lp: 'battery', name: 'Viên pin tiểu cũ rỉ sét', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Pin cũ chứa chì, thủy ngân và cadmium cực kỳ độc hại cho nguồn nước ngầm.' },
+        { lp: 'bulb', name: 'Bóng đèn huỳnh quang vỡ', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Bóng đèn huỳnh quang có chứa hơi thủy ngân và mảnh thủy tinh sắc nhọn.' },
+        { lp: 'chem', name: 'Lọ hóa chất tẩy rửa hết hạn', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Hóa chất mạnh nếu đổ ra môi trường sẽ giết chết vi sinh vật và cá dưới sông.' },
+        { lp: 'thermo', name: 'Nhiệt kế thủy ngân bị vỡ', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Thủy ngân trong nhiệt kế là kim loại nặng rất độc, phải thu gom vào thùng nguy hại.' },
+        { lp: 'battery', name: 'Pin điện thoại bị phồng hỏng', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Pin Lithium bị hỏng dễ gây cháy nổ và rò rỉ hóa chất độc hại.' },
+        { lp: 'chem', name: 'Bình xịt muỗi, côn trùng rỗng', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Vỏ bình xịt côn trùng còn tồn dư thuốc độc và áp suất khí nén nguy hiểm.' },
+        { lp: 'chem', name: 'Lọ thuốc trừ sâu nông nghiệp', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Bao bì thuốc bảo vệ thực vật là chất thải nguy hại, tuyệt đối không vứt xuống sông.' },
+        { lp: 'bulb', name: 'Bóng đèn compact tiết kiệm điện hỏng', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Bóng đèn compact chứa bột huỳnh quang và thủy ngân cần xử lý riêng biệt.' },
+        { lp: 'battery', name: 'Ắc quy xe đạp điện cũ hỏng', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Ắc quy chứa axit sunfuric và chì nặng, gây ô nhiễm đất và nước nghiêm trọng.' },
+        { lp: 'chem', name: 'Hộp sơn dầu và dung môi pha sơn', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Sơn hóa học và xăng thơm dễ cháy, chứa kim loại nặng độc hại cho thủy sinh.' },
+        { lp: 'chem', name: 'Dầu nhớt xe máy thải ra', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Một giọt dầu nhớt thải có thể làm ô nhiễm hàng ngàn lít nước sạch trên sông.' },
+        { lp: 'battery', name: 'Pin cúc áo trong đồng hồ, đồ chơi', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Pin cúc áo nhỏ nhưng chứa hàm lượng kim loại nặng rất cao, cần bỏ vào thùng đỏ.' },
+        { lp: 'chem', name: 'Vỉ thuốc tây đã quá hạn sử dụng', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Thuốc y tế hết hạn là rác nguy hại, không được vứt chung với rác thức ăn.' },
+        { lp: 'chem', name: 'Lọ keo dán công nghiệp & hóa chất', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Dung môi keo công nghiệp độc hại và dễ bắt lửa, phải phân loại vào thùng Đỏ.' },
+        { lp: 'thermo', name: 'Ống nghiệm chứa mẫu hóa chất lỗi', type: 'dochai', binName: 'Thùng Độc Hại', hint: 'Dụng cụ dính hóa chất phòng thí nghiệm cần được xử lý theo quy trình rác độc hại.' }
     ];
 
-    const riverTrashPool = [
-        { lp: 'cup', name: 'Ly nhựa trà sữa', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'banana', name: 'Vỏ chuối chín', type: 'huuco', binName: 'Thùng Hữu Cơ' },
-        { lp: 'battery', name: 'Pin cũ rỉ sét', type: 'dochai', binName: 'Thùng Độc Hại' },
-        { lp: 'can', name: 'Vỏ lon nước ngọt', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'leaf', name: 'Lá cây khô & vỏ cam', type: 'huuco', binName: 'Thùng Hữu Cơ' },
-        { lp: 'bottle', name: 'Chai nhựa dầu gội', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'chem', name: 'Lọ hóa chất hết hạn', type: 'dochai', binName: 'Thùng Độc Hại' },
-        { lp: 'box', name: 'Thùng giấy carton', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'watermelon', name: 'Vỏ dưa hấu', type: 'huuco', binName: 'Thùng Hữu Cơ' },
-        { lp: 'newspaper', name: 'Tờ báo cũ', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'apple', name: 'Lõi táo thừa', type: 'huuco', binName: 'Thùng Hữu Cơ' },
-        { lp: 'bulb', name: 'Bóng đèn huỳnh quang hỏng', type: 'dochai', binName: 'Thùng Độc Hại' },
-        { lp: 'milk', name: 'Vỏ hộp sữa giấy', type: 'taiche', binName: 'Thùng Tái Chế' },
-        { lp: 'veg', name: 'Rau củ bị héo', type: 'huuco', binName: 'Thùng Hữu Cơ' },
-        { lp: 'thermo', name: 'Nhiệt kế thủy ngân vỡ', type: 'dochai', binName: 'Thùng Độc Hại' }
-    ];
-
+    let trainItems = [];
+    let riverTrashPool = [];
     let trainIdx = 0;
     let riverAnim = null;
     let isRiverRunning = false;
@@ -1572,10 +1602,29 @@
         showScreen('screen-island-1');
         resetIslandRunScore(1);
         trainIdx = 0;
+
+        // Rút ngẫu nhiên 6 mẫu cân bằng (2 hữu cơ, 2 tái chế, 2 độc hại) cho Pha 1 và 15 mẫu không trùng cho Pha 2
+        const huucoList = shuffleArray(trashMasterBank.filter(x => x.type === 'huuco'));
+        const taicheList = shuffleArray(trashMasterBank.filter(x => x.type === 'taiche'));
+        const dochaiList = shuffleArray(trashMasterBank.filter(x => x.type === 'dochai'));
+
+        trainItems = shuffleArray([
+            ...huucoList.slice(0, 2),
+            ...taicheList.slice(0, 2),
+            ...dochaiList.slice(0, 2)
+        ]);
+
+        const remainingPool = shuffleArray([
+            ...huucoList.slice(2),
+            ...taicheList.slice(2),
+            ...dochaiList.slice(2)
+        ]);
+        riverTrashPool = remainingPool.slice(0, TOTAL_ICE_STEPS);
+
         document.getElementById('i1-phase1').style.display = 'block';
         document.getElementById('i1-phase2').style.display = 'none';
         document.getElementById('bot-msg-1').innerText =
-            "Pha 1 (Huấn luyện AI): Em hãy dạy cho 'Cánh tay Robot AI' 6 mẫu rác cơ bản trước khi bước vào thử thách vượt 15 tảng băng đang tan nhé!";
+            "Pha 1 (Huấn luyện AI): Em hãy dạy cho 'Cánh tay Robot AI' 6 mẫu rác ngẫu nhiên dưới đây trước khi bước vào thử thách vượt 15 tảng băng đang tan nhé!";
         renderTrainItem();
     }
 
@@ -1685,14 +1734,14 @@
             addCanvasFeedback(nextBlock.x, nextBlock.y - 40, "+10 ★", "#2ecc71");
             triggerArmAndJump(nextBlock, chosenBinType);
             document.getElementById('bot-msg-1').innerHTML =
-                `${lpIcon('arm', 'xs')} Chính xác (+10 ⭐)! Cánh tay AI đã gắp [${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}!`;
+                `${lpIcon('arm', 'xs')} Chính xác (+10 ⭐)! Cánh tay AI đã gắp [${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}! (${trash.hint})`;
         } else {
             playSound('err');
             addRunStars(1, -5, event);
             addCanvasFeedback(playerPos.x, playerPos.y - 40, "-5 ★", "#ff4757");
             currentIceHealth = Math.max(12, currentIceHealth - 18);
             document.getElementById('bot-msg-1').innerHTML =
-                `${lpIcon('warn', 'xs')} Sai thùng rồi (-5 ⭐)! [${trash.name}] phải bỏ vào ${trash.binName}. Hãy chọn lại nhanh trước khi băng tan!`;
+                `${lpIcon('warn', 'xs')} Sai thùng rồi (-5 ⭐)! [${trash.name}] phải bỏ vào ${trash.binName}. Giải thích: ${trash.hint}`;
         }
     }
 
@@ -1740,12 +1789,10 @@
         const sideRight = isGoal ? "#145a32" : "#1b4f72";
         const borderCol = isTarget ? "#f1c40f" : "rgba(255,255,255,0.65)";
 
-        // Các mặt vách băng chìm dưới nước 3D
         drawPoly(ctx, [[-42, -2], [-18, 12], [-14, 30], [-34, 18]], sideLeft, borderCol);
         drawPoly(ctx, [[-18, 12], [18, 12], [14, 32], [-14, 30]], sideMid, borderCol);
         drawPoly(ctx, [[18, 12], [42, -2], [34, 18], [14, 32]], sideRight, borderCol);
 
-        // Mặt băng phía trên chia đa giác Low-Poly
         drawPoly(ctx, [[-42, -2], [-16, -15], [0, -2], [-18, 12]], topLight, borderCol);
         drawPoly(ctx, [[-16, -15], [16, -15], [0, -2]], "#ffffff", borderCol);
         drawPoly(ctx, [[16, -15], [42, -2], [18, 12], [0, -2]], topMid, borderCol);
@@ -1758,7 +1805,6 @@
         const s = isCurrentTarget ? 1.15 : 0.85;
         ctx.scale(s, s);
 
-        // Đổ bóng dưới mặt băng
         drawPoly(ctx, [[-14, 10], [0, 6], [14, 10], [0, 14]], "rgba(0,0,0,0.22)");
 
         if (trash.type === 'huuco') {
@@ -1780,16 +1826,12 @@
     function drawLowPolyCanvasRobot(ctx, x, y) {
         ctx.save();
         ctx.translate(x, y - 20);
-        // Anten
         drawPoly(ctx, [[-2, -26], [2, -26], [2, -18], [-2, -18]], "#e74c3c");
         drawPoly(ctx, [[-5, -29], [5, -29], [3, -24], [-3, -24]], "#f1c40f");
-        // Đầu Robot đa giác
         drawPoly(ctx, [[-15, -18], [0, -21], [0, -2], [-17, -4]], "#85c1e9", "#1b4f72");
         drawPoly(ctx, [[15, -18], [0, -21], [0, -2], [17, -4]], "#3498db", "#1b4f72");
-        // Thân Robot
         drawPoly(ctx, [[-14, -2], [0, -2], [0, 14], [-11, 12]], "#5dade2", "#1b4f72");
         drawPoly(ctx, [[14, -2], [0, -2], [0, 14], [11, 12]], "#2980b9", "#1b4f72");
-        // Mắt phát sáng
         drawPoly(ctx, [[-10, -13], [-3, -13], [-4, -8], [-10, -8]], "#ffffff");
         drawPoly(ctx, [[3, -13], [10, -13], [10, -8], [4, -8]], "#ffffff");
         drawPoly(ctx, [[-6, 3], [6, 3], [4, 8], [-4, 8]], "#2ecc71");
@@ -1799,10 +1841,8 @@
     function drawLowPolyGoalIsland(ctx, x, y) {
         ctx.save();
         ctx.translate(x, y - 18);
-        // Cột cờ & Lá cờ 3D
         drawPoly(ctx, [[-2, -32], [2, -32], [2, 4], [-2, 4]], "#ecf0f1");
         drawPoly(ctx, [[2, -32], [24, -24], [2, -16]], "#f1c40f", "#d35400");
-        // Cây dừa Low-Poly
         drawPoly(ctx, [[-16, -20], [-6, -28], [-10, -14]], "#2ecc71");
         drawPoly(ctx, [[-16, -20], [-26, -24], [-20, -12]], "#27ae60");
         ctx.restore();
@@ -1822,7 +1862,6 @@
         const targetCamX = Math.max(0, Math.min(playerPos.x - 180, maxCamX));
         cameraX += (targetCamX - cameraX) * 0.12;
 
-        // Sóng nước đa giác Low-Poly
         const waveOffset = (Date.now() / 40) % 50;
         for (let y = 38; y < 265; y += 45) {
             for (let x = -50; x < 860; x += 65) {
@@ -1879,7 +1918,6 @@
             }
         });
 
-        // Trạm Cánh Tay Robot AI Low-Poly 3D trên đỉnh Canvas
         const armBaseX = cameraX + 410;
         const armBaseY = 20;
         drawPoly(ctx, [[armBaseX - 75, 0], [armBaseX + 75, 0], [armBaseX + 62, 26], [armBaseX - 62, 26]], "#34495e", "#f1c40f");
@@ -1904,7 +1942,6 @@
             ctx.lineTo(curArmX, curArmY);
             ctx.stroke();
 
-            // Khớp nối và Kẹp Robot Low-Poly 3D
             drawPoly(ctx, [[elbowX - 6, elbowY - 6], [elbowX + 6, elbowY - 6], [elbowX + 6, elbowY + 6], [elbowX - 6, elbowY + 6]], "#f1c40f", "#2c3e50");
             drawPoly(ctx, [[curArmX, curArmY], [curArmX - 14, curArmY + 10], [curArmX - 6, curArmY + 18]], "#e74c3c", "#ffffff");
             drawPoly(ctx, [[curArmX, curArmY], [curArmX + 14, curArmY + 10], [curArmX + 6, curArmY + 18]], "#c0392b", "#ffffff");
@@ -1989,7 +2026,8 @@
     }
 
     /* ==========================================
-       ĐẢO 2: THÁP NĂNG LƯỢNG XANH + VIÊN PIN 15 VẠCH BÊN PHẢI
+       ĐẢO 2: THÁP NĂNG LƯỢNG XANH + NGÂN HÀNG 36 CÂU HỎI ĐIỀU PHỐI AI
+       - Mỗi lượt chơi rút ngẫu nhiên 9 câu không trùng lặp từ ngân hàng 36 câu
        ========================================== */
     let slotsState = [];
     let slotRewarded = [];
@@ -1998,10 +2036,10 @@
     let i2QuestionHadWrong = false;
 
     const slotTypes = {
-        'coal': { lp: 'coal', name: 'Nhà máy Than (Xả CO₂)' },
+        'coal': { lp: 'coal', name: 'Nhà máy Than (Xả CO2)' },
         'solar': { lp: 'solar', name: 'Pin Mặt Trời' },
         'wind': { lp: 'wind', name: 'Tua-bin Gió' },
-        'tree': { lp: 'tree', name: 'Rừng Hấp Thụ CO₂' }
+        'tree': { lp: 'tree', name: 'Rừng Hấp Thụ CO2' }
     };
 
     function buildIsland2EnergyBarDOM() {
@@ -2047,71 +2085,262 @@
         }
     }
 
-    const energyAIQuestions = [
+    const energyAIQuestionBank = [
         {
-            q: "1. Khi cảm biến AI nhận thấy [Trời Nắng To buổi trưa], AI nên ưu tiên nguồn điện nào?",
+            q: "Khi cảm biến AI nhận thấy [Trời Nắng To buổi trưa], AI nên ưu tiên nguồn điện nào?",
             opts: [
                 { t: "☀️ Bật tối đa Pin Năng lượng Mặt trời", ok: true },
-                { t: "🏭 Đốt thêm than đá", ok: false, why: "Đốt than đá xả rất nhiều khói độc CO₂ gây nóng lên toàn cầu, trong khi trời đang nắng to rất thuận lợi để thu điện mặt trời sạch!" }
+                { t: "🏭 Đốt thêm than đá", ok: false, why: "Đốt than đá xả rất nhiều khói độc CO2 gây nóng lên toàn cầu, trong khi trời đang nắng to rất thuận lợi để thu điện mặt trời sạch!" }
             ]
         },
         {
-            q: "2. Khi [Gió biển thổi mạnh vào ban đêm], AI nên điều chỉnh hệ thống thế nào?",
+            q: "Khi [Gió biển thổi mạnh vào ban đêm], AI nên điều chỉnh hệ thống thế nào?",
             opts: [
                 { t: "🌬️ Chuyển sang dùng điện từ Tua-bin Gió", ok: true },
                 { t: "🔥 Đốt dầu diesel phát điện", ok: false, why: "Đốt dầu diesel gây ô nhiễm không khí và tiếng ồn, trong khi sức gió biển ban đêm là nguồn năng lượng sạch hoàn toàn miễn phí!" }
             ]
         },
         {
-            q: "3. Cảm biến AI phát hiện [Phòng học đã tan trường, không có người], AI nên làm gì?",
+            q: "Cảm biến AI phát hiện [Phòng học đã tan trường, không có người], AI nên làm gì?",
             opts: [
                 { t: "💡 Tự động tắt đèn, quạt và máy lạnh", ok: true },
                 { t: "💡 Giữ nguyên đèn sáng suốt đêm", ok: false, why: "Để đèn và quạt chạy suốt đêm khi không có người sẽ gây lãng phí điện năng rất lớn!" }
             ]
         },
         {
-            q: "4. Vì sao thay thế nhà máy than bằng điện mặt trời và gió lại chống biến đổi khí hậu?",
+            q: "Vì sao thay thế nhà máy than bằng điện mặt trời và gió lại chống biến đổi khí hậu?",
             opts: [
-                { t: "🌿 Vì năng lượng tái tạo không xả khí nhà kính CO₂", ok: true },
-                { t: "🏭 Vì than đá làm trời lạnh đi", ok: false, why: "Ngược lại, đốt than đá sinh ra khí nhà kính CO₂ giữ nhiệt lại làm Trái Đất ngày càng nóng lên!" }
+                { t: "🌿 Vì năng lượng tái tạo không xả khí nhà kính CO2", ok: true },
+                { t: "🏭 Vì than đá làm trời lạnh đi", ok: false, why: "Ngược lại, đốt than đá sinh ra khí nhà kính CO2 giữ nhiệt lại làm Trái Đất ngày càng nóng lên!" }
             ]
         },
         {
-            q: "5. Khi nhiệt độ ngoài trời mát mẻ (24°C), AI điều khiển điều hòa ở mức nào để tiết kiệm điện?",
+            q: "Khi nhiệt độ ngoài trời mát mẻ (24°C), AI điều khiển điều hòa ở mức nào để tiết kiệm điện?",
             opts: [
                 { t: "❄️ Chuyển sang chế độ quạt gió tự nhiên hoặc 26-27°C", ok: true },
                 { t: "🥶 Hạ nhiệt độ xuống 16°C", ok: false, why: "Hạ điều hòa xuống 16°C khi trời đã mát vừa gây tốn điện gấp nhiều lần vừa dễ làm học sinh bị cảm lạnh!" }
             ]
         },
         {
-            q: "6. Đèn đường thông minh tích hợp AI hoạt động thế nào để tiết kiệm năng lượng?",
+            q: "Đèn đường thông minh tích hợp AI hoạt động thế nào để tiết kiệm năng lượng?",
             opts: [
                 { t: "🌙 Tự bật khi trời tối và giảm độ sáng khi đường vắng", ok: true },
                 { t: "☀️ Bật sáng trưng cả lúc giữa trưa nắng", ok: false, why: "Ban ngày đã có ánh sáng mặt trời, bật đèn đường giữa trưa nắng là lãng phí nguồn điện vô ích!" }
             ]
         },
         {
-            q: "7. Khi lượng điện mặt trời tạo ra vào buổi trưa dư thừa, hệ thống AI nên làm gì?",
+            q: "Khi lượng điện mặt trời tạo ra vào buổi trưa dư thừa, hệ thống AI nên làm gì?",
             opts: [
                 { t: "🔋 Tích trữ vào Pin lưu trữ năng lượng để dùng buổi tối", ok: true },
                 { t: "🗑️ Bỏ phí nguồn điện đó", ok: false, why: "Buổi tối không có ánh nắng mặt trời, nếu bỏ phí điện ban trưa thì tối lại phải đốt than phát điện!" }
             ]
         },
         {
-            q: "8. Trồng thêm rừng cây quanh thành phố giúp ích gì cho Tháp Năng Lượng Xanh?",
+            q: "Trồng thêm rừng cây quanh thành phố giúp ích gì cho Tháp Năng Lượng Xanh?",
             opts: [
-                { t: "🌳 Cây xanh hấp thụ khí CO₂ và làm mát thành phố", ok: true },
-                { t: "🪵 Cây làm tốn diện tích đất", ok: false, why: "Cây xanh là 'lá phổi' tự nhiên giúp hút khí độc CO₂, tỏa khí Oxy và giảm nhiệt độ cho cả thành phố!" }
+                { t: "🌳 Cây xanh hấp thụ khí CO2 và làm mát thành phố", ok: true },
+                { t: "🪵 Cây làm tốn diện tích đất", ok: false, why: "Cây xanh là 'lá phổi' tự nhiên giúp hút khí độc CO2, tỏa khí Oxy và giảm nhiệt độ cho cả thành phố!" }
             ]
         },
         {
-            q: "9. Gia đình em muốn tiết kiệm điện hằng ngày, thói quen nào dưới đây là đúng?",
+            q: "Gia đình em muốn tiết kiệm điện hằng ngày, thói quen nào dưới đây là đúng?",
             opts: [
                 { t: "🔌 Tắt thiết bị điện khi không sử dụng và tận dụng ánh sáng tự nhiên", ok: true },
                 { t: "📺 Mở tivi và máy tính cùng lúc dù không xem", ok: false, why: "Mở nhiều thiết bị điện khi không sử dụng vừa làm tốn tiền điện vừa làm tăng phát thải khí nhà kính!" }
             ]
+        },
+        {
+            q: "AI điều khiển tấm pin mặt trời xoay hướng theo Mặt Trời trong ngày để làm gì?",
+            opts: [
+                { t: "☀️ Để hứng được nhiều ánh nắng nhất và tạo ra nhiều điện sạch nhất", ok: true },
+                { t: "🌙 Để quay lưng tránh ánh nắng mặt trời", ok: false, why: "Pin mặt trời cần đón trực diện ánh nắng mới sản xuất được tối đa nguồn điện sạch!" }
+            ]
+        },
+        {
+            q: "Khi dùng tủ lạnh ở nhà, hành động nào giúp tiết kiệm điện năng?",
+            opts: [
+                { t: "❄️ Đóng kín cửa tủ lạnh ngay sau khi lấy đồ ăn", ok: true },
+                { t: "🔥 Mở cửa tủ lạnh thật lâu để mát cả phòng", ok: false, why: "Mở cửa tủ lạnh lâu làm hơi lạnh thoát ra ngoài, máy nén phải chạy hết công suất cực kỳ tốn điện!" }
+            ]
+        },
+        {
+            q: "Loại bóng đèn nào dưới đây tiết kiệm điện nhất cho trường học và gia đình?",
+            opts: [
+                { t: "💡 Đèn LED tiết kiệm điện", ok: true },
+                { t: "🔥 Đèn sợi đốt tỏa nhiều nhiệt nóng", ok: false, why: "Đèn sợi đốt tiêu tốn rất nhiều điện năng chỉ để tỏa nhiệt nóng thay vì phát sáng như đèn LED!" }
+            ]
+        },
+        {
+            q: "Khi đun nước hoặc nấu ăn, dùng nguồn năng lượng nào giúp giảm khói bụi ô nhiễm?",
+            opts: [
+                { t: "🔌 Bếp điện từ hoặc bếp năng lượng mặt trời", ok: true },
+                { t: "🏭 Đốt than tổ ong hoặc đốt rác nhựa trong bếp", ok: false, why: "Đốt than tổ ong và rác nhựa sinh ra khí CO và khói độc hại cực kỳ nguy hiểm cho phổi và môi trường!" }
+            ]
+        },
+        {
+            q: "Hệ thống lưới điện thông minh (Smart Grid) dùng AI để làm gì vào giờ cao điểm?",
+            opts: [
+                { t: "🔋 Phân phối điện hợp lý và điều tiết tránh quá tải, mất điện", ok: true },
+                { t: "🗑️ Cắt điện toàn bộ các bệnh viện và trường học", ok: false, why: "AI lưới điện thông minh giúp cân bằng phụ tải để ưu tiên giữ điện ổn định cho nơi thiết yếu chứ không cắt điện bừa bãi!" }
+            ]
+        },
+        {
+            q: "Trên mái nhà trường học có diện tích rộng và nhiều nắng, giải pháp xanh nào tốt nhất?",
+            opts: [
+                { t: "☀️ Lắp đặt hệ thống điện mặt trời áp mái cung cấp điện cho lớp học", ok: true },
+                { t: "🏭 Xây ống khói đốt than trên mái trường", ok: false, why: "Điện mặt trời áp mái vừa giúp chống nóng cho lớp học vừa tạo ra nguồn điện sạch tại chỗ!" }
+            ]
+        },
+        {
+            q: "Khi đang bật máy điều hòa làm mát trong lớp học, chúng ta cần lưu ý điều gì?",
+            opts: [
+                { t: "🪟 Đóng kín cửa phòng để hơi lạnh không thất thoát ra ngoài", ok: true },
+                { t: "🌬️ Mở toang tất cả cửa sổ và cửa chính", ok: false, why: "Mở toang cửa khi bật điều hòa làm khí lạnh bay ra ngoài hết, máy phải chạy liên tục gây lãng phí điện!" }
+            ]
+        },
+        {
+            q: "Năng lượng thủy triều và sóng biển thuộc nhóm năng lượng nào?",
+            opts: [
+                { t: "🌊 Năng lượng tái tạo sạch từ đại dương", ok: true },
+                { t: "🏭 Năng lượng hóa thạch gây khói bụi", ok: false, why: "Sức nước từ thủy triều và sóng biển là nguồn năng lượng tự nhiên tái tạo, không đốt nhiên liệu hóa thạch!" }
+            ]
+        },
+        {
+            q: "Khi sạc đầy 100% pin cho máy tính bảng hoặc xe đạp điện, AI ổ cắm thông minh nên làm gì?",
+            opts: [
+                { t: "🔌 Tự động ngắt dòng sạc để tiết kiệm điện và chống chai pin", ok: true },
+                { t: "🔥 Cứ truyền điện nóng liên tục suốt cả tuần", ok: false, why: "Ngắt sạc khi đầy vừa giúp tiết kiệm điện năng hao phí vừa đảm bảo an toàn phòng chống cháy nổ!" }
+            ]
+        },
+        {
+            q: "Cảm biến AI phát hiện [Bụi bẩn bám dày trên mặt tấm Pin Mặt Trời], hệ thống nên làm gì?",
+            opts: [
+                { t: "💧 Kích hoạt robot lau sạch mặt kính để pin hấp thụ nắng tốt hơn", ok: true },
+                { t: "🪵 Phủ thêm bùn đất lên tấm pin", ok: false, why: "Bụi bẩn che khuất ánh nắng làm giảm hiệu suất phát điện, vệ sinh tấm pin giúp thu được nhiều điện sạch hơn!" }
+            ]
+        },
+        {
+            q: "Phương tiện giao thông công cộng nào chạy bằng năng lượng sạch trong thành phố?",
+            opts: [
+                { t: "🔋 Xe buýt điện và tàu điện đô thị", ok: true },
+                { t: "🏭 Xe tải cũ xả khói đen đặc", ok: false, why: "Xe buýt điện và tàu điện không xả khói CO2 ra đường phố, giúp không khí đô thị trong lành!" }
+            ]
+        },
+        {
+            q: "Khi ủi (là) quần áo đi học, thói quen nào giúp tiết kiệm điện?",
+            opts: [
+                { t: "🔌 Tập trung ủi nhiều quần áo cùng một lúc thay vì bật bàn ủi nhiều lần", ok: true },
+                { t: "🔥 Cắm bàn ủi nóng đỏ rồi bỏ đi chơi game", ok: false, why: "Bàn ủi tiêu thụ công suất điện rất lớn, cắm bỏ quên vừa lãng phí điện vừa cực kỳ dễ gây hỏa hoạn!" }
+            ]
+        },
+        {
+            q: "AI dự báo thời tiết báo ngày mai [Mưa bão lớn, gió giật siêu mạnh], Tua-bin gió nên làm gì?",
+            opts: [
+                { t: "🌬️ AI tự động hãm phanh và xoay cánh quạt để bảo vệ tua-bin khỏi gãy đổ", ok: true },
+                { t: "🏭 Đốt tua-bin gió đi", ok: false, why: "Khi bão quá mạnh vượt ngưỡng an toàn, AI sẽ tự động khóa cánh quạt để bảo vệ thiết bị bền vững lâu dài!" }
+            ]
+        },
+        {
+            q: "Sử dụng bình nước nóng năng lượng mặt trời trên mái nhà có lợi ích gì?",
+            opts: [
+                { t: "☀️ Dùng nhiệt từ ánh nắng để đun nóng nước mà không tốn một số điện nào", ok: true },
+                { t: "🏭 Phải đốt củi trên mái nhà mới có nước nóng", ok: false, why: "Bình nước nóng thái dương năng hấp thụ trực tiếp nhiệt mặt trời để làm nóng nước rất an toàn và tiết kiệm!" }
+            ]
+        },
+        {
+            q: "Năng lượng địa nhiệt là nguồn năng lượng lấy từ đâu?",
+            opts: [
+                { t: "🌍 Nguồn nhiệt tự nhiên nằm sâu trong lòng Trái Đất", ok: true },
+                { t: "🛍️ Lấy từ việc đốt túi nilon", ok: false, why: "Địa nhiệt là nguồn năng lượng tái tạo sạch khai thác hơi nóng tự nhiên từ lòng đất!" }
+            ]
+        },
+        {
+            q: "Tại sao các trung tâm dữ liệu AI lớn trên thế giới lại chuyển sang dùng điện gió và điện mặt trời?",
+            opts: [
+                { t: "🌿 Để vận hành siêu máy tính mà không làm tăng khí thải nhà kính CO2", ok: true },
+                { t: "🏭 Để xả thêm nhiều khói bụi hơn", ok: false, why: "Sử dụng 100% năng lượng tái tạo giúp các trung tâm máy chủ AI phát triển bền vững và thân thiện với khí hậu!" }
+            ]
+        },
+        {
+            q: "Khi chọn mua thiết bị điện mới cho gia đình (tủ lạnh, máy giặt), bố mẹ nên ưu tiên nhãn nào?",
+            opts: [
+                { t: "🌱 Nhãn Năng Lượng Xanh có 5 sao tiết kiệm điện", ok: true },
+                { t: "🏭 Thiết bị đời cũ tiêu tốn thật nhiều điện", ok: false, why: "Nhãn năng lượng 5 sao chứng nhận thiết bị có hiệu suất cao và tiêu thụ ít điện năng nhất!" }
+            ]
+        },
+        {
+            q: "Ở vùng nông thôn có nhiều phụ phẩm nông nghiệp và chất thải chăn nuôi, có thể tạo ra năng lượng gì?",
+            opts: [
+                { t: "🌿 Khí sinh học (Biogas) để đun nấu và phát điện sạch", ok: true },
+                { t: "🌊 Xả thẳng chất thải xuống sông ngòi", ok: false, why: "Hầm Biogas vừa xử lý sạch chất thải chăn nuôi không gây mùi hôi, vừa tạo ra khí đốt miễn phí!" }
+            ]
+        },
+        {
+            q: "Trong thang máy tòa nhà cao tầng, AI điều khiển thông minh giúp tiết kiệm điện bằng cách nào?",
+            opts: [
+                { t: "💡 Điều phối thang máy gần nhất đón khách và tắt đèn thang khi không có người dùng", ok: true },
+                { t: "🔥 Cho tất cả thang máy chạy lên xuống liên tục dù rỗng", ok: false, why: "Cho thang máy chạy rỗng liên tục sẽ làm tiêu hao lượng điện khổng lồ và nhanh hỏng cáp!" }
+            ]
+        },
+        {
+            q: "Sơn tường nhà màu sáng và trồng cây leo chống nắng giúp tiết kiệm điện như thế nào?",
+            opts: [
+                { t: "🌳 Giúp ngôi nhà mát hơn tự nhiên, giảm thời gian phải chạy máy điều hòa", ok: true },
+                { t: "🥶 Làm ngôi nhà tối om phải bật đèn suốt ngày", ok: false, why: "Tường sáng màu phản xạ nhiệt tốt và cây xanh che mát giúp giảm đáng kể lượng điện dùng cho làm mát!" }
+            ]
+        },
+        {
+            q: "Khi máy tính ở phòng Tin học không sử dụng trong giờ ra chơi dài, chế độ nào giúp tiết kiệm điện?",
+            opts: [
+                { t: "💻 Tự động chuyển sang chế độ Ngủ (Sleep) hoặc tắt màn hình", ok: true },
+                { t: "📺 Mở video 4K chạy liên tục trên mọi máy", ok: false, why: "Chế độ Sleep và tắt màn hình khi rời máy giúp giảm hơn 80% điện năng tiêu thụ trong giờ nghỉ!" }
+            ]
+        },
+        {
+            q: "Sự kiện 'Giờ Trái Đất' khuyến khích mọi người tắt đèn không cần thiết trong 60 phút nhằm mục đích gì?",
+            opts: [
+                { t: "🌍 Nâng cao ý thức tiết kiệm năng lượng và bảo vệ khí hậu toàn cầu", ok: true },
+                { t: "🎮 Để mọi người đốt pháo hoa thay đèn điện", ok: false, why: "Giờ Trái Đất là thông điệp toàn cầu nhắc nhở con người chung tay tiết kiệm điện và giảm phát thải CO2!" }
+            ]
+        },
+        {
+            q: "Cảm biến AI tưới cây công viên nên hoạt động vào thời điểm nào để tiết kiệm cả điện bơm nước và nước?",
+            opts: [
+                { t: "💧 Tưới vào sáng sớm hoặc chiều mát khi trời không mưa", ok: true },
+                { t: "☀️ Bơm tưới lúc 12 giờ trưa nắng gắt hoặc khi trời đang mưa to", ok: false, why: "Tưới lúc giữa trưa nắng làm nước bốc hơi mất hết, còn tưới lúc đang mưa là lãng phí điện bơm nước!" }
+            ]
+        },
+        {
+            q: "Khi đun nước bằng ấm siêu tốc, lượng nước đổ vào ấm như thế nào là hợp lý nhất?",
+            opts: [
+                { t: "💧 Đun lượng nước vừa đủ với nhu cầu sử dụng", ok: true },
+                { t: "💦 Lúc nào cũng đun đầy tràn ấm dù chỉ pha 1 tách trà nhỏ", ok: false, why: "Đun lượng nước dư thừa quá nhiều sẽ làm ấm phải chạy lâu hơn và tốn điện gấp đôi!" }
+            ]
+        },
+        {
+            q: "Cánh quạt của Tua-bin điện gió khổng lồ quay được là nhờ nguồn năng lượng nào?",
+            opts: [
+                { t: "🌬️ Động năng của luồng gió tự nhiên trong khí quyển", ok: true },
+                { t: "🏭 Nhờ đốt xăng dầu bên trong cánh quạt", ok: false, why: "Tua-bin gió đón luồng gió tự nhiên làm quay cánh quạt và máy phát điện mà không tốn một giọt xăng nào!" }
+            ]
+        },
+        {
+            q: "Tại sao việc giảm sử dụng túi nilon và đồ nhựa cũng giúp tiết kiệm năng lượng?",
+            opts: [
+                { t: "🌿 Vì sản xuất nhựa tiêu tốn rất nhiều dầu mỏ và điện năng tại nhà máy", ok: true },
+                { t: "🛍️ Vì túi nilon tự phát ra điện", ok: false, why: "Nhựa được chế tạo từ dầu mỏ và tiêu tốn nhiều năng lượng sản xuất; giảm rác nhựa chính là tiết kiệm tài nguyên!" }
+            ]
+        },
+        {
+            q: "Khi AI phát hiện một đường dây điện trong thành phố bị rò rỉ gây thất thoát điện, AI sẽ làm gì?",
+            opts: [
+                { t: "⚡ Khoanh vùng vị trí sự cố và báo ngay cho kỹ sư điện đến sửa chữa kịp thời", ok: true },
+                { t: "😴 Bỏ qua không thông báo cho ai biết", ok: false, why: "Phát hiện sớm rò rỉ điện giúp ngăn chặn nguy cơ chập cháy và tránh thất thoát nguồn năng lượng quý giá!" }
+            ]
         }
     ];
+
+    let energyAIQuestions = [];
     let i2QIdx = 0;
 
     function initIsland2() {
@@ -2123,6 +2352,9 @@
         slotEarnedStars = Array(6).fill(0);
         i2WasReminded = false;
         i2QIdx = 0;
+
+        // Rút ngẫu nhiên 9 câu hỏi không trùng lặp từ ngân hàng 36 câu
+        energyAIQuestions = shuffleArray(energyAIQuestionBank).slice(0, 9);
 
         const banner = document.getElementById('bot-banner-2');
         if (banner) banner.classList.remove('warn');
@@ -2211,7 +2443,7 @@
             if (banner) banner.classList.add('warn');
 
             document.getElementById('bot-msg-2').innerHTML =
-                `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ:</strong> Em vẫn còn <strong>${remainingCoal} Nhà máy than ${lpIcon('coal', 'xs')}</strong> đang xả khói đen CO₂! Em bắt buộc phải chuyển đổi hết toàn bộ 6 nhà máy sang năng lượng sạch rồi mới bấm Hoàn thành nhé! <em>(Các nhà máy chuyển đổi sau lời nhắc này chỉ được tính <strong>+5 ⭐</strong>)</em>.`;
+                `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ:</strong> Em vẫn còn <strong>${remainingCoal} Nhà máy than ${lpIcon('coal', 'xs')}</strong> đang xả khói đen CO2! Em bắt buộc phải chuyển đổi hết toàn bộ 6 nhà máy sang năng lượng sạch rồi mới bấm Hoàn thành nhé! <em>(Các nhà máy chuyển đổi sau lời nhắc này chỉ được tính <strong>+5 ⭐</strong>)</em>.`;
             renderEnergySlots();
             return;
         }
@@ -2219,7 +2451,7 @@
         playSound('win');
         document.getElementById('bot-banner-2').classList.remove('warn');
         document.getElementById('bot-msg-2').innerHTML =
-            `${lpIcon('check', 'xs')} Chúc mừng! Hệ thống năng lượng sạch đã hoàn tất. Bây giờ hãy cùng AI trả lời 9 tình huống điều phối điện thông minh để nạp đầy Viên Pin Năng Lượng nhé!`;
+            `${lpIcon('check', 'xs')} Chúc mừng! Hệ thống năng lượng sạch đã hoàn tất. Bây giờ hãy cùng AI trả lời 9 tình huống điều phối điện ngẫu nhiên để nạp đầy Viên Pin Năng Lượng nhé!`;
         document.getElementById('i2-phase1').style.display = 'none';
         document.getElementById('i2-phase2').style.display = 'block';
         renderIsland2Quiz();
@@ -2231,7 +2463,7 @@
 
         document.getElementById('i2-q-progress').innerText = `${i2QIdx + 1}/${energyAIQuestions.length}`;
         const item = energyAIQuestions[i2QIdx];
-        document.getElementById('i2-q-title').innerText = item.q;
+        document.getElementById('i2-q-title').innerText = `Câu ${i2QIdx + 1}: ${item.q}`;
         const optsDiv = document.getElementById('i2-q-options');
         optsDiv.innerHTML = '';
 
@@ -2277,70 +2509,263 @@
     }
 
     /* ==========================================
-       ĐẢO 3: VƯƠNG QUỐC RỪNG XANH
+       ĐẢO 3: VƯƠNG QUỐC RỪNG XANH + NGÂN HÀNG 35 CÂU HỎI KIỂM LÂM AI
+       - Mỗi lượt chơi rút ngẫu nhiên 5 câu hỏi không trùng lặp từ ngân hàng 35 câu
        ========================================== */
     let currentTool = 'scan';
     let forestCells = [];
     let fixedCount = 0;
     let i3QIdx = 0;
 
-    const forestQuizList = [
+    const forestQuizBank = [
         {
-            q: "1. Công nghệ Thị giác máy tính (Computer Vision) của AI giúp ích gì cho kiểm lâm?",
+            q: "Công nghệ Thị giác máy tính (Computer Vision) của AI giúp ích gì cho kiểm lâm?",
             opts: [
                 { t: "📷 Tự động nhận diện khói cháy rừng từ camera vệ tinh/drone sớm nhất", ok: true },
-                {
-                    t: "🪓 Tự động chặt cây trong rừng",
-                    ok: false,
-                    why: "Chặt phá cây rừng sẽ làm mất nơi ở của muôn loài và làm Trái Đất nóng lên! AI được tạo ra để giám sát và bảo vệ rừng chứ không phải để phá rừng."
-                }
+                { t: "🪓 Tự động chặt cây trong rừng", ok: false, why: "Chặt phá cây rừng sẽ làm mất nơi ở của muôn loài và làm Trái Đất nóng lên! AI được tạo ra để giám sát và bảo vệ rừng." }
             ]
         },
         {
-            q: "2. Khi đi dã ngoại trong rừng, hành động nào giúp phòng chống cháy rừng?",
+            q: "Khi đi dã ngoại trong rừng, hành động nào giúp phòng chống cháy rừng?",
             opts: [
                 { t: "💧 Không đốt lửa bừa bãi và thu dọn sạch rác trước khi về", ok: true },
-                {
-                    t: "🔥 Đốt lửa trại sát các bụi cây khô",
-                    ok: false,
-                    why: "Cây khô và lá rụng rất dễ bén lửa! Đốt lửa sát bụi cây khô khi có gió thổi sẽ làm ngọn lửa bùng phát thành đám cháy rừng lớn."
-                }
+                { t: "🔥 Đốt lửa trại sát các bụi cây khô", ok: false, why: "Cây khô và lá rụng rất dễ bén lửa! Đốt lửa sát bụi cây khô khi có gió thổi sẽ làm ngọn lửa bùng phát thành đám cháy rừng lớn." }
             ]
         },
         {
-            q: "3. Vì sao bảo vệ rừng lại giúp chống biến đổi khí hậu hiệu quả?",
+            q: "Vì sao bảo vệ rừng lại giúp chống biến đổi khí hậu hiệu quả?",
             opts: [
-                { t: "🌳 Rừng là 'lá phổi xanh' hấp thụ khí CO₂ và giữ nước chống lũ lụt", ok: true },
-                {
-                    t: "🍂 Vì lá rừng rụng làm Trái Đất nặng hơn",
-                    ok: false,
-                    why: "Lá rụng chỉ phân hủy thành mùn nuôi dưỡng đất. Rừng giúp chống biến đổi khí hậu là nhờ cây xanh quang hợp hút khí nhà kính CO₂ và tỏa ra khí Oxy trong lành!"
-                }
+                { t: "🌳 Rừng là 'lá phổi xanh' hấp thụ khí CO2 và giữ nước chống lũ lụt", ok: true },
+                { t: "🍂 Vì lá rừng rụng làm Trái Đất nặng hơn", ok: false, why: "Lá rụng chỉ phân hủy thành mùn nuôi dưỡng đất. Rừng giúp chống biến đổi khí hậu là nhờ cây xanh quang hợp hút khí nhà kính CO2!" }
             ]
         },
         {
-            q: "4. Khi Camera AI phát hiện một loài động vật quý hiếm bị thương, chúng ta nên làm gì?",
+            q: "Khi Camera AI phát hiện một loài động vật quý hiếm bị thương, chúng ta nên làm gì?",
             opts: [
                 { t: "🚑 Báo ngay cho đội cứu hộ động vật hoang dã để chăm sóc và thả về tự nhiên", ok: true },
-                {
-                    t: "🏠 Bắt về nhà nuôi làm thú cưng",
-                    ok: false,
-                    why: "Động vật hoang dã quý hiếm cần môi trường rừng tự nhiên để sinh sống và cần bác sĩ thú y chuyên nghiệp chữa trị, việc tự ý bắt nhốt là vi phạm pháp luật bảo tồn!"
-                }
+                { t: "🏠 Bắt về nhà nuôi làm thú cưng", ok: false, why: "Động vật hoang dã quý hiếm cần môi trường rừng tự nhiên để sinh sống và cần bác sĩ thú y chuyên nghiệp chữa trị!" }
             ]
         },
         {
-            q: "5. Làm thế nào để giúp AI nhận diện các loài cây và động vật chính xác hơn?",
+            q: "Làm thế nào để giúp AI nhận diện các loài cây và động vật chính xác hơn?",
             opts: [
                 { t: "📸 Cung cấp nhiều hình ảnh mẫu rõ nét, đa dạng cho AI học", ok: true },
-                {
-                    t: "🙈 Che kín ống kính camera lại",
-                    ok: false,
-                    why: "Thị giác máy tính của AI cần 'nhìn' qua camera và học từ dữ liệu hình ảnh. Nếu che kín ống kính, AI sẽ bị mù hoàn toàn và không thể nhận diện được gì!"
-                }
+                { t: "🙈 Che kín ống kính camera lại", ok: false, why: "Thị giác máy tính của AI cần 'nhìn' qua camera và học từ dữ liệu hình ảnh. Nếu che kín ống kính, AI sẽ không thể nhận diện được gì!" }
+            ]
+        },
+        {
+            q: "Hệ thống cảm biến âm thanh AI đặt trong rừng già có thể giúp kiểm lâm phát hiện điều gì?",
+            opts: [
+                { t: "🔊 Nhận diện tiếng cưa máy trái phép hoặc tiếng súng săn trộm để báo động ngay", ok: true },
+                { t: "🎵 Phát nhạc thật to làm thú rừng hoảng sợ", ok: false, why: "AI phân tích âm thanh giúp phân biệt tiếng cưa gỗ lậu với âm thanh tự nhiên để kiểm lâm ngăn chặn kẻ xấu kịp thời!" }
+            ]
+        },
+        {
+            q: "Rừng ngập mặn ven biển Việt Nam có vai trò đặc biệt nào đối với môi trường?",
+            opts: [
+                { t: "🌱 Chắn sóng bão bảo vệ đê biển và hấp thụ lượng lớn khí carbon", ok: true },
+                { t: "🪵 Làm cản trở tàu thuyền nên cần chặt bỏ hết", ok: false, why: "Rừng ngập mặn là bức tường xanh bảo vệ bờ biển khỏi sạt lở và là nơi sinh sống của tôm cá!" }
+            ]
+        },
+        {
+            q: "Máy bay không người lái (Drone AI) gieo hạt giống trồng rừng có ưu điểm gì?",
+            opts: [
+                { t: "🚁 Bay tới được những sườn núi dốc hiểm trở và gieo hàng ngàn hạt giống rất nhanh", ok: true },
+                { t: "🔥 Làm cháy hết cỏ trên đồi", ok: false, why: "Drone AI giúp phủ xanh các vùng đồi trọc hiểm trở mà con người rất khó leo lên tới!" }
+            ]
+        },
+        {
+            q: "Vì sao không nên vứt chai thủy tinh hoặc mảnh kính vỡ trong rừng nắng nóng?",
+            opts: [
+                { t: "🔥 Thủy tinh có thể hội tụ ánh nắng mặt trời như kính lúp gây cháy lá khô", ok: true },
+                { t: "💧 Thủy tinh tự tan thành nước tưới cây", ok: false, why: "Dưới nắng gắt, mảnh chai thủy tinh hội tụ tia nhiệt vào thảm cỏ khô là một trong những nguyên nhân gây cháy rừng!" }
+            ]
+        },
+        {
+            q: "Loài ong rừng và chim chóc đóng vai trò gì đối với sự phát triển của rừng xanh?",
+            opts: [
+                { t: "🌿 Giúp thụ phấn cho hoa và phát tán hạt giống cây rừng đi khắp nơi", ok: true },
+                { t: "🪓 Làm cây rừng bị héo khô", ok: false, why: "Ong giúp thụ phấn và chim ăn quả giúp gieo hạt giống tự nhiên, duy trì sự đa dạng sinh học cho khu rừng!" }
+            ]
+        },
+        {
+            q: "Khi đi tham quan Vườn Quốc Gia, em thấy một bông hoa rừng rất đẹp và quý hiếm, em nên làm gì?",
+            opts: [
+                { t: "📷 Chỉ chụp ảnh kỷ niệm và giữ nguyên bông hoa trên cây", ok: true },
+                { t: "🗑️ Bẻ cành, hái hoa mang về rồi vứt dọc đường", ok: false, why: "Không bẻ cành hái hoa giúp loài thực vật quý hiếm tiếp tục kết hạt và duy trì nòi giống trong tự nhiên!" }
+            ]
+        },
+        {
+            q: "Hiện tượng 'Đất trống đồi trọc' do mất rừng sẽ dẫn đến hậu quả nguy hiểm nào khi mưa bão?",
+            opts: [
+                { t: "🌊 Lũ quét, sạt lở đất và xói mòn vì không còn rễ cây giữ đất giữ nước", ok: true },
+                { t: "☀️ Làm trời không bao giờ mưa nữa", ok: false, why: "Rễ cây rừng giống như bộ lưới khổng lồ giữ đất và thấm nước mưa; mất rừng sẽ gây lũ quét và sạt lở rất nguy hiểm!" }
+            ]
+        },
+        {
+            q: "Camera bẫy ảnh thông minh (Camera Trap) tích hợp AI hoạt động như thế nào vào ban đêm?",
+            opts: [
+                { t: "🌙 Dùng cảm biến hồng ngoại tự động chụp khi có thú quý đi qua mà không làm chúng giật mình", ok: true },
+                { t: "💡 Bật đèn pha chói lóa suốt đêm", ok: false, why: "Hồng ngoại giúp AI ghi nhận hình ảnh động vật hoang dã kiếm ăn ban đêm một cách tự nhiên và an toàn nhất!" }
+            ]
+        },
+        {
+            q: "Tại sao việc săn bắt và buôn bán động vật hoang dã lại làm mất cân bằng sinh thái?",
+            opts: [
+                { t: "🐼 Làm chuỗi thức ăn tự nhiên bị đứt gãy và nhiều loài có nguy cơ tuyệt chủng", ok: true },
+                { t: "🌳 Làm cây trong rừng mọc nhanh hơn", ok: false, why: "Mỗi loài động vật là một mắt xích quan trọng trong hệ sinh thái rừng, mất đi sẽ làm suy thoái toàn bộ khu rừng!" }
+            ]
+        },
+        {
+            q: "AI phân tích ảnh chụp vệ tinh có thể giúp các nhà khoa học theo dõi rừng như thế nào?",
+            opts: [
+                { t: "🛰️ So sánh ảnh vệ tinh qua từng tháng để phát hiện ngay diện tích rừng bị suy giảm", ok: true },
+                { t: "🎮 Chỉ dùng để vẽ bản đồ trong trò chơi", ok: false, why: "Ảnh vệ tinh kết hợp AI giúp giám sát hàng triệu héc-ta rừng trên toàn cầu mỗi ngày!" }
+            ]
+        },
+        {
+            q: "Khi trồng cây gây rừng, vì sao nên trồng nhiều loài cây bản địa đa dạng thay vì chỉ trồng 1 loại cây duy nhất?",
+            opts: [
+                { t: "🌳 Rừng đa dạng loài sẽ bền vững hơn, chống sâu bệnh tốt và là nhà của nhiều loài thú", ok: true },
+                { t: "🪵 Trồng 1 loại cây để dễ chặt hết một lần", ok: false, why: "Rừng đa dạng sinh học có sức đề kháng tự nhiên cao và tạo môi trường sống phong phú cho muôn loài!" }
+            ]
+        },
+        {
+            q: "Rác thải nhựa do khách du lịch bỏ lại trong rừng gây nguy hiểm gì cho động vật hoang dã?",
+            opts: [
+                { t: "🛍️ Thú rừng tưởng nhầm là thức ăn, khi nuốt phải túi nilon sẽ bị tắc ruột nguy hiểm tính mạng", ok: true },
+                { t: "🎁 Làm đồ chơi an toàn cho thú rừng", ok: false, why: "Hươu, nai, khỉ và chim rừng rất dễ nuốt phải mảnh nhựa hoặc mắc kẹt vào rác nhựa!" }
+            ]
+        },
+        {
+            q: "Vòng đeo cổ định vị GPS thông minh gắn trên một số cá thể voi hoặc hổ quý hiếm có tác dụng gì?",
+            opts: [
+                { t: "🛰️ Giúp kiểm lâm theo dõi đường di chuyển để bảo vệ chúng khỏi kẻ săn trộm và tránh xung đột", ok: true },
+                { t: "🎮 Để điều khiển thú rừng từ xa như robot", ok: false, why: "Thiết bị định vị giúp các nhà bảo tồn hiểu tập tính di cư và bảo vệ động vật hoang dã an toàn!" }
+            ]
+        },
+        {
+            q: "Một cây trưởng thành trung bình có thể hấp thụ khoảng bao nhiêu kg khí CO2 mỗi năm?",
+            opts: [
+                { t: "🌳 Khoảng 20 kg khí CO2 mỗi năm và nhả ra khí Oxy quý giá", ok: true },
+                { t: "🏭 Cây không hấp thụ khí CO2 mà chỉ xả khói", ok: false, why: "Cây xanh hấp thụ hàng chục kg CO2 mỗi năm qua quá trình quang hợp để làm sạch bầu khí quyển!" }
+            ]
+        },
+        {
+            q: "Khi phát hiện một đám cháy nhỏ mới bùng lên ở bìa rừng, hành động nào của học sinh là đúng nhất?",
+            opts: [
+                { t: "🚑 Báo ngay cho người lớn, kiểm lâm hoặc gọi số 114 cứu hỏa để dập lửa kịp thời", ok: true },
+                { t: "🙈 Đứng nhìn hoặc ném thêm cành khô vào lửa", ok: false, why: "Học sinh nhỏ tuổi cần báo ngay cho người lớn và lực lượng cứu hỏa 114 để xử lý an toàn, nhanh chóng!" }
+            ]
+        },
+        {
+            q: "Ứng dụng nhận diện lá cây bằng AI trên điện thoại giúp học sinh học môn Tự nhiên & Xã hội thế nào?",
+            opts: [
+                { t: "📸 Chụp ảnh chiếc lá để AI tra cứu tên loài cây, đặc điểm và cách chăm sóc bảo vệ", ok: true },
+                { t: "🪓 Hướng dẫn cách chặt hạ cây cổ thụ", ok: false, why: "AI nhận diện thực vật giúp học sinh khám phá thiên nhiên và thêm yêu quý các loài cây xung quanh!" }
+            ]
+        },
+        {
+            q: "Tầng thảm mục (lá cây mục, cành khô, nấm) dưới mặt đất rừng có lợi ích gì?",
+            opts: [
+                { t: "🍂 Giữ độ ẩm cho đất như miếng bọt biển và cung cấp chất dinh dưỡng nuôi cây", ok: true },
+                { t: "🗑️ Làm bẩn khu rừng nên cần đổ bê tông kín mặt đất", ok: false, why: "Thảm mục rừng là nơi sinh sống của vi sinh vật có lợi và giúp giữ nước ngầm cực kỳ hiệu quả!" }
+            ]
+        },
+        {
+            q: "Vì sao chúng ta không nên mua các đồ trang sức hay vật phẩm làm từ ngà voi, sừng tê giác?",
+            opts: [
+                { t: "🐼 Vì không mua bán sẽ giúp chấm dứt nạn săn bắn sát hại động vật hoang dã quý hiếm", ok: true },
+                { t: "🛍️ Vì mua càng nhiều thì voi và tê giác càng vui", ok: false, why: "'Không có người mua thì không còn kẻ săn trộm' - nói không với sản phẩm từ động vật hoang dã là bảo vệ sự sống!" }
+            ]
+        },
+        {
+            q: "Rừng đầu nguồn ở trên các vùng núi cao có vai trò gì đối với các dòng sông bên dưới?",
+            opts: [
+                { t: "💧 Điều hòa nguồn nước, giữ nước mùa mưa và cung cấp nước ngọt cho sông suối mùa khô", ok: true },
+                { t: "🔥 Làm các dòng sông bị cạn khô hết", ok: false, why: "Rừng đầu nguồn giữ nước mưa thấm vào lòng đất, giúp sông suối có nước chảy quanh năm và giảm lũ lụt!" }
+            ]
+        },
+        {
+            q: "Khi AI phân tích độ ẩm đất và nhiệt độ rừng thấy [Nắng nóng khô hanh kéo dài trên 38°C], AI sẽ phát cảnh báo gì?",
+            opts: [
+                { t: "🔥 Cảnh báo nguy cơ cháy rừng cấp độ cực kỳ nguy hiểm để tăng cường tuần tra", ok: true },
+                { t: "❄️ Cảnh báo tuyết rơi trong rừng nhiệt đới", ok: false, why: "Thời tiết khô hanh và nắng nóng kéo dài làm thảm thực vật rất dễ bắt lửa, cần cảnh báo sớm để phòng cháy!" }
+            ]
+        },
+        {
+            q: "Phong trào 'Tết trồng cây' ở trường học và địa phương mang lại ý nghĩa gì?",
+            opts: [
+                { t: "🌱 Góp phần phủ xanh đất trống, làm đẹp cảnh quan và tạo bóng mát chống biến đổi khí hậu", ok: true },
+                { t: "🪵 Trồng xong rồi bỏ mặc không tưới nước chăm sóc", ok: false, why: "Trồng thêm một cây xanh và chăm sóc cây lớn lên là hành động thiết thực nhất để bảo vệ Trái Đất!" }
+            ]
+        },
+        {
+            q: "Loài Gấu Trúc và Voọc mũi hếch thuộc nhóm động vật nào cần được bảo vệ nghiêm ngặt?",
+            opts: [
+                { t: "🐼 Động vật quý hiếm nằm trong Sách Đỏ có nguy cơ tuyệt chủng", ok: true },
+                { t: "🏠 Vật nuôi phổ biến trong mọi gia đình", ok: false, why: "Các loài trong Sách Đỏ có số lượng ngoài tự nhiên rất ít, cần được bảo vệ môi trường sống nghiêm ngặt!" }
+            ]
+        },
+        {
+            q: "Khi đi bộ xuyên rừng cùng đoàn trải nghiệm, vì sao em nên đi đúng theo đường mòn hướng dẫn?",
+            opts: [
+                { t: "🌿 Để đảm bảo an toàn và không giẫm đạp làm hỏng các cây non, tổ côn trùng dưới đất", ok: true },
+                { t: "🪓 Để chặt cây mở thêm thật nhiều đường mới", ok: false, why: "Đi đúng đường mòn vừa giúp em không bị lạc trong rừng vừa bảo vệ thảm thực vật tự nhiên!" }
+            ]
+        },
+        {
+            q: "Sử dụng sản phẩm gỗ có chứng chỉ rừng bền vững (FSC) có ý nghĩa là gì?",
+            opts: [
+                { t: "🌳 Gỗ được khai thác từ rừng trồng có kế hoạch trồng lại đầy đủ, không phá rừng tự nhiên", ok: true },
+                { t: "🪓 Gỗ chặt trộm từ rừng cấm quốc gia", ok: false, why: "Khai thác bền vững luôn đi đôi với việc trồng mới và tái tạo rừng để không làm suy giảm diện tích rừng!" }
+            ]
+        },
+        {
+            q: "Nếu phát hiện một chú chim non bị rơi khỏi tổ trong vườn trường, em nên làm gì?",
+            opts: [
+                { t: "🌳 Nhờ thầy cô hoặc người lớn nhẹ nhàng đặt chim non trở lại tổ trên cây", ok: true },
+                { t: "🛍️ Bỏ vào túi nilon buộc kín lại", ok: false, why: "Đưa chim non về lại tổ giúp chim bố mẹ tiếp tục mớm mồi và nuôi dưỡng chú chim lớn lên tự nhiên!" }
+            ]
+        },
+        {
+            q: "AI giúp các nhà thực vật học phát hiện bệnh trên lá cây rừng bằng cách nào?",
+            opts: [
+                { t: "📷 Quét hình ảnh đốm lá bất thường để nhận biết sớm nấm bệnh và sâu hại rừng", ok: true },
+                { t: "🔥 Đốt trụi cả cánh rừng khi thấy 1 chiếc lá vàng", ok: false, why: "Nhận diện sớm dấu hiệu sâu bệnh qua hình ảnh lá giúp cứu chữa cây rừng kịp thời trước khi dịch bệnh lây lan!" }
+            ]
+        },
+        {
+            q: "Tại sao tiếng ồn quá lớn từ loa thùng công suất cao lại không được khuyến khích trong khu bảo tồn thiên nhiên?",
+            opts: [
+                { t: "🐼 Tiếng ồn lớn làm động vật hoang dã hoảng loạn, bỏ tổ và ảnh hưởng mùa sinh sản", ok: true },
+                { t: "🎵 Vì thú rừng chỉ thích nghe nhạc rock", ok: false, why: "Giữ yên tĩnh trong khu bảo tồn giúp các loài chim thú sinh sống bình yên trong ngôi nhà tự nhiên của chúng!" }
+            ]
+        },
+        {
+            q: "Cây xanh ở sân trường giúp ích gì cho sức khỏe của học sinh mỗi ngày?",
+            opts: [
+                { t: "🌳 Tỏa bóng mát, lọc bụi mịn trong không khí và cung cấp khí Oxy giúp tinh thần sảng khoái", ok: true },
+                { t: "🏭 Làm sân trường nóng bức hơn", ok: false, why: "Tán cây xanh giúp giảm nhiệt độ sân trường từ 3-5°C và chắn bụi, mang lại bầu không khí trong lành!" }
+            ]
+        },
+        {
+            q: "Để giúp rừng cây phát triển bền vững, học sinh tiểu học có thể làm việc vừa sức nào sau đây?",
+            opts: [
+                { t: "🌱 Chăm sóc bồn hoa cây cảnh ở trường, tiết kiệm giấy viết và tuyên truyền bảo vệ rừng", ok: true },
+                { t: "🪓 Tự mình mang cưa vào rừng già", ok: false, why: "Mỗi trang giấy tiết kiệm được và mỗi mầm cây được em tưới nước hằng ngày đều góp phần bảo vệ rừng xanh!" }
+            ]
+        },
+        {
+            q: "Khi AI kết hợp dữ liệu từ cảm biến độ ẩm, hướng gió và bản đồ địa hình trong đám cháy rừng, AI giúp được gì?",
+            opts: [
+                { t: "🚁 Dự đoán hướng lửa lan để chỉ huy đội máy bay chữa cháy đón đầu dập lửa an toàn", ok: true },
+                { t: "🌬️ Thổi thêm gió cho lửa cháy to hơn", ok: false, why: "Dự báo chính xác hướng cháy lan giúp lực lượng cứu hỏa khoanh vùng dập lửa nhanh và bảo vệ an toàn cho lính cứu hỏa!" }
             ]
         }
     ];
+
+    let forestQuizList = [];
 
     function initIsland3() {
         showScreen('screen-island-3');
@@ -2348,6 +2773,10 @@
         currentTool = 'scan';
         fixedCount = 0;
         i3QIdx = 0;
+
+        // Rút ngẫu nhiên 5 câu hỏi Kiểm lâm AI từ ngân hàng 35 câu
+        forestQuizList = shuffleArray(forestQuizBank).slice(0, 5);
+
         document.getElementById('forest-fixed').innerText = '0';
         document.getElementById('i3-phase1').style.display = 'block';
         document.getElementById('i3-phase2').style.display = 'none';
@@ -2355,7 +2784,7 @@
         const banner3 = document.getElementById('bot-banner-3');
         if (banner3) banner3.classList.remove('warn');
         document.getElementById('bot-msg-3').innerText =
-            "Pha 1: Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ (Đúng +10⭐, Sai công cụ -5⭐). Sau đó trả lời 5 câu hỏi Kiểm lâm AI!";
+            "Pha 1: Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ (Đúng +10⭐, Sai công cụ -5⭐). Sau đó trả lời 5 câu hỏi ngẫu nhiên của Kiểm lâm AI!";
 
         selectForestTool('scan');
 
@@ -2441,7 +2870,7 @@
                     document.getElementById('i3-phase1').style.display = 'none';
                     document.getElementById('i3-phase2').style.display = 'block';
                     document.getElementById('bot-msg-3').innerHTML =
-                        `${lpIcon('trophy', 'xs')} Đã dập tắt hết đám cháy và cứu hộ xong! Bây giờ em hãy trả lời 5 câu hỏi của Kiểm lâm AI nhé!`;
+                        `${lpIcon('trophy', 'xs')} Đã dập tắt hết đám cháy và cứu hộ xong! Bây giờ em hãy trả lời 5 câu hỏi ngẫu nhiên của Kiểm lâm AI nhé!`;
                     renderIsland3Quiz();
                 }, 350);
             }
@@ -2457,7 +2886,7 @@
         if (i3QIdx >= forestQuizList.length) return;
         document.getElementById('i3-q-progress').innerText = `${i3QIdx + 1}/${forestQuizList.length}`;
         const item = forestQuizList[i3QIdx];
-        document.getElementById('i3-q-title').innerText = item.q;
+        document.getElementById('i3-q-title').innerText = `Câu ${i3QIdx + 1}: ${item.q}`;
         const optsDiv = document.getElementById('i3-q-options');
         optsDiv.innerHTML = '';
 
@@ -2499,7 +2928,8 @@
     }
 
     /* ==========================================
-       ĐẢO 4: NGỌN NÚI KHÍ HẬU (LOW-POLY 3D)
+       ĐẢO 4: NGỌN NÚI KHÍ HẬU + NGÂN HÀNG 45 CÂU HỎI PHÁT TRIỂN BỀN VỮNG
+       - Mỗi lượt chơi rút ngẫu nhiên 15 câu hỏi không trùng lặp từ ngân hàng 45 câu
        ========================================== */
     const mountainZigzagCoords = [
         { x: 75,  y: 405 },
@@ -2519,173 +2949,325 @@
         { x: 160, y: 52  }
     ];
 
-    const climateQuiz = [
+    const climateQuizBank = [
         {
-            q: "1. Khi đi học cách nhà 400m, cách nào giúp giảm khí thải CO₂ tốt nhất?",
+            q: "Khi đi học cách nhà 400m, cách nào giúp giảm khí thải CO2 tốt nhất?",
             opts: [
                 { text: "🚲 Đi bộ hoặc đi xe đạp", ok: true },
-                {
-                    text: "🚗 Đi bằng ô tô riêng mỗi ngày",
-                    ok: false,
-                    why: "Ô tô chạy xăng dầu đốt nhiên liệu hóa thạch và xả nhiều khí nhà kính CO₂ làm băng Bắc Cực tan nhanh hơn, trong khi quãng đường 400m rất gần để đi bộ hoặc đạp xe!"
-                }
+                { text: "🚗 Đi bằng ô tô riêng mỗi ngày", ok: false, why: "Ô tô chạy xăng dầu đốt nhiên liệu hóa thạch và xả nhiều khí nhà kính CO2 làm băng Bắc Cực tan nhanh hơn!" }
             ]
         },
         {
-            q: "2. Khi mua nước uống, hành động nào giúp bảo vệ đại dương khỏi rác nhựa?",
+            q: "Khi mua nước uống, hành động nào giúp bảo vệ đại dương khỏi rác nhựa?",
             opts: [
                 { text: "🍼 Mang theo bình nước cá nhân dùng nhiều lần", ok: true },
-                {
-                    text: "🛍️ Dùng thật nhiều ly nhựa và túi nilon dùng 1 lần",
-                    ok: false,
-                    why: "Ly nhựa và túi nilon dùng 1 lần phải mất hàng trăm năm mới phân hủy, khi trôi ra biển sẽ gây nguy hiểm cho rùa biển và cá!"
-                }
+                { text: "🛍️ Dùng thật nhiều ly nhựa và túi nilon dùng 1 lần", ok: false, why: "Ly nhựa và túi nilon dùng 1 lần phải mất hàng trăm năm mới phân hủy, khi trôi ra biển sẽ gây nguy hiểm cho sinh vật biển!" }
             ]
         },
         {
-            q: "3. Trí tuệ nhân tạo (AI) giúp ích gì trong việc ứng phó với biến đổi khí hậu?",
+            q: "Trí tuệ nhân tạo (AI) giúp ích gì trong việc ứng phó với biến đổi khí hậu?",
             opts: [
                 { text: "🛰️ Phân tích dữ liệu vệ tinh để dự báo bão lũ, cháy rừng sớm", ok: true },
-                {
-                    text: "🎮 Chỉ dùng để chơi game giải trí",
-                    ok: false,
-                    why: "AI không chỉ để giải trí mà còn là công cụ khoa học mạnh mẽ giúp phân tích thời tiết, đo tốc độ tan băng và cảnh báo thiên tai cứu sống con người!"
-                }
+                { text: "🎮 Chỉ dùng để chơi game giải trí", ok: false, why: "AI là công cụ khoa học mạnh mẽ giúp phân tích thời tiết, đo tốc độ tan băng và cảnh báo thiên tai cứu sống con người!" }
             ]
         },
         {
-            q: "4. Các siêu máy tính chạy AI cũng tiêu thụ điện năng. Em nên dùng AI thế nào?",
+            q: "Các siêu máy tính chạy AI cũng tiêu thụ điện năng. Em nên dùng AI thế nào?",
             opts: [
                 { text: "💡 Sử dụng AI thông minh, đúng mục đích học tập, không spam vô ích", ok: true },
-                {
-                    text: "📱 Bật máy chạy AI liên tục dù không có nhu cầu",
-                    ok: false,
-                    why: "Mỗi yêu cầu gửi cho máy chủ AI đều tiêu tốn điện năng và nước làm mát trung tâm dữ liệu. Bật chạy vô ích sẽ gây lãng phí năng lượng!"
-                }
+                { text: "📱 Bật máy chạy AI liên tục dù không có nhu cầu", ok: false, why: "Mỗi yêu cầu gửi cho máy chủ AI đều tiêu tốn điện năng và nước làm mát trung tâm dữ liệu. Bật chạy vô ích sẽ gây lãng phí!" }
             ]
         },
         {
-            q: "5. Tư duy 'Phát triển bền vững' có nghĩa là gì?",
+            q: "Tư duy 'Phát triển bền vững' có nghĩa là gì?",
             opts: [
                 { text: "🌱 Đáp ứng nhu cầu hiện tại nhưng vẫn giữ gìn môi trường cho tương lai", ok: true },
-                {
-                    text: "🪓 Khai thác cạn kiệt tài nguyên thiên nhiên ngay hôm nay",
-                    ok: false,
-                    why: "Nếu khai thác cạn kiệt rừng, nước và khoáng sản ngay hôm nay thì thế hệ tương lai sẽ không còn tài nguyên để sinh sống!"
-                }
+                { text: "🪓 Khai thác cạn kiệt tài nguyên thiên nhiên ngay hôm nay", ok: false, why: "Nếu khai thác cạn kiệt rừng, nước và khoáng sản ngay hôm nay thì thế hệ tương lai sẽ không còn tài nguyên để sinh sống!" }
             ]
         },
         {
-            q: "6. Khi đánh răng hoặc rửa tay, em nên làm gì để bảo vệ nguồn nước sạch?",
+            q: "Khi đánh răng hoặc rửa tay, em nên làm gì để bảo vệ nguồn nước sạch?",
             opts: [
                 { text: "🚰 Khóa vòi nước trong lúc đang chà xà phòng hoặc chải răng", ok: true },
-                {
-                    text: "💦 Mở vòi nước chảy tràn lan suốt lúc đánh răng",
-                    ok: false,
-                    why: "Nước sạch là tài nguyên quý giá và tốn nhiều năng lượng để lọc sạch. Để vòi chảy tràn lan làm lãng phí hàng chục lít nước mỗi ngày!"
-                }
+                { text: "💦 Mở vòi nước chảy tràn lan suốt lúc đánh răng", ok: false, why: "Nước sạch là tài nguyên quý giá và tốn nhiều năng lượng để lọc sạch. Để vòi chảy tràn lan làm lãng phí hàng chục lít nước!" }
             ]
         },
         {
-            q: "7. Với quần áo, sách giáo khoa cũ vẫn còn mới và dùng tốt, em nên làm gì?",
+            q: "Với quần áo, sách giáo khoa cũ vẫn còn mới và dùng tốt, em nên làm gì?",
             opts: [
                 { text: "🎁 Quyên góp tặng các bạn nhỏ vùng khó khăn để tái sử dụng", ok: true },
-                {
-                    text: "🔥 Đem đốt bỏ gây khói bụi",
-                    ok: false,
-                    why: "Đốt quần áo và sách vở cũ vừa gây khói bụi độc hại CO₂ làm ô nhiễm không khí, vừa lãng phí đồ dùng vẫn còn giá trị sử dụng!"
-                }
+                { text: "🔥 Đem đốt bỏ gây khói bụi", ok: false, why: "Đốt quần áo và sách vở cũ vừa gây khói bụi độc hại CO2 làm ô nhiễm không khí, vừa lãng phí đồ dùng còn tốt!" }
             ]
         },
         {
-            q: "8. Vì sao băng ở hai cực Trái Đất lại bị tan chảy nhanh trong những năm gần đây?",
+            q: "Vì sao băng ở hai cực Trái Đất lại bị tan chảy nhanh trong những năm gần đây?",
             opts: [
                 { text: "🌡️ Do hiệu ứng nhà kính làm nhiệt độ Trái Đất nóng lên", ok: true },
-                {
-                    text: "🐻‍❄️ Do gấu Bắc Cực làm vỡ băng",
-                    ok: false,
-                    why: "Gấu Bắc Cực là nạn nhân bị mất nơi sinh sống! Nguyên nhân thật sự là do khói thải CO₂ từ nhà máy, xe cộ gây hiệu ứng nhà kính làm Trái Đất nóng lên."
-                }
+                { text: "🐻‍❄️ Do gấu Bắc Cực làm vỡ băng", ok: false, why: "Gấu Bắc Cực là nạn nhân bị mất nơi sinh sống! Nguyên nhân thật sự là do khói thải CO2 gây hiệu ứng nhà kính làm Trái Đất nóng lên." }
             ]
         },
         {
-            q: "9. Khi đi siêu thị cùng bố mẹ, em nên khuyên bố mẹ dùng loại túi nào?",
+            q: "Khi đi siêu thị cùng bố mẹ, em nên khuyên bố mẹ dùng loại túi nào?",
             opts: [
                 { text: "👜 Túi vải sử dụng nhiều lần hoặc giỏ đi chợ", ok: true },
-                {
-                    text: "🛍️ Xin thật nhiều túi nilon nhỏ cho mỗi món đồ",
-                    ok: false,
-                    why: "Túi nilon làm từ dầu mỏ và rất khó phân hủy, khi thải ra môi trường sẽ làm tắc nghẽn cống thoát nước và gây ô nhiễm đất!"
-                }
+                { text: "🛍️ Xin thật nhiều túi nilon nhỏ cho mỗi món đồ", ok: false, why: "Túi nilon làm từ dầu mỏ và rất khó phân hủy, khi thải ra môi trường sẽ làm tắc nghẽn cống thoát nước và gây ô nhiễm đất!" }
             ]
         },
         {
-            q: "10. Trong nông nghiệp thông minh, AI giúp người nông dân bảo vệ môi trường thế nào?",
+            q: "Trong nông nghiệp thông minh, AI giúp người nông dân bảo vệ môi trường thế nào?",
             opts: [
                 { text: "💧 Cảm biến AI tưới nước tiết kiệm vừa đủ cho từng gốc cây", ok: true },
-                {
-                    text: "🧪 Phun thuốc hóa học tràn lan khắp cánh đồng",
-                    ok: false,
-                    why: "Phun thuốc hóa học tràn lan sẽ làm nhiễm độc đất, nguồn nước ngầm và tiêu diệt cả các loài côn trùng có ích như ong, bướm!"
-                }
+                { text: "🧪 Phun thuốc hóa học tràn lan khắp cánh đồng", ok: false, why: "Phun thuốc hóa học tràn lan sẽ làm nhiễm độc đất, nguồn nước ngầm và tiêu diệt cả các loài côn trùng có ích!" }
             ]
         },
         {
-            q: "11. Khi viết nháp hoặc vẽ tranh ở trường, cách sử dụng giấy nào giúp bảo vệ cây rừng?",
+            q: "Khi viết nháp hoặc vẽ tranh ở trường, cách sử dụng giấy nào giúp bảo vệ cây rừng?",
             opts: [
                 { text: "📄 Tận dụng cả hai mặt giấy trước khi đem đi tái chế", ok: true },
-                {
-                    text: "🗑️ Viết một chữ rồi vò nát tờ giấy vứt đi",
-                    ok: false,
-                    why: "Giấy được sản xuất từ gỗ cây rừng. Lãng phí giấy đồng nghĩa với việc phải chặt hạ thêm nhiều cây xanh hơn!"
-                }
+                { text: "🗑️ Viết một chữ rồi vò nát tờ giấy vứt đi", ok: false, why: "Giấy được sản xuất từ gỗ cây rừng. Lãng phí giấy đồng nghĩa với việc phải chặt hạ thêm nhiều cây xanh hơn!" }
             ]
         },
         {
-            q: "12. Trong bữa ăn hằng ngày ở trường và ở nhà, hành động nào giúp giảm khí nhà kính?",
+            q: "Trong bữa ăn hằng ngày ở trường và ở nhà, hành động nào giúp giảm khí nhà kính?",
             opts: [
                 { text: "🍱 Lấy thức ăn vừa đủ và ăn hết phần của mình, không bỏ thừa", ok: true },
-                {
-                    text: "🍔 Lấy thật nhiều đồ ăn rồi đổ bỏ vào thùng rác",
-                    ok: false,
-                    why: "Thức ăn thừa bị chôn lấp ở bãi rác sẽ phân hủy sinh ra khí Mê-tan (CH₄) gây hiệu ứng nhà kính mạnh gấp nhiều lần khí CO₂!"
-                }
+                { text: "🍔 Lấy thật nhiều đồ ăn rồi đổ bỏ vào thùng rác", ok: false, why: "Thức ăn thừa bị chôn lấp ở bãi rác sẽ phân hủy sinh ra khí Mê-tan (CH4) gây hiệu ứng nhà kính mạnh gấp nhiều lần khí CO2!" }
             ]
         },
         {
-            q: "13. Khi trời ban ngày có nhiều ánh sáng tự nhiên, em nên làm gì trong phòng học?",
+            q: "Khi trời ban ngày có nhiều ánh sáng tự nhiên, em nên làm gì trong phòng học?",
             opts: [
                 { text: "🪟 Mở rèm cửa đón ánh sáng tự nhiên và tắt bớt bóng đèn điện", ok: true },
-                {
-                    text: "💡 Đóng kín cửa và bật toàn bộ đèn điện",
-                    ok: false,
-                    why: "Đóng kín cửa và bật đèn khi ngoài trời đang sáng vừa làm phòng học bí khí, vừa gây tiêu tốn điện năng không cần thiết!"
-                }
+                { text: "💡 Đóng kín cửa và bật toàn bộ đèn điện", ok: false, why: "Đóng kín cửa và bật đèn khi ngoài trời đang sáng vừa làm phòng học bí khí, vừa gây tiêu tốn điện năng không cần thiết!" }
             ]
         },
         {
-            q: "14. Rác thải là Pin cũ sau khi tháo khỏi đồ chơi cần được xử lý thế nào?",
+            q: "Rác thải là Pin cũ sau khi tháo khỏi đồ chơi cần được xử lý thế nào?",
             opts: [
                 { text: "🔋 Gom riêng đưa tới điểm thu hồi pin cũ / thùng rác nguy hại", ok: true },
-                {
-                    text: "🌊 Ném xuống sông hoặc chôn xuống vườn cây",
-                    ok: false,
-                    why: "Một viên pin cũ bị chôn xuống đất hay ném xuống sông có thể làm nhiễm độc kim loại nặng cho hàng trăm lít nước và đất trồng!"
-                }
+                { text: "🌊 Ném xuống sông hoặc chôn xuống vườn cây", ok: false, why: "Một viên pin cũ bị chôn xuống đất hay ném xuống sông có thể làm nhiễm độc kim loại nặng cho hàng trăm lít nước và đất trồng!" }
             ]
         },
         {
-            q: "15. Là một Đại sứ Nhí AI Vì Trái Đất Xanh, em sẽ làm gì sau khi hoàn thành trò chơi?",
+            q: "Là một Đại sứ Nhí AI Vì Trái Đất Xanh, em sẽ làm gì sau khi hoàn thành trò chơi?",
             opts: [
                 { text: "🌍 Thực hành sống xanh mỗi ngày và chia sẻ cùng bạn bè, người thân", ok: true },
-                {
-                    text: "😴 Quên hết các thói quen bảo vệ môi trường",
-                    ok: false,
-                    why: "Trái Đất chỉ thực sự xanh sạch khi mỗi chúng ta biến kiến thức thành hành động bảo vệ môi trường hằng ngày!"
-                }
+                { text: "😴 Quên hết các thói quen bảo vệ môi trường", ok: false, why: "Trái Đất chỉ thực sự xanh sạch khi mỗi chúng ta biến kiến thức thành hành động bảo vệ môi trường hằng ngày!" }
+            ]
+        },
+        {
+            q: "Khái niệm 'Dấu chân Carbon' (Carbon Footprint) có nghĩa là gì?",
+            opts: [
+                { text: "🌍 Tổng lượng khí nhà kính phát thải ra môi trường từ các hoạt động của con người", ok: true },
+                { text: "🐻‍❄️ Vết chân của chú gấu in trên than đá", ok: false, why: "Dấu chân Carbon đo lường lượng khí CO2 sinh ra khi chúng ta dùng điện, đi xe, tiêu dùng; giảm dấu chân Carbon là bảo vệ khí hậu!" }
+            ]
+        },
+        {
+            q: "Nguyên tắc 3R trong bảo vệ môi trường gồm những hành động nào?",
+            opts: [
+                { text: "🌱 Giảm thiểu (Reduce) - Tái sử dụng (Reuse) - Tái chế (Recycle)", ok: true },
+                { text: "🗑️ Xả rác - Đốt rác - Chôn rác nhựa", ok: false, why: "Nguyên tắc 3R giúp hạn chế tối đa lượng rác thải ra môi trường và tiết kiệm tài nguyên thiên nhiên!" }
+            ]
+        },
+        {
+            q: "Khi băng ở Bắc Cực và Nam Cực tan chảy hàng loạt sẽ gây ra nguy cơ gì cho các thành phố ven biển?",
+            opts: [
+                { text: "🌊 Mực nước biển dâng cao gây ngập lụt và xâm nhập mặn", ok: true },
+                { text: "🏔️ Làm nước biển rút cạn khô", ok: false, why: "Băng vĩnh cửu tan chảy đổ thêm lượng nước khổng lồ vào đại dương làm nước biển dâng cao đe dọa vùng ven biển!" }
+            ]
+        },
+        {
+            q: "Tại sao san hô dưới đáy biển lại bị 'tẩy trắng' và chết dần khi biến đổi khí hậu xảy ra?",
+            opts: [
+                { text: "🌡️ Do nước biển ấm lên bất thường và bị axit hóa vì hấp thụ quá nhiều CO2", ok: true },
+                { text: "🐟 Do cá biển sơn màu trắng lên san hô", ok: false, why: "Rạn san hô rất nhạy cảm với nhiệt độ; khi nước biển nóng lên chỉ 1-2°C sẽ làm san hô bị tẩy trắng và mất ngôi nhà của cá biển!" }
+            ]
+        },
+        {
+            q: "Robot tàu ngầm AI dưới đại dương có thể giúp các nhà hải dương học làm công việc gì?",
+            opts: [
+                { text: "🛰️ Lặn sâu theo dõi sức khỏe rạn san hô và thu gom rác thải nhựa dưới đáy biển", ok: true },
+                { text: "🧪 Xả thêm dầu loang xuống biển", ok: false, why: "Robot AI dưới nước giúp khảo sát hệ sinh thái biển và làm sạch đại dương ở những nơi thợ lặn khó tiếp cận!" }
+            ]
+        },
+        {
+            q: "Khi mua trái cây, rau củ cùng mẹ, lựa chọn nào giúp giảm lượng khí thải vận chuyển?",
+            opts: [
+                { text: "🍱 Ưu tiên chọn nông sản tươi ngon trồng tại địa phương theo mùa", ok: true },
+                { text: "🛍️ Chỉ mua thực phẩm đóng gói qua 5 lớp hộp nhựa bay từ bên kia bán cầu", ok: false, why: "Nông sản địa phương theo mùa vừa tươi ngon vừa không tốn nhiều nhiên liệu máy bay, tàu thủy vận chuyển đường dài!" }
+            ]
+        },
+        {
+            q: "Nước vo gạo hoặc nước rửa rau sạch ở nhà có thể tận dụng làm gì để tiết kiệm nước?",
+            opts: [
+                { text: "🌱 Dùng để tưới cho chậu hoa và cây cảnh ngoài ban công, sân vườn", ok: true },
+                { text: "🗑️ Đổ đi rồi lại mở vòi nước máy mới để tưới cây", ok: false, why: "Nước vo gạo và rửa rau chứa nhiều dưỡng chất tự nhiên, tái sử dụng để tưới cây giúp tiết kiệm nước sạch rất hiệu quả!" }
+            ]
+        },
+        {
+            q: "Khi tổ chức sinh nhật hoặc liên hoan lớp, cách chuẩn bị nào thân thiện với môi trường nhất?",
+            opts: [
+                { text: "🍱 Dùng chén đĩa, ly cốc rửa sạch dùng nhiều lần hoặc vật liệu bã mía tự phân hủy", ok: true },
+                { text: "🛍️ Dùng toàn bộ đĩa xốp, muỗng nhựa và ống hút nhựa dùng 1 lần", ok: false, why: "Hộp xốp và đồ nhựa dùng 1 lần sau bữa tiệc sẽ tạo thành núi rác nhựa khổng lồ mất hàng thế kỷ mới phân hủy!" }
+            ]
+        },
+        {
+            q: "AI điều khiển đèn giao thông thông minh trong thành phố giúp giảm ô nhiễm không khí bằng cách nào?",
+            opts: [
+                { text: "🛰️ Điều chỉnh nhịp đèn xanh-đỏ theo lưu lượng xe để giảm kẹt xe và giảm khói xăng", ok: true },
+                { text: "🚗 Bật đèn đỏ ở tất cả các ngã tư suốt cả ngày", ok: false, why: "Khi xe cộ bị kẹt đứng yên nổ máy sẽ xả ra lượng khí thải độc hại rất lớn; AI giảm ùn tắc giúp giảm phát thải CO2!" }
+            ]
+        },
+        {
+            q: "Các hạt 'Vi nhựa' (Microplastics) nguy hiểm như thế nào đối với sức khỏe và môi trường?",
+            opts: [
+                { text: "🌊 Mảnh nhựa siêu nhỏ trôi vào nước, cá ăn phải rồi đi vào chuỗi thức ăn của con người", ok: true },
+                { text: "🍼 Vi nhựa là vitamin tốt cho cá biển", ok: false, why: "Rác nhựa ngoài biển bị sóng và nắng làm vỡ vụn thành hạt vi nhựa độc hại xâm nhập vào nguồn nước và sinh vật biển!" }
+            ]
+        },
+        {
+            q: "Thay vì vứt bỏ chai nhựa lớn, học sinh có thể tái chế sáng tạo (Upcycle) thành vật dụng gì?",
+            opts: [
+                { text: "🌱 Làm chậu trồng cây tự tưới hoặc hộp đựng bút học tập góc STEM", ok: true },
+                { text: "🔥 Đem đốt lấy khói đen", ok: false, why: "Tái chế sáng tạo chai nhựa thành chậu cây hay đồ dùng học tập giúp kéo dài vòng đời vật liệu và giảm rác thải!" }
+            ]
+        },
+        {
+            q: "Hệ thống thu gom nước mưa trên mái trường học có thể dùng vào những việc gì?",
+            opts: [
+                { text: "💧 Tưới vườn cây trường học, rửa sân và dội nhà vệ sinh để tiết kiệm nước sạch", ok: true },
+                { text: "🗑️ Không có tác dụng gì cả", ok: false, why: "Thu trữ nước mưa giúp tiết kiệm hàng ngàn mét khối nước máy mỗi năm và giảm ngập úng khi mưa lớn!" }
+            ]
+        },
+        {
+            q: "Vì sao trồng nhiều cây xanh trên vỉa hè và công viên giúp giảm 'Hiệu ứng đảo nhiệt đô thị'?",
+            opts: [
+                { text: "🌳 Tán cây che nắng cho mặt đường nhựa và hơi nước từ lá làm dịu mát không khí", ok: true },
+                { text: "🔥 Cây xanh làm mặt đường bê tông nóng hơn", ok: false, why: "Bê tông và nhựa đường hấp thụ nhiệt rất mạnh; cây xanh giúp hạ nhiệt độ đô thị và lọc sạch bụi mịn!" }
+            ]
+        },
+        {
+            q: "Khi một món đồ chơi hoặc chiếc quạt điện bị hỏng nhẹ, giải pháp bền vững nhất là gì?",
+            opts: [
+                { text: "💡 Nhờ bố mẹ sửa chữa lại để tiếp tục sử dụng thay vì vứt đi mua mới ngay", ok: true },
+                { text: "🗑️ Đập vỡ nát rồi ném ra bãi đất trống", ok: false, why: "Sửa chữa đồ dùng giúp giảm lượng rác thải điện tử (E-waste) và tiết kiệm tài nguyên sản xuất đồ mới!" }
+            ]
+        },
+        {
+            q: "Rác thải điện tử (điện thoại hỏng, bo mạch cũ, máy tính hỏng) cần được xử lý như thế nào?",
+            opts: [
+                { text: "🔋 Đưa đến điểm thu hồi rác điện tử chuyên dụng để tách lấy kim loại tái chế an toàn", ok: true },
+                { text: "🌊 Vứt chung vào thùng rác hữu cơ hoặc ném xuống ao hồ", ok: false, why: "Linh kiện điện tử chứa cả kim loại quý có thể tái chế lẫn chất độc hại như chì, thủy ngân cần xử lý đúng quy trình!" }
+            ]
+        },
+        {
+            q: "AI giúp các nhà máy sản xuất công nghiệp bảo vệ môi trường nước bằng cách nào?",
+            opts: [
+                { text: "💧 Cảm biến AI kiểm tra chất lượng nước thải 24/7, đảm bảo lọc sạch đạt chuẩn trước khi xả ra ngoài", ok: true },
+                { text: "🧪 Tự động xả thẳng nước thải đen ngòm ra sông lúc nửa đêm", ok: false, why: "Hệ thống quan trắc AI tự động giúp giám sát chặt chẽ nguồn nước thải, ngăn chặn hành vi gây ô nhiễm sông ngòi!" }
+            ]
+        },
+        {
+            q: "Tại sao chúng ta nên hạn chế sử dụng bóng bay bơm khí trong các buổi lễ ngoài trời?",
+            opts: [
+                { text: "🐢 Bóng bay nổ rơi xuống biển hoặc rừng sẽ làm chim và rùa biển nuốt nhầm gây tử vong", ok: true },
+                { text: "☁️ Bóng bay bay lên sẽ biến thành mây mưa", ok: false, why: "Xác bóng bay cao su và dây buộc rơi xuống biển là cái bẫy nguy hiểm đối với chim biển, cá heo và rùa biển!" }
+            ]
+        },
+        {
+            q: "Khi rửa bát đĩa ở nhà, cách làm nào vừa sạch sẽ vừa bảo vệ môi trường nước?",
+            opts: [
+                { text: "🌿 Gạt bỏ thức ăn thừa vào thùng hữu cơ và dùng lượng nước rửa chén sinh học vừa đủ", ok: true },
+                { text: "🧪 Đổ cả chai hóa chất tẩy rửa đặc xuống cống", ok: false, why: "Dùng quá nhiều hóa chất tẩy rửa sẽ làm ô nhiễm nguồn nước và gây hại cho các vi sinh vật có lợi!" }
+            ]
+        },
+        {
+            q: "Thói quen mượn sách ở thư viện trường hoặc trao đổi truyện tranh cũ với bạn bè có lợi ích gì?",
+            opts: [
+                { text: "📄 Nhiều bạn cùng đọc được sách hay mà không cần in thêm quá nhiều giấy mới", ok: true },
+                { text: "🗑️ Làm thư viện tốn chỗ để sách", ok: false, why: "Chia sẻ và dùng chung sách báo là cách tuyệt vời để lan tỏa tri thức và bảo vệ tài nguyên rừng!" }
+            ]
+        },
+        {
+            q: "Hiện tượng thời tiết cực đoan nào đang xảy ra thường xuyên hơn do biến đổi khí hậu?",
+            opts: [
+                { text: "🌡️ Nắng nóng kỷ lục, hạn hán kéo dài và siêu bão lũ bất thường", ok: true },
+                { text: "🌈 Cầu vồng xuất hiện mỗi ngày", ok: false, why: "Trái Đất nóng lên làm biến đổi dòng hải lưu và khí quyển, gây ra các đợt nắng nóng, hạn mặn và bão lũ khốc liệt hơn!" }
+            ]
+        },
+        {
+            q: "Khi đi du lịch biển ở Nha Trang hay Phú Quốc, hành động nào của em giúp bảo vệ biển xanh?",
+            opts: [
+                { text: "🌊 Không xả rác trên bãi biển, không giẫm đạp lên rạn san hô và không bắt sao biển lên bờ", ok: true },
+                { text: "🛍️ Vứt vỏ hộp xốp và chai nhựa xuống sóng biển", ok: false, why: "Giữ bãi biển sạch rác và tôn trọng sinh vật biển giúp đại dương luôn xanh trong và bền vững!" }
+            ]
+        },
+        {
+            q: "AI hỗ trợ thiết kế các tòa nhà 'Kiến trúc Xanh' (Green Building) như thế nào?",
+            opts: [
+                { text: "🪟 Mô phỏng hướng nắng và hướng gió để tòa nhà luôn thoáng mát, đón sáng tự nhiên tối đa", ok: true },
+                { text: "🏭 Thiết kế tòa nhà kín mít không có cửa sổ để phải bật đèn 24/24", ok: false, why: "Kiến trúc xanh tận dụng thông gió và ánh sáng tự nhiên giúp giảm tới 40% lượng điện tiêu thụ của tòa nhà!" }
+            ]
+        },
+        {
+            q: "Phân bón hữu cơ ủ từ vỏ trái cây, lá cây khô ở trường học có ưu điểm gì so với phân hóa học?",
+            opts: [
+                { text: "🌱 Giúp đất tơi xốp, giữ ẩm tốt, an toàn cho giun đất và không gây ô nhiễm nguồn nước", ok: true },
+                { text: "🧪 Làm đất bị chai cứng và nhiễm độc", ok: false, why: "Ủ rác hữu cơ thành phân компост (compost) là vòng tuần hoàn tự nhiên tuyệt vời giúp giảm rác thải và nuôi dưỡng đất!" }
+            ]
+        },
+        {
+            q: "Khi thấy vòi nước ở khu vệ sinh trường học bị rò rỉ chảy nhỏ giọt liên tục, em nên làm gì?",
+            opts: [
+                { text: "🚰 Vặn chặt lại hoặc báo ngay cho thầy cô, bác bảo vệ để sửa chữa kịp thời", ok: true },
+                { text: "💦 Vặn cho nước chảy mạnh hơn nữa", ok: false, why: "Một vòi nước rò rỉ nhỏ giọt có thể làm lãng phí hàng trăm lít nước sạch mỗi tuần nếu không được khóa và sửa kịp thời!" }
+            ]
+        },
+        {
+            q: "Tại sao việc bảo vệ loài rùa biển lại rất quan trọng đối với hệ sinh thái đại dương?",
+            opts: [
+                { text: "🐢 Rùa biển giúp duy trì thảm cỏ biển khỏe mạnh và kiểm soát số lượng sứa biển cân bằng", ok: true },
+                { text: "🛍️ Vì rùa biển thích ăn túi nilon", ok: false, why: "Rùa biển thường nhầm túi nilon trôi nổi là con sứa nên nuốt phải; bảo vệ rùa biển và giảm rác nhựa giúp đại dương cân bằng!" }
+            ]
+        },
+        {
+            q: "Ứng dụng AI dịch thuật và nhận diện tiếng kêu động vật đang được các nhà khoa học nghiên cứu để làm gì?",
+            opts: [
+                { text: "🐼 Hiểu tín hiệu giao tiếp, báo động của cá voi, voi rừng để bảo vệ chúng tốt hơn", ok: true },
+                { text: "🎮 Để dạy động vật chơi điện tử", ok: false, why: "AI phân tích âm thanh sinh học giúp con người hiểu khi nào đàn thú đang gặp nguy hiểm hoặc căng thẳng do môi trường biến đổi!" }
+            ]
+        },
+        {
+            q: "Khi mua sắm đồ dùng học tập đầu năm học mới, cách chọn nào thể hiện tư duy bền vững?",
+            opts: [
+                { text: "🎒 Kiểm tra lại những đồ dùng năm cũ còn tốt để dùng tiếp, chỉ mua mới những thứ thật sự thiếu", ok: true },
+                { text: "🗑️ Vứt hết cặp sách, thước kẻ, hộp bút còn mới tinh để mua bộ khác", ok: false, why: "Tái sử dụng đồ dùng học tập còn tốt giúp tiết kiệm tiền cho bố mẹ và giảm lượng tài nguyên tiêu tốn để sản xuất mới!" }
+            ]
+        },
+        {
+            q: "Khí nhà kính nào dưới đây sinh ra nhiều nhất từ hoạt động đốt than, xăng dầu của con người?",
+            opts: [
+                { text: "🏭 Khí Cacbonic (CO2)", ok: true },
+                { text: "🌳 Khí Oxy (O2) do cây xanh nhả ra", ok: false, why: "Khí Oxy là khí duy trì sự sống, còn khí CO2 sinh ra từ việc đốt nhiên liệu hóa thạch là nguyên nhân chính gây hiệu ứng nhà kính!" }
+            ]
+        },
+        {
+            q: "Để lan tỏa thông điệp bảo vệ môi trường đến cộng đồng, học sinh có thể ứng dụng công nghệ AI như thế nào?",
+            opts: [
+                { text: "🌍 Dùng công cụ thiết kế cùng AI để vẽ tranh cổ động, làm trò chơi phân loại rác chia sẻ với bạn bè", ok: true },
+                { text: "😴 Không quan tâm đến các hoạt động môi trường của trường lớp", ok: false, why: "Kết hợp sức sáng tạo của học sinh với công nghệ AI giúp tạo ra những sản phẩm tuyên truyền sống xanh đầy cảm hứng!" }
+            ]
+        },
+        {
+            q: "Mục tiêu cao nhất của việc kết hợp Trí tuệ nhân tạo (AI) và Phát triển bền vững là gì?",
+            opts: [
+                { text: "🌱 Dùng công nghệ thông minh để tạo tác động tích cực, giúp con người và thiên nhiên cùng chung sống hài hòa", ok: true },
+                { text: "🏭 Dùng máy móc thay thế hoàn toàn cây xanh và thiên nhiên", ok: false, why: "Công nghệ AI chỉ thực sự có ý nghĩa khi phục vụ con người và bảo vệ hành tinh xanh bền vững cho muôn đời sau!" }
             ]
         }
     ];
+
+    let climateQuiz = [];
     let qIndex = 0;
 
     function initIsland4() {
@@ -2693,10 +3275,13 @@
         resetIslandRunScore(4);
         qIndex = 0;
 
+        // Rút ngẫu nhiên 15 câu hỏi không trùng lặp từ ngân hàng 45 câu
+        climateQuiz = shuffleArray(climateQuizBank).slice(0, 15);
+
         const banner4 = document.getElementById('bot-banner-4');
         if (banner4) banner4.classList.remove('warn');
         document.getElementById('bot-msg-4').innerHTML =
-            "Em đang ở chân núi (Bậc <strong>#1</strong>). Hãy trả lời đúng các câu hỏi để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé! (Đúng <strong>+10 ⭐</strong>, Sai <strong>-5 ⭐</strong> và AI sẽ giải thích vì sao sai).";
+            "Em đang ở chân núi (Bậc <strong>#1</strong>). Hãy trả lời đúng 15 câu hỏi ngẫu nhiên để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé! (Đúng <strong>+10 ⭐</strong>, Sai <strong>-5 ⭐</strong> và AI sẽ giải thích vì sao sai).";
 
         renderMountainQuiz();
     }
@@ -2739,7 +3324,6 @@
                 hexPts.push(`${(pt.x + r * Math.cos(rad)).toFixed(1)},${(pt.y + r * Math.sin(rad)).toFixed(1)}`);
             }
 
-            // Đá quý lục giác Low-Poly 3D cho mỗi mốc leo núi
             const hex = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
             hex.setAttribute('points', hexPts.join(' '));
             hex.setAttribute('fill', isDone ? '#2ecc71' : (isCurrent ? '#f1c40f' : '#ffffff'));
@@ -2782,7 +3366,7 @@
         document.getElementById('i4-step-label').innerText = `#${qIndex + 1} / ${climateQuiz.length}`;
 
         const item = climateQuiz[qIndex];
-        document.getElementById('q-title').innerText = item.q;
+        document.getElementById('q-title').innerText = `${qIndex + 1}. ${item.q}`;
         const optsDiv = document.getElementById('q-options');
         optsDiv.innerHTML = '';
 
