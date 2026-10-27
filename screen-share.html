@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chia Sẻ Màn Hình P2P - QR Connect</title>
+    <!-- Tailwind CSS, PeerJS & QRCode.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* Đảm bảo mã QR luôn căn giữa đẹp mắt */
+        #qrcode img { margin: 0 auto; border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col items-center p-4">
+
+    <!-- Tiêu đề -->
+    <header class="w-full max-w-4xl text-center my-3">
+        <h1 class="text-2xl md:text-3xl font-bold text-emerald-400">TRÌNH CHIẾU MÀN HÌNH NỘI BỘ (P2P)</h1>
+        <p class="text-slate-400 text-sm mt-1">Quét mã QR để kết nối nhanh - Không tốn băng thông Internet</p>
+    </header>
+
+    <!-- Khu vực chọn vai trò -->
+    <div id="roleSelection" class="w-full max-w-md bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 my-auto">
+        <h2 class="text-lg font-semibold mb-4 text-center text-slate-200">Chọn thiết bị đang sử dụng:</h2>
+        <div class="flex flex-col gap-4">
+            <button onclick="selectRole('receiver')" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition shadow-lg">
+                <span>💻</span> Máy Tính (Nhận Hình Ảnh)
+            </button>
+            <button onclick="selectRole('sender')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition shadow-lg">
+                <span>📱</span> Điện Thoại (Phát Màn Hình)
+            </button>
+        </div>
+    </div>
+
+    <!-- GIAO DIỆN MÁY TÍNH (RECEIVER) -->
+    <div id="receiverUI" class="hidden w-full max-w-5xl flex-col items-center">
+        <!-- Thanh trạng thái trên cùng -->
+        <div class="w-full bg-slate-800 p-4 rounded-xl mb-4 flex flex-wrap items-center justify-between gap-4 border border-slate-700">
+            <div class="flex items-center gap-3">
+                <span class="text-slate-400">Mã kết nối:</span>
+                <span id="myPeerId" class="text-2xl font-mono font-bold text-amber-400 bg-slate-900 px-4 py-1 rounded-lg border border-amber-500/30">....</span>
+            </div>
+            <div id="receiverStatus" class="text-sm px-3 py-1.5 rounded-full bg-slate-700 text-slate-300">
+                ⏳ Đang chờ điện thoại quét mã...
+            </div>
+            <button onclick="toggleFullScreen()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition">
+                ⛶ Toàn màn hình
+            </button>
+        </div>
+
+        <!-- Khung hiển thị Video & Mã QR chờ -->
+        <div class="w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-800 relative flex justify-center items-center" style="min-height: 68vh;">
+            <video id="remoteVideo" class="max-h-[75vh] w-auto hidden" autoplay playsinline controls></video>
+            
+            <!-- Màn hình chờ có chứa QR Code -->
+            <div id="videoPlaceholder" class="flex flex-col items-center justify-center p-6 text-center">
+                <div class="bg-white p-4 rounded-2xl shadow-2xl mb-4 border-4 border-emerald-500/40">
+                    <!-- Thẻ chứa mã QR sẽ được tạo tự động -->
+                    <div id="qrcode" class="w-48 h-48 flex items-center justify-center text-slate-400 text-xs">
+                        Đang tạo QR...
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Quét mã QR bằng Điện thoại để kết nối</h3>
+                <p class="text-slate-400 text-sm max-w-md">
+                    Sử dụng Camera hoặc ứng dụng quét QR trên điện thoại. Hệ thống sẽ tự động điền mã phòng <span id="textPeerId" class="text-amber-400 font-mono font-bold"></span>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIAO DIỆN ĐIỆN THOẠI (SENDER) -->
+    <div id="senderUI" class="hidden w-full max-w-md bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 my-auto">
+        <div id="autoConnectBadge" class="hidden mb-4 p-2.5 bg-emerald-900/50 border border-emerald-500/40 rounded-xl text-emerald-300 text-center text-sm font-medium">
+            ✨ Đã nhận diện mã phòng từ QR Code!
+        </div>
+
+        <h2 class="text-xl font-bold mb-4 text-emerald-400 text-center">Thiết Bị Phát Màn Hình</h2>
+        
+        <div class="mb-4">
+            <label class="block text-slate-400 text-sm mb-2">Mã ID Máy tính:</label>
+            <input type="number" id="targetIdInput" placeholder="Ví dụ: 4829" 
+                   class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-amber-400 font-bold text-center text-2xl font-mono tracking-widest focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-slate-400 text-sm mb-2">Chế độ truyền tải:</label>
+            <select id="captureMode" class="w-full px-3 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white text-sm focus:outline-none">
+                <option value="screen">📱 Toàn bộ màn hình & Âm thanh</option>
+                <option value="camera">📷 Camera sau (Soi bài tập / Vật thể)</option>
+            </select>
+        </div>
+
+        <button id="startBtn" onclick="startStreaming()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-lg shadow-lg transition mb-3 animate-pulse">
+            🚀 Bấm để bắt đầu chiếu
+        </button>
+
+        <button id="stopBtn" onclick="stopStreaming()" class="hidden w-full py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-bold text-base shadow-lg transition">
+            ⏹ Dừng chia sẻ
+        </button>
+
+        <p id="senderStatus" class="text-center text-sm text-slate-400 mt-4"></p>
+    </div>
+
+    <script>
+        let peer = null;
+        let currentStream = null;
+        let currentCall = null;
+
+        // 1. KIỂM TRA URL NGAY KHI TẢI TRANG ĐỂ TỰ ĐỘNG CHUYỂN HƯỚNG
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const joinId = urlParams.get('join');
+
+            if (joinId) {
+                // Nếu URL có dạng ?join=1234 -> Tự động vào vai trò Điện thoại
+                selectRole('sender');
+                document.getElementById('targetIdInput').value = joinId;
+                document.getElementById('autoConnectBadge').classList.remove('hidden');
+                updateSenderStatus("Hãy chọn chế độ và bấm nút màu xanh bên trên.", "text-emerald-300");
+            }
+        });
+
+        function generateShortId() {
+            return Math.floor(1000 + Math.random() * 9000).toString();
+        }
+
+        function selectRole(role) {
+            document.getElementById('roleSelection').classList.add('hidden');
+            if (role === 'receiver') {
+                document.getElementById('receiverUI').classList.remove('hidden');
+                document.getElementById('receiverUI').classList.add('flex');
+                initReceiver();
+            } else {
+                document.getElementById('senderUI').classList.remove('hidden');
+                initSender();
+            }
+        }
+
+        // --- XỬ LÝ TRÊN MÁY TÍNH (NHẬN & TẠO QR) ---
+        function initReceiver() {
+            const shortId = generateShortId();
+            peer = new Peer(shortId);
+
+            peer.on('open', (id) => {
+                document.getElementById('myPeerId').innerText = id;
+                document.getElementById('textPeerId').innerText = id;
+                generateQRCode(id);
+            });
+
+            peer.on('call', (call) => {
+                document.getElementById('receiverStatus').innerText = "🟢 Đang trình chiếu trực tiếp";
+                document.getElementById('receiverStatus').className = "text-sm px-3 py-1.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-500/30";
+                
+                call.answer();
+
+                call.on('stream', (remoteStream) => {
+                    const video = document.getElementById('remoteVideo');
+                    // Ẩn khung QR và hiện Video
+                    document.getElementById('videoPlaceholder').classList.add('hidden');
+                    video.classList.remove('hidden');
+                    
+                    video.srcObject = remoteStream;
+                    video.play().catch(err => console.log("Chờ tương tác âm thanh:", err));
+                });
+
+                call.on('close', () => {
+                    resetReceiverUI();
+                });
+            });
+
+            peer.on('error', (err) => {
+                if (err.type === 'unavailable-id') {
+                    initReceiver();
+                } else {
+                    alert("Lỗi kết nối: " + err.message);
+                }
+            });
+        }
+
+        // Hàm tạo mã QR động từ đường dẫn hiện tại
+        function generateQRCode(peerId) {
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = ""; // Xóa chữ "Đang tạo QR..."
+            
+            // Lấy URL gốc (bỏ các tham số cũ nếu có) và gắn ?join=ID
+            const baseUrl = window.location.origin + window.location.pathname;
+            const connectUrl = `${baseUrl}?join=${peerId}`;
+
+            new QRCode(qrContainer, {
+                text: connectUrl,
+                width: 192,
+                height: 192,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.M
+            });
+        }
+
+        function resetReceiverUI() {
+            const video = document.getElementById('remoteVideo');
+            video.srcObject = null;
+            video.classList.add('hidden');
+            // Hiện lại mã QR khi ngắt kết nối
+            document.getElementById('videoPlaceholder').classList.remove('hidden');
+            document.getElementById('receiverStatus').innerText = "⏳ Đã ngắt kết nối. Quét lại để tiếp tục...";
+            document.getElementById('receiverStatus').className = "text-sm px-3 py-1.5 rounded-full bg-slate-700 text-slate-300";
+        }
+
+        function toggleFullScreen() {
+            const video = document.getElementById('remoteVideo');
+            if (video.requestFullscreen) video.requestFullscreen();
+            else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+        }
+
+        // --- XỬ LÝ TRÊN ĐIỆN THOẠI (PHÁT) ---
+        function initSender() {
+            peer = new Peer();
+            peer.on('error', (err) => {
+                updateSenderStatus("❌ Lỗi kết nối: " + err.type, "text-rose-400");
+            });
+        }
+
+        async function startStreaming() {
+            const targetId = document.getElementById('targetIdInput').value.trim();
+            const mode = document.getElementById('captureMode').value;
+
+            if (!targetId) {
+                alert("Vui lòng nhập mã ID trên màn hình máy tính!");
+                return;
+            }
+
+            try {
+                updateSenderStatus("⏳ Đang xin quyền truy cập...", "text-amber-400");
+
+                const displayMediaOptions = {
+                    video: { frameRate: { ideal: 60, max: 60 }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+                    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+                };
+
+                if (mode === 'screen') {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                        throw new Error("Trình duyệt này chặn quay màn hình. Hãy chọn chế độ 'Camera sau' hoặc mở bằng Chrome trên Android.");
+                    }
+                    currentStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+                } else {
+                    currentStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } },
+                        audio: true
+                    });
+                }
+
+                updateSenderStatus("🔄 Đang truyền hình ảnh lên máy tính...", "text-blue-400");
+                currentCall = peer.call(targetId, currentStream);
+
+                setTimeout(() => boostVideoBitrate(currentCall), 1000);
+
+                updateSenderStatus("🟢 Đang phát trực tiếp!", "text-emerald-400 font-bold");
+                document.getElementById('startBtn').classList.add('hidden');
+                document.getElementById('stopBtn').classList.remove('hidden');
+
+                currentStream.getVideoTracks()[0].onended = () => stopStreaming();
+
+            } catch (err) {
+                updateSenderStatus("⚠️ " + err.message, "text-rose-400");
+            }
+        }
+
+        function stopStreaming() {
+            if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+            if (currentCall) currentCall.close();
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('stopBtn').classList.add('hidden');
+            updateSenderStatus("Đã dừng chia sẻ.", "text-slate-400");
+        }
+
+        function updateSenderStatus(msg, colorClass) {
+            const statusEl = document.getElementById('senderStatus');
+            statusEl.innerText = msg;
+            statusEl.className = "text-center text-sm mt-4 " + colorClass;
+        }
+
+        function boostVideoBitrate(call) {
+            if (!call || !call.peerConnection) return;
+            call.peerConnection.getSenders().forEach(sender => {
+                if (sender.track && sender.track.kind === 'video') {
+                    const params = sender.getParameters();
+                    if (!params.encodings) params.encodings = [{}];
+                    params.encodings[0].maxBitrate = 8000000;
+                    sender.setParameters(params).catch(e => console.warn(e));
+                }
+            });
+        }
+    </script>
+</body>
+</html>
