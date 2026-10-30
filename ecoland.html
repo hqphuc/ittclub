@@ -1390,7 +1390,7 @@
                 <div class="bot-banner" id="bot-banner-2">
                     <div class="bot-avatar"><span data-lp="robot" data-size="lg"></span></div>
                     <div class="bot-text" id="bot-msg-2">
-                        Phần 1: Em hãy bấm chuyển đổi toàn bộ 6 Nhà máy than sang nguồn năng lượng sạch (+10⭐/nhà máy), sau đó nhấn nút <strong>[HOÀN THÀNH]</strong> nhé!
+                        Phần 1: Em hãy bấm chuyển đổi toàn bộ 6 Nhà máy than sang nguồn năng lượng sạch, sau đó nhấn nút <strong>[HOÀN THÀNH]</strong> nhé!
                     </div>
                 </div>
 
@@ -1416,7 +1416,6 @@
                     <div class="quiz-card">
                         <div style="font-weight:bold; color:#2980b9; margin-bottom:6px;">
                             <span data-lp="robot" data-size="sm"></span> Phần 2: Thử thách Điều phối AI Năng lượng (<span id="i2-q-progress">1/9</span>)
-                            <br><small style="color:#555;">(Chọn đúng ngay: <strong style="color:#27ae60">+10⭐</strong> | Chọn sai: <strong style="color:#c0392b">-10⭐</strong> & AI nhắc nhở | Chọn lại đúng sau khi nhắc: <strong style="color:#e67e22">+5⭐</strong>)</small>
                         </div>
                         <h3 id="i2-q-title" style="margin:8px 0;">Câu hỏi</h3>
                         <div id="i2-q-options"></div>
@@ -1445,13 +1444,13 @@
         <div class="bot-banner" id="bot-banner-3">
             <div class="bot-avatar"><span data-lp="robot" data-size="lg"></span></div>
             <div class="bot-text" id="bot-msg-3">
-                Pha 1: Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ (Đúng +10⭐, Sai công cụ -5⭐). Sau đó trả lời 5 câu hỏi Kiểm lâm AI!
+                Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ. Sau đó trả lời 5 câu hỏi Kiểm lâm AI!
             </div>
         </div>
 
         <div id="i3-phase1">
             <div style="text-align:center; font-weight:800; margin-bottom:8px;">
-                <span data-lp="camera" data-size="sm"></span> Sự cố rừng đã xử lý: <span id="forest-fixed">0</span>/10 (Mỗi sự cố xử lý đúng +10⭐, chọn sai công cụ -5⭐)
+                <span data-lp="camera" data-size="sm"></span> Sự cố rừng đã xử lý: <span id="forest-fixed">0</span>/10
             </div>
 
             <div class="tool-bar">
@@ -1467,7 +1466,7 @@
         <div id="i3-phase2" style="display:none;">
             <div class="quiz-card">
                 <div style="font-weight:bold; color:#27ae60; margin-bottom:6px;">
-                    <span data-lp="sprout" data-size="sm"></span> Câu hỏi Kiểm lâm AI (<span id="i3-q-progress">1/5</span>) - Đúng +10⭐, Sai -5⭐ (Kiểm lâm AI sẽ giải thích vì sao sai):
+                    <span data-lp="sprout" data-size="sm"></span> Câu hỏi Kiểm lâm AI (<span id="i3-q-progress">1/5</span>)
                 </div>
                 <h3 id="i3-q-title" style="margin:8px 0;">Câu hỏi</h3>
                 <div id="i3-q-options"></div>
@@ -1567,7 +1566,7 @@
                 <div class="bot-banner" id="bot-banner-4" style="margin-bottom:0;">
                     <div class="bot-avatar"><span data-lp="robot" data-size="lg"></span></div>
                     <div class="bot-text" id="bot-msg-4">
-                        Em đang ở chân núi (Bậc #1). Hãy trả lời đúng các câu hỏi để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé! (Đúng <strong>+10 ⭐</strong>, Sai <strong>-5 ⭐</strong> và AI sẽ giải thích vì sao sai).
+                        Em đang ở chân núi (Bậc #1). Hãy trả lời đúng các câu hỏi để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé!
                     </div>
                 </div>
 
@@ -1576,7 +1575,7 @@
                         <span style="background:#3498db; color:white; padding:4px 12px; border-radius:20px; font-weight:800; font-size:0.9rem; display:inline-flex; align-items:center; gap:5px;">
                             <span data-lp="pin" data-size="xs"></span> Vị trí: Mốc leo núi <span id="i4-step-label">#1 / 15</span>
                         </span>
-                        <span style="color:#27ae60; font-weight:800; font-size:0.9rem;">Đúng +10⭐ | Sai -5⭐</span>
+                        <span style="color:#27ae60; font-weight:800; font-size:0.9rem;"></span>
                     </div>
                     <h3 id="q-title" style="margin:10px 0 14px 0; font-size:1.2rem; line-height:1.4; color:#1b4f72;">Câu hỏi 1</h3>
                     <div id="q-options"></div>
@@ -2470,7 +2469,7 @@
         document.getElementById('i1-phase1').style.display = 'block';
         document.getElementById('i1-phase2').style.display = 'none';
         document.getElementById('bot-msg-1').innerText =
-            "Pha 1 (Huấn luyện AI): Em hãy dạy cho 'Cánh tay Robot AI' 6 mẫu rác ngẫu nhiên dưới đây trước khi bước vào thử thách vượt 15 tảng băng đang tan nhé!";
+            "Huấn luyện AI: Em hãy dạy cho 'Cánh tay Robot AI' 6 mẫu rác ngẫu nhiên dưới đây trước khi bước vào thử thách vượt 15 tảng băng đang tan nhé!";
         renderTrainItem();
     }
 
@@ -2482,7 +2481,7 @@
         if (trainIdx >= trainItems.length) {
             playSound('win');
             document.getElementById('bot-msg-1').innerHTML =
-                `Pha 2 (Vượt 15 tảng băng đang tan): Mỗi lần chọn đúng thùng rác cho Cánh tay AI ${lpIcon('arm', 'xs')} mở đường, em được +10 ⭐ (Tối đa 150 ⭐). Chọn sai bị -5 ⭐!`;
+                `Vượt 15 tảng băng đang tan: Chọn đúng thùng rác cho Cánh tay AI ${lpIcon('arm', 'xs')} mở đường tiến lên`;
             document.getElementById('i1-phase1').style.display = 'none';
             document.getElementById('i1-phase2').style.display = 'block';
             startIceJumpingPhase();
@@ -2596,14 +2595,14 @@
             addCanvasFeedback(nextBlock.x, nextBlock.y - 65, "+10 ★", "#2ecc71");
             triggerArmAndJump(nextBlock, chosenBinType);
             document.getElementById('bot-msg-1').innerHTML =
-                `${lpIcon('arm', 'xs')} Chính xác (+10 ⭐)! Cánh tay AI đã gắp [${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}! (${trash.hint})`;
+                `${lpIcon('arm', 'xs')} Chính xác! Cánh tay AI đã gắp [${trash.name}] vào ${trash.binName} và mở đường sang tảng băng thứ ${currentStep + 1}! (${trash.hint})`;
         } else {
             playSound('err');
             addRunStars(1, -5, event);
             addCanvasFeedback(playerPos.x, playerPos.y - 65, "-5 ★", "#ff4757");
             currentIceHealth = Math.max(12, currentIceHealth - 18);
             document.getElementById('bot-msg-1').innerHTML =
-                `${lpIcon('warn', 'xs')} Sai thùng rồi (-5 ⭐)! [${trash.name}] phải bỏ vào ${trash.binName}. Giải thích: ${trash.hint}`;
+                `${lpIcon('warn', 'xs')} Sai thùng rồi! [${trash.name}] phải bỏ vào ${trash.binName}. Giải thích: ${trash.hint}`;
         }
     }
 
@@ -2617,7 +2616,7 @@
         addRunStars(1, 10, event);
         addCanvasFeedback(nextBlock.x, nextBlock.y - 65, "+10 ★ (AI)", "#f1c40f");
         document.getElementById('bot-msg-1').innerHTML =
-            `${lpIcon('robot', 'xs')} Cánh tay AI tự động phân loại [${nextBlock.trash.name}] vào ${nextBlock.trash.binName} (+10 ⭐)!`;
+            `${lpIcon('robot', 'xs')} Cánh tay AI tự động phân loại [${nextBlock.trash.name}] vào ${nextBlock.trash.binName}!`;
         triggerArmAndJump(nextBlock, nextBlock.trash.type);
     }
 
@@ -2746,7 +2745,7 @@
                 addCanvasFeedback(playerPos.x, playerPos.y - 65, "Băng tan! -5 ★", "#ff4757");
                 currentIceHealth = 100;
                 document.getElementById('bot-msg-1').innerHTML =
-                    `${lpIcon('ice', 'xs')} Tảng băng vừa tan hết (-5 ⭐)! Phao cứu sinh AI đã làm đông cứng lại tảng băng mới, em hãy phân loại rác nhanh hơn nhé!`;
+                    `${lpIcon('ice', 'xs')} Tảng băng vừa tan hết! Phao cứu sinh AI đã làm đông cứng lại tảng băng mới, em hãy phân loại rác nhanh hơn nhé!`;
             }
         }
         const healthInt = Math.max(0, Math.round(currentIceHealth));
@@ -3228,7 +3227,7 @@
         const banner = document.getElementById('bot-banner-2');
         if (banner) banner.classList.remove('warn');
         document.getElementById('bot-msg-2').innerHTML =
-            `Phần 1: Em hãy bấm chuyển đổi toàn bộ 6 Nhà máy than ${lpIcon('coal', 'xs')} sang nguồn năng lượng sạch (+10⭐/nhà máy), sau đó nhấn nút <strong>[HOÀN THÀNH]</strong> nhé! (Nếu đổi sau khi AI nhắc nhở chỉ được <strong>+5⭐</strong>).`;
+            `Phần 1: Em hãy bấm chuyển đổi toàn bộ 6 Nhà máy than ${lpIcon('coal', 'xs')} sang nguồn năng lượng sạch, sau đó nhấn nút <strong>[HOÀN THÀNH]</strong> nhé!`;
 
         document.getElementById('i2-phase1').style.display = 'block';
         document.getElementById('i2-phase2').style.display = 'none';
@@ -3255,8 +3254,8 @@
             let subLabel = '';
             if (st === 'coal') {
                 subLabel = i2WasReminded
-                    ? `<span style="color:#d35400; font-size:0.85rem;">${lpIcon('warn', 'xs')} AI nhắc nhở: Bấm đổi ngay (+5⭐)</span>`
-                    : '<span style="color:#7f8c8d; font-size:0.85rem;">Bấm để chuyển đổi (+10⭐)</span>';
+                    ? `<span style="color:#d35400; font-size:0.85rem;">${lpIcon('warn', 'xs')} AI nhắc nhở: Bấm đổi ngay</span>`
+                    : '<span style="color:#7f8c8d; font-size:0.85rem;">Bấm để chuyển đổi</span>';
             } else {
                 subLabel = `<span style="color:#27ae60; font-size:0.85rem;">Đã chuyển đổi (+${slotEarnedStars[idx]}⭐)</span>`;
             }
@@ -3312,7 +3311,7 @@
             if (banner) banner.classList.add('warn');
 
             document.getElementById('bot-msg-2').innerHTML =
-                `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ:</strong> Em vẫn còn <strong>${remainingCoal} Nhà máy than ${lpIcon('coal', 'xs')}</strong> đang xả khói đen CO2! Em bắt buộc phải chuyển đổi hết toàn bộ 6 nhà máy sang năng lượng sạch rồi mới bấm Hoàn thành nhé! <em>(Các nhà máy chuyển đổi sau lời nhắc này chỉ được tính <strong>+5 ⭐</strong>)</em>.`;
+                `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ:</strong> Em vẫn còn <strong>${remainingCoal} Nhà máy than ${lpIcon('coal', 'xs')}</strong> đang xả khói đen CO2! Em bắt buộc phải chuyển đổi hết toàn bộ 6 nhà máy sang năng lượng sạch rồi mới bấm Hoàn thành nhé!`;
             renderEnergySlots();
             return;
         }
@@ -3350,8 +3349,8 @@
 
                     document.getElementById('bot-banner-2').classList.remove('warn');
                     document.getElementById('bot-msg-2').innerHTML = i2QuestionHadWrong
-                        ? `${lpIcon('check', 'xs')} Em đã chọn lại đáp án đúng (<strong>+5 ⭐</strong>)!`
-                        : `${lpIcon('star', 'xs')} Chính xác tuyệt đối (<strong>+10 ⭐</strong>)!`;
+                        ? `${lpIcon('check', 'xs')} Em đã chọn lại đáp án đúng!`
+                        : `${lpIcon('star', 'xs')} Chính xác tuyệt đối!`;
 
                     i2QIdx++;
                     if (i2QIdx >= energyAIQuestions.length) {
@@ -3370,7 +3369,7 @@
 
                     document.getElementById('bot-banner-2').classList.add('warn');
                     document.getElementById('bot-msg-2').innerHTML =
-                        `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ (-10 ⭐):</strong> ${o.why} <br>👉 <em>Em hãy bấm chọn lại đáp án đúng còn lại nhé (chọn lại sẽ được <strong>+5 ⭐</strong>)!</em>`;
+                        `${lpIcon('warn', 'xs')} <strong>ROBOT AI NHẮC NHỞ:</strong> ${o.why} <br>👉 <em>Em hãy bấm chọn lại đáp án đúng còn lại nhé!</em>`;
                 }
             };
             optsDiv.appendChild(btn);
@@ -3653,7 +3652,7 @@
         const banner3 = document.getElementById('bot-banner-3');
         if (banner3) banner3.classList.remove('warn');
         document.getElementById('bot-msg-3').innerText =
-            "Pha 1: Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ (Đúng +10⭐, Sai công cụ -5⭐). Sau đó trả lời 5 câu hỏi ngẫu nhiên của Kiểm lâm AI!";
+            "Dùng Camera AI quét phát hiện 10 sự cố trong rừng và chọn đúng công cụ cứu hộ. Sau đó trả lời các câu hỏi ngẫu nhiên của Kiểm lâm AI!";
 
         selectForestTool('scan');
 
@@ -3731,7 +3730,7 @@
             addRunStars(3, 10, event);
             if (banner3) banner3.classList.remove('warn');
             document.getElementById('forest-fixed').innerText = fixedCount;
-            document.getElementById('bot-msg-3').innerHTML = `${lpIcon('check', 'xs')} Chính xác (+10 ⭐)! Đã xử lý ${fixedCount}/10 sự cố trong rừng!`;
+            document.getElementById('bot-msg-3').innerHTML = `${lpIcon('check', 'xs')} Chính xác! Đã xử lý ${fixedCount}/10 sự cố trong rừng!`;
             renderForest();
 
             if (fixedCount >= 10) {
@@ -3747,7 +3746,7 @@
             playSound('err');
             addRunStars(3, -5, event);
             if (banner3) banner3.classList.add('warn');
-            document.getElementById('bot-msg-3').innerHTML = `${lpIcon('cross', 'xs')} Chọn sai công cụ cứu hộ rồi (-5 ⭐)! Em hãy nhìn kỹ biểu tượng sự cố để chọn đúng công cụ nhé!`;
+            document.getElementById('bot-msg-3').innerHTML = `${lpIcon('cross', 'xs')} Chọn sai công cụ cứu hộ rồi! Em hãy nhìn kỹ biểu tượng sự cố để chọn đúng công cụ nhé!`;
         }
     }
 
@@ -3772,7 +3771,7 @@
                     addRunStars(3, 10, e);
                     if (banner3) banner3.classList.remove('warn');
                     document.getElementById('bot-msg-3').innerHTML =
-                        `${lpIcon('star', 'xs')} <strong>KIỂM LÂM AI KHEN NGỢI (+10 ⭐):</strong> Câu trả lời hoàn toàn chính xác!`;
+                        `${lpIcon('star', 'xs')} <strong>KIỂM LÂM AI KHEN NGỢI:</strong> Câu trả lời hoàn toàn chính xác!`;
 
                     i3QIdx++;
                     if (i3QIdx >= forestQuizList.length) {
@@ -3789,7 +3788,7 @@
 
                     if (banner3) banner3.classList.add('warn');
                     document.getElementById('bot-msg-3').innerHTML =
-                        `${lpIcon('warn', 'xs')} <strong>KIỂM LÂM AI GIẢI THÍCH (-5 ⭐):</strong> ${o.why} <br>👉 <em>Em hãy chọn lại đáp án đúng để tiếp tục nhé!</em>`;
+                        `${lpIcon('warn', 'xs')} <strong>KIỂM LÂM AI GIẢI THÍCH:</strong> ${o.why} <br>👉 <em>Em hãy chọn lại đáp án đúng để tiếp tục nhé!</em>`;
                 }
             };
             optsDiv.appendChild(btn);
@@ -4150,7 +4149,7 @@
         const banner4 = document.getElementById('bot-banner-4');
         if (banner4) banner4.classList.remove('warn');
         document.getElementById('bot-msg-4').innerHTML =
-            "Em đang ở chân núi (Bậc <strong>#1</strong>). Hãy trả lời đúng 15 câu hỏi ngẫu nhiên để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé! (Đúng <strong>+10 ⭐</strong>, Sai <strong>-5 ⭐</strong> và AI sẽ giải thích vì sao sai).";
+            "Em đang ở chân núi (Bậc <strong>#1</strong>). Hãy trả lời đúng 15 câu hỏi ngẫu nhiên để leo theo đường ziczac lên đỉnh núi kích hoạt Trạm Khí Hậu AI nhé!";
 
         renderMountainQuiz();
     }
@@ -4252,7 +4251,7 @@
                     addRunStars(4, 10, e);
                     if (banner4) banner4.classList.remove('warn');
                     document.getElementById('bot-msg-4').innerHTML =
-                        `${lpIcon('star', 'xs')} <strong>CHÍNH XÁC (+10 ⭐):</strong> Băng Bắc Cực đông cứng thêm! Robot AI đã leo lên mốc tiếp theo trên đỉnh núi!`;
+                        `${lpIcon('star', 'xs')} <strong>CHÍNH XÁC:</strong> Băng Bắc Cực đông cứng thêm! Robot AI đã leo lên mốc tiếp theo trên đỉnh núi!`;
 
                     qIndex++;
                     if (qIndex >= climateQuiz.length) {
@@ -4270,7 +4269,7 @@
 
                     if (banner4) banner4.classList.add('warn');
                     document.getElementById('bot-msg-4').innerHTML =
-                        `${lpIcon('warn', 'xs')} <strong>ROBOT AI GIẢI THÍCH (-5 ⭐):</strong> ${o.why} <br>👉 <em>Em hãy bấm chọn lại đáp án đúng để tiếp tục leo lên núi nhé!</em>`;
+                        `${lpIcon('warn', 'xs')} <strong>ROBOT AI GIẢI THÍCH:</strong> ${o.why} <br>👉 <em>Em hãy bấm chọn lại đáp án đúng để tiếp tục leo lên núi nhé!</em>`;
                 }
             };
             optsDiv.appendChild(btn);
