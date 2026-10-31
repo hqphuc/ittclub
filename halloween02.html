@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halloween Shooting Scratch - Demo & Hướng Dẫn Lập Trình</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f0a1c;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+    /* Scratch Block Styling */
+    .scratch-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ffffff;
+      user-select: none;
+    }
+    .s-block {
+      padding: 7px 12px;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 2px 3px rgba(0,0,0,0.35);
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      line-height: 1.3;
+      position: relative;
+    }
+    .s-hat {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 12px;
+      padding-top: 10px;
+    }
+    .s-c-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border-left: 14px solid;
+      padding-left: 8px;
+      margin-left: 6px;
+      gap: 2px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+    }
+    .s-event { background-color: #FFBF00; border: 1px solid #CC9900; color: #1f2937; }
+    .s-control { background-color: #FFAB19; border: 1px solid #CF8B17; color: #1f2937; }
+    .s-c-control { border-left-color: #FFAB19; }
+    .s-motion { background-color: #4C97FF; border: 1px solid #3373CC; }
+    .s-looks { background-color: #9966FF; border: 1px solid #774DCB; }
+    .s-sound { background-color: #CF63CF; border: 1px solid #BD42BD; }
+    .s-sensing { background-color: #5CB1D6; border: 1px solid #2E8EB8; }
+    .s-operator { background-color: #59C059; border: 1px solid #389438; }
+    .s-var { background-color: #FF8C1A; border: 1px solid #DB6E00; }
+    .s-list { background-color: #FF661A; border: 1px solid #D64D00; }
+    .s-myblock { background-color: #FF6680; border: 1px solid #FF3355; }
+    .s-pill {
+      background: rgba(255, 255, 255, 0.92);
+      color: #111827;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .s-hex {
+      background: #59C059;
+      color: #fff;
+      padding: 2px 9px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.25);
+      font-size: 0.78rem;
+    }
+    .s-var-pill {
+      background: #FF8C1A;
+      color: #fff;
+      padding: 1px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      font-size: 0.78rem;
+    }
+    .s-list-pill {
+      background: #FF661A;
+      color: #fff;
+      padding: 1px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      font-size: 0.78rem;
+    }
+    #gameCanvas {
+      cursor: none;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-[#130b24] via-[#1b1035] to-[#0f081d]">
+
+  <!-- Top Header -->
+  <header class="border-b border-orange-500/30 bg-[#160d29]/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-orange-500/20 text-xl">
+          🎃
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-purple-300">
+            Halloween Shooting — Dự Án Scratch
+          </h1>
+          <p class="text-xs text-purple-200/75">Mô phỏng Sân khấu 480×360 • Kịch bản Học sinh • Khối lệnh Scratch 3.0</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 bg-[#231542] p-1 rounded-xl border border-purple-500/30">
+        <button id="tabBtnDemo" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-orange-500 text-slate-950 shadow">
+          🎮 Chơi Thử Demo
+        </button>
+        <button id="tabBtnScenario" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-purple-200 hover:bg-purple-800/40">
+          📖 Mô Tả Kịch Bản
+        </button>
+        <button id="tabBtnScratch" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-purple-200 hover:bg-purple-800/40">
+          🧩 Lệnh Scratch
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5">
+
+    <!-- ================= TAB 1: PLAYABLE DEMO ================= -->
+    <section id="panelDemo" class="space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- Left Column: Scratch Stage (7 cols on lg) -->
+        <div class="lg:col-span-8 bg-[#1d1236] border border-purple-500/30 rounded-2xl p-3 sm:p-4 shadow-2xl">
+          <!-- Scratch Stage Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2.5 border-b border-purple-500/20">
+            <div class="flex items-center gap-2">
+              <button id="btnGreenFlag" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm shadow transition">
+                <span>🚩</span> Bắt đầu (Cờ xanh)
+              </button>
+              <button id="btnStopGame" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow transition">
+                <span>🛑</span> Dừng
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button id="btnToggleCoords" class="px-2.5 py-1.5 rounded-lg bg-purple-900/70 hover:bg-purple-800 text-purple-200 border border-purple-500/40 text-xs font-medium transition">
+                📐 Hiện tọa độ (x, y)
+              </button>
+              <button id="btnToggleSound" class="px-2.5 py-1.5 rounded-lg bg-purple-900/70 hover:bg-purple-800 text-purple-200 border border-purple-500/40 text-xs font-medium transition">
+                🔊 Âm thanh: Bật
+              </button>
+            </div>
+          </div>
+
+          <!-- Scratch Variable Monitors Bar -->
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="bg-[#2a1b4e] border border-orange-500/40 rounded-xl px-3 py-1.5 flex items-center justify-between">
+              <span class="text-xs font-semibold text-orange-200">Điểm</span>
+              <span id="hudScore" class="bg-orange-500 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-sm">0</span>
+            </div>
+            <div class="bg-[#2a1b4e] border border-orange-500/40 rounded-xl px-3 py-1.5 flex items-center justify-between">
+              <span class="text-xs font-semibold text-orange-200">Thời gian</span>
+              <span id="hudTime" class="bg-orange-500 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-sm">30s</span>
+            </div>
+            <div class="bg-[#2a1b4e] border border-purple-400/40 rounded-xl px-3 py-1.5 flex items-center justify-between">
+              <span class="text-xs font-semibold text-purple-200">Đổi kệ (2s)</span>
+              <span id="hudWaveTimer" class="bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-md text-xs sm:text-sm">2.0s</span>
+            </div>
+          </div>
+
+          <!-- Canvas Wrapper (4:3 Scratch 480x360 aspect ratio) -->
+          <div id="canvasContainer" class="relative w-full aspect-[4/3] bg-[#0c0717] rounded-xl overflow-hidden border-2 border-orange-500/40 shadow-inner">
+            <canvas id="gameCanvas" width="480" height="360" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Stage Footer Status & Scratch Coordinates -->
+          <div class="mt-2.5 flex flex-wrap items-center justify-between text-xs text-purple-300/80 gap-2">
+            <div class="flex items-center gap-3">
+              <span>🎯 <strong>Hồng tâm:</strong> <code id="coordReadout" class="text-orange-300 font-mono">x: 0, y: 0</code></span>
+              <span>👻 <strong>Bản sao trên kệ:</strong> <code id="cloneCountReadout" class="text-emerald-300 font-mono">15 / 15</code></span>
+            </div>
+            <span class="text-amber-300/90">💡 Nhấp chuột hoặc chạm vào nhân vật trên kệ gỗ để bắn (+10 điểm)</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Live Scratch State Inspector & Quick Rules (4 cols on lg) -->
+        <div class="lg:col-span-4 space-y-4">
+          <!-- Real-time Row Costume Assignment Card -->
+          <div class="bg-[#1d1236] border border-purple-500/30 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-sm font-bold text-orange-300 flex items-center gap-1.5">
+                <span>🪵</span> Trạng Thái Kệ Gỗ 3 Hàng
+              </h2>
+              <span class="text-[11px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30">
+                Làm mới mỗi 2 giây
+              </span>
+            </div>
+            <p class="text-xs text-purple-200/80 mb-3">
+              Mỗi đợt 2 giây, 3 loại trang phục (Quả bí, Bộ xương, Con ma) được chia ngẫu nhiên vào 3 hàng, mỗi hàng 5 bản sao:
+            </p>
+            <div id="rowAssignmentList" class="space-y-2 text-xs">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- 6 Costumes Quick Preview Card -->
+          <div class="bg-[#1d1236] border border-purple-500/30 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-orange-300 mb-2.5 flex items-center gap-1.5">
+              <span>🎭</span> 6 Trang Phục Nhân Vật Bot Halloween
+            </h2>
+            <div class="space-y-2 text-xs">
+              <div class="p-2 rounded-lg bg-[#271847] border border-orange-500/20 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-orange-300">Cặp 1 (Quả bí):</span>
+                  <div class="text-purple-200/80">#1 Quả bí ➜ #2 Quả bí vỡ</div>
+                </div>
+                <span class="px-2 py-1 rounded bg-orange-500/20 text-orange-300 font-mono text-[11px]">1 ➜ 2</span>
+              </div>
+              <div class="p-2 rounded-lg bg-[#271847] border border-cyan-500/20 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-cyan-300">Cặp 2 (Bộ xương):</span>
+                  <div class="text-purple-200/80">#3 Bộ xương ➜ #4 Bộ xương vỡ</div>
+                </div>
+                <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[11px]">3 ➜ 4</span>
+              </div>
+              <div class="p-2 rounded-lg bg-[#271847] border border-purple-400/20 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-purple-200">Cặp 3 (Con ma):</span>
+                  <div class="text-purple-200/80">#5 Con ma ➜ #6 Con ma bị bắn</div>
+                </div>
+                <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-200 font-mono text-[11px]">5 ➜ 6</span>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-purple-500/20 grid grid-cols-3 gap-2 text-center">
+              <div class="bg-[#140b29] p-2 rounded-lg">
+                <div class="text-[11px] text-purple-300">Bắn trúng</div>
+                <div id="statHits" class="text-sm font-extrabold text-emerald-400">0</div>
+              </div>
+              <div class="bg-[#140b29] p-2 rounded-lg">
+                <div class="text-[11px] text-purple-300">Bắn trượt</div>
+                <div id="statMisses" class="text-sm font-extrabold text-rose-400">0</div>
+              </div>
+              <div class="bg-[#140b29] p-2 rounded-lg">
+                <div class="text-[11px] text-purple-300">Kỷ lục</div>
+                <div id="statBest" class="text-sm font-extrabold text-amber-400">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: STUDENT SCENARIO GUIDE ================= -->
+    <section id="panelScenario" class="hidden space-y-6">
+      <div class="bg-[#1d1236] border border-purple-500/30 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-purple-500/20">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-400">Tài Liệu Học Tập Scratch</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">Mô Tả Kịch Bản Trò Chơi: Halloween Shooting</h2>
+          </div>
+          <button id="btnJumpToDemoFromScenario" class="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs sm:text-sm transition">
+            🎮 Chơi thử ngay
+          </button>
+        </div>
+
+        <!-- 1. Mục tiêu trò chơi -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-[#271847] border border-orange-500/30 rounded-xl p-4">
+            <div class="text-orange-400 font-bold text-sm mb-1">🎯 1. Nhiệm vụ của người chơi</div>
+            <p class="text-xs sm:text-sm text-purple-100/90 leading-relaxed">
+              Sử dụng chuột điều khiển <strong>Hồng tâm</strong> nhắm và nhấp bắn trúng các nhân vật <strong>Bot Halloween</strong> xuất hiện trên 3 hàng kệ gỗ.
+            </p>
+          </div>
+          <div class="bg-[#271847] border border-emerald-500/30 rounded-xl p-4">
+            <div class="text-emerald-400 font-bold text-sm mb-1">⏱️ 2. Thời gian & Điểm số</div>
+            <p class="text-xs sm:text-sm text-purple-100/90 leading-relaxed">
+              Thời gian chơi đếm ngược từ <strong>30 giây</strong> về 0. Mỗi lần bắn trúng 1 Bot Halloween được cộng <strong>+10 điểm</strong>.
+            </p>
+          </div>
+          <div class="bg-[#271847] border border-amber-500/30 rounded-xl p-4">
+            <div class="text-amber-300 font-bold text-sm mb-1">🔄 3. Quy luật xuất hiện & biến mất</div>
+            <p class="text-xs sm:text-sm text-purple-100/90 leading-relaxed">
+              Mục tiêu bị bắn trúng sẽ đổi sang <strong>trang phục bị vỡ</strong> rồi biến mất sau <strong>0.5 giây</strong>. Cứ mỗi <strong>2 giây</strong>, toàn bộ kệ gỗ xóa sạch và hiện ngẫu nhiên đợt mới.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. Bảng thiết kế 6 trang phục -->
+        <h3 class="text-base sm:text-lg font-bold text-orange-300 mb-3">🎨 Thiết Kế 2 Nhân Vật & 6 Trang Phục (3 Cặp)</h3>
+        <p class="text-xs sm:text-sm text-purple-200/85 mb-4">
+          Trong nhân vật <strong>Bot Halloween</strong>, các em sắp xếp đúng thứ tự <strong>6 trang phục</strong> theo 3 cặp liên tiếp (số lẻ là nguyên vẹn, số chẵn ngay sau là bị vỡ) để khi trúng đạn chỉ cần dùng 1 lệnh <code class="bg-purple-900 px-1.5 py-0.5 rounded text-orange-300">trang phục kế tiếp</code>:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <!-- Pair 1 -->
+          <div class="bg-[#150c28] border border-orange-500/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-orange-400 text-sm">Cặp 1: Quả Bí Ngô</span>
+              <span class="text-xs bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded">Trang phục 1 & 2</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume1" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-white mt-1">1. qua-bi</div>
+                <div class="text-[11px] text-purple-300">Lúc mới hiện</div>
+              </div>
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume2" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-orange-300 mt-1">2. qua-bi-vo</div>
+                <div class="text-[11px] text-purple-300">Khi bị bắn trúng</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pair 2 -->
+          <div class="bg-[#150c28] border border-cyan-500/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-cyan-400 text-sm">Cặp 2: Bộ Xương</span>
+              <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">Trang phục 3 & 4</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume3" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-white mt-1">3. bo-xuong</div>
+                <div class="text-[11px] text-purple-300">Lúc mới hiện</div>
+              </div>
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume4" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-cyan-300 mt-1">4. bo-xuong-vo</div>
+                <div class="text-[11px] text-purple-300">Khi bị bắn trúng</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pair 3 -->
+          <div class="bg-[#150c28] border border-purple-400/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-purple-300 text-sm">Cặp 3: Con Ma</span>
+              <span class="text-xs bg-purple-500/20 text-purple-200 px-2 py-0.5 rounded">Trang phục 5 & 6</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume5" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-white mt-1">5. con-ma</div>
+                <div class="text-[11px] text-purple-300">Lúc mới hiện</div>
+              </div>
+              <div class="bg-[#22143d] p-2 rounded-lg">
+                <canvas id="previewCostume6" width="90" height="80" class="mx-auto"></canvas>
+                <div class="text-xs font-semibold text-purple-300 mt-1">6. con-ma-bi-ban</div>
+                <div class="text-[11px] text-purple-300">Khi bị bắn trúng</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Sơ đồ tọa độ 3 hàng x 5 cột trên sân khấu Scratch -->
+        <h3 class="text-base sm:text-lg font-bold text-orange-300 mb-2">📐 Sơ Đồ Tọa Độ Kệ Gỗ 3 Hàng × 5 Nhân Vật Trên Sân Khấu Scratch</h3>
+        <p class="text-xs sm:text-sm text-purple-200/85 mb-3">
+          Sân khấu Scratch có chiều ngang từ <code class="text-orange-300">-240</code> đến <code class="text-orange-300">240</code> và chiều dọc từ <code class="text-orange-300">-180</code> đến <code class="text-orange-300">180</code>. Để xếp 3 hàng kệ gỗ cân đối, mỗi hàng 5 nhân vật cách đều nhau <code class="text-orange-300">80 bước</code>:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm bg-[#140b29] rounded-xl overflow-hidden">
+            <thead>
+              <tr class="bg-purple-900/60 text-orange-300 border-b border-purple-500/30">
+                <th class="p-3">Hàng kệ gỗ</th>
+                <th class="p-3">Tọa độ dọc (Y)</th>
+                <th class="p-3">5 Vị trí ngang (X) — cách nhau 80 bước</th>
+                <th class="p-3">Trang phục xuất hiện</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-purple-500/20 text-purple-100">
+              <tr>
+                <td class="p-3 font-bold text-amber-300">Hàng 1 (Trên)</td>
+                <td class="p-3 font-mono text-emerald-300">y = 95</td>
+                <td class="p-3 font-mono">x = -160, -80, 0, 80, 160</td>
+                <td class="p-3">Ngẫu nhiên 1 trong 3 loại (Quả bí #1, Bộ xương #3, Con ma #5)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-amber-300">Hàng 2 (Giữa)</td>
+                <td class="p-3 font-mono text-emerald-300">y = -5</td>
+                <td class="p-3 font-mono">x = -160, -80, 0, 80, 160</td>
+                <td class="p-3">Ngẫu nhiên 1 trong 2 loại còn lại (không trùng Hàng 1)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-amber-300">Hàng 3 (Dưới)</td>
+                <td class="p-3 font-mono text-emerald-300">y = -105</td>
+                <td class="p-3 font-mono">x = -160, -80, 0, 80, 160</td>
+                <td class="p-3">Loại trang phục cuối cùng trong bộ 3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: SCRATCH BLOCKS GUIDE ================= -->
+    <section id="panelScratch" class="hidden space-y-6">
+      <div class="bg-[#1d1236] border border-purple-500/30 rounded-2xl p-5 sm:p-6 shadow-xl space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-purple-500/20">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-400">Hướng Dẫn Thực Hành Từng Bước</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">Đề Xuất Khối Lệnh Scratch Cho Học Sinh</h2>
+          </div>
+          <span class="text-xs bg-purple-900/80 border border-purple-400/30 text-purple-200 px-3 py-1.5 rounded-lg">
+            Tương thích chuẩn Scratch 3.0
+          </span>
+        </div>
+
+        <!-- BƯỚC 1: TẠO BIẾN & DANH SÁCH -->
+        <div class="bg-[#140b29] border border-orange-500/30 rounded-xl p-4">
+          <h3 class="text-base font-bold text-orange-300 mb-2">Bước 1: Tạo Biến số & Danh sách (Trong nhóm Các Biến Số)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div>
+              <p class="font-semibold text-white mb-1">🔸 Các biến cần tạo (Dành cho tất cả nhân vật):</p>
+              <ul class="list-disc list-inside space-y-1 text-purple-200">
+                <li><span class="s-var-pill">Điểm</span> — Lưu điểm số người chơi (+10 mỗi lần bắn trúng).</li>
+                <li><span class="s-var-pill">Thời gian</span> — Đếm ngược từ 30 giây về 0.</li>
+                <li><span class="s-var-pill">vị trí ngẫu nhiên</span> — Lưu vị trí lấy trang phục từ danh sách.</li>
+                <li><span class="s-var-pill">tọa độ Y</span> — Lưu độ cao của từng hàng kệ gỗ (95, -5, -105).</li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-semibold text-white mb-1">🔸 Danh sách cần tạo (Nút "Tạo một danh sách"):</p>
+              <ul class="list-disc list-inside space-y-1 text-purple-200">
+                <li><span class="s-list-pill">Hàng_TrangPhục</span> — Chứa 3 số thứ tự trang phục gốc: <code class="text-amber-300">1</code> (Quả bí), <code class="text-amber-300">3</code> (Bộ xương), <code class="text-amber-300">5</code> (Con ma) để chia ngẫu nhiên mỗi loại vào 1 hàng không bị trùng lặp.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 2: NHÂN VẬT HỒNG TÂM -->
+        <div class="bg-[#140b29] border border-purple-500/30 rounded-xl p-4">
+          <h3 class="text-base font-bold text-cyan-300 mb-1">Nội dung 1: Lập trình Nhân vật Hồng Tâm (Nhắm bắn)</h3>
+          <p class="text-xs text-purple-200/80 mb-3">
+            Hồng tâm luôn đi theo con trỏ chuột và nằm ở lớp trên cùng để không bị nhân vật Bot Halloween che khuất.
+          </p>
+          <div class="scratch-stack">
+            <div class="s-block s-hat s-event">Khi bấm vào 🚩</div>
+            <div class="s-block s-looks">đi tới lớp <span class="s-pill">phía trên cùng</span></div>
+            <div class="s-block s-control">liên tục</div>
+            <div class="s-c-wrap s-c-control">
+              <div class="s-block s-motion">đi tới <span class="s-pill">con trỏ chuột</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 3: ĐỒNG HỒ ĐẾM NGƯỢC 30 GIÂY -->
+        <div class="bg-[#140b29] border border-purple-500/30 rounded-xl p-4">
+          <h3 class="text-base font-bold text-amber-300 mb-1">Nội dung 2: Đồng hồ đếm ngược 30 giây & Tính điểm</h3>
+          <p class="text-xs text-purple-200/80 mb-3">
+            Đặt ở Sân khấu hoặc trong nhân vật <strong>Bot Halloween</strong>. Khi hết 30 giây, xóa hết bản sao còn lại và dừng trò chơi.
+          </p>
+          <div class="scratch-stack">
+            <div class="s-block s-hat s-event">Khi bấm vào 🚩</div>
+            <div class="s-block s-var">đặt <span class="s-pill">Điểm</span> thành <span class="s-pill">0</span></div>
+            <div class="s-block s-var">đặt <span class="s-pill">Thời gian</span> thành <span class="s-pill">30</span></div>
+            <div class="s-block s-control">lặp lại <span class="s-pill">30</span> lần</div>
+            <div class="s-c-wrap s-c-control">
+              <div class="s-block s-control">đợi <span class="s-pill">1</span> giây</div>
+              <div class="s-block s-var">thay đổi <span class="s-pill">Thời gian</span> một lượng <span class="s-pill">-1</span></div>
+            </div>
+            <div class="s-block s-event">phát tin nhắn <span class="s-pill">Xóa đợt cũ</span></div>
+            <div class="s-block s-control">dừng <span class="s-pill">tất cả</span></div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 4: CHU KỲ 2 GIÂY XÓA & HIỆN NGẪU NHIÊN 3 HÀNG x 5 NHÂN VẬT -->
+        <div class="bg-[#140b29] border border-purple-500/30 rounded-xl p-4 space-y-4">
+          <div>
+            <h3 class="text-base font-bold text-emerald-300 mb-1">Nội dung 3: Chu kỳ 2 giây xóa hết và hiện ngẫu nhiên 3 hàng × 5 nhân vật</h3>
+            <p class="text-xs text-purple-200/80">
+              Trong nhân vật <strong>Bot Halloween</strong>: nhân vật gốc luôn <strong>Ẩn</strong> và cứ mỗi <strong>2 giây</strong> lại phát tin nhắn <code class="text-orange-300">Xóa đợt cũ</code> rồi gọi khối lệnh tạo 3 hàng mới (mỗi hàng 5 bản sao).
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Khối chính 2 giây -->
+            <div>
+              <div class="text-xs font-bold text-orange-300 mb-2">A. Vòng lặp làm mới mỗi 2 giây & Xóa bản sao cũ:</div>
+              <div class="scratch-stack mb-4">
+                <div class="s-block s-hat s-event">Khi bấm vào 🚩</div>
+                <div class="s-block s-looks">ẩn</div>
+                <div class="s-block s-control">liên tục</div>
+                <div class="s-c-wrap s-c-control">
+                  <div class="s-block s-event">phát tin nhắn <span class="s-pill">Xóa đợt cũ</span> và đợi</div>
+                  <div class="s-block s-myblock">Tạo kệ gỗ 3 hàng</div>
+                  <div class="s-block s-control">đợi <span class="s-pill">2</span> giây</div>
+                </div>
+              </div>
+
+              <div class="scratch-stack">
+                <div class="s-block s-hat s-event">Khi nhận <span class="s-pill">Xóa đợt cũ</span></div>
+                <div class="s-block s-control">xóa bản sao này</div>
+              </div>
+            </div>
+
+            <!-- Định nghĩa khối Tạo kệ gỗ 3 hàng -->
+            <div>
+              <div class="text-xs font-bold text-pink-300 mb-2">B. Định nghĩa khối [Tạo kệ gỗ 3 hàng] (Chạy không làm mới màn hình):</div>
+              <div class="scratch-stack">
+                <div class="s-block s-hat s-myblock">Định nghĩa: Tạo kệ gỗ 3 hàng</div>
+                <div class="s-block s-list">xóa hết tất cả trong <span class="s-pill">Hàng_TrangPhục</span></div>
+                <div class="s-block s-list">thêm <span class="s-pill">1</span> vào <span class="s-pill">Hàng_TrangPhục</span> <span class="text-[11px] opacity-80">(Quả bí)</span></div>
+                <div class="s-block s-list">thêm <span class="s-pill">3</span> vào <span class="s-pill">Hàng_TrangPhục</span> <span class="text-[11px] opacity-80">(Bộ xương)</span></div>
+                <div class="s-block s-list">thêm <span class="s-pill">5</span> vào <span class="s-pill">Hàng_TrangPhục</span> <span class="text-[11px] opacity-80">(Con ma)</span></div>
+                <div class="s-block s-var">đặt <span class="s-pill">tọa độ Y</span> thành <span class="s-pill">95</span></div>
+                <div class="s-block s-control">lặp lại <span class="s-pill">3</span> lần <span class="text-[11px] opacity-80">(3 hàng kệ gỗ)</span></div>
+                <div class="s-c-wrap s-c-control">
+                  <div class="s-block s-var">đặt <span class="s-pill">vị trí ngẫu nhiên</span> thành <span class="s-operator s-pill">lấy ngẫu nhiên từ 1 đến (kích thước của Hàng_TrangPhục)</span></div>
+                  <div class="s-block s-looks">chuyển sang trang phục <span class="s-list-pill">phần tử thứ (vị trí ngẫu nhiên) của Hàng_TrangPhục</span></div>
+                  <div class="s-block s-list">xóa phần tử thứ <span class="s-var-pill">vị trí ngẫu nhiên</span> của <span class="s-pill">Hàng_TrangPhục</span></div>
+                  <div class="s-block s-motion">đi tới điểm x: <span class="s-pill">-160</span> y: <span class="s-var-pill">tọa độ Y</span></div>
+                  <div class="s-block s-control">lặp lại <span class="s-pill">5</span> lần <span class="text-[11px] opacity-80">(5 nhân vật mỗi hàng)</span></div>
+                  <div class="s-c-wrap s-c-control">
+                    <div class="s-block s-control">tạo bản sao của <span class="s-pill">bản thân tôi</span></div>
+                    <div class="s-block s-motion">thay đổi x một lượng <span class="s-pill">80</span></div>
+                  </div>
+                  <div class="s-block s-var">thay đổi <span class="s-pill">tọa độ Y</span> một lượng <span class="s-pill">-100</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 5: XỬ LÝ BẮN TRÚNG, ĐỔI TRANG PHỤC VỠ & BIẾN MẤT SAU 0.5 GIÂY -->
+        <div class="bg-[#140b29] border border-purple-500/30 rounded-xl p-4">
+          <h3 class="text-base font-bold text-rose-300 mb-1">Nội dung 4: Khi Bot Halloween bị bắn trúng (+10 điểm, đổi trang phục vỡ, biến mất sau 0.5s)</h3>
+          <p class="text-xs text-purple-200/80 mb-3">
+            Vì mỗi bản sao bắt đầu ở trang phục nguyên vẹn (số 1, 3 hoặc 5), khi người chơi nhấp chuột trúng bản sao, lệnh <code class="text-orange-300">trang phục kế tiếp</code> sẽ chuyển ngay sang trang phục bị vỡ tương ứng (số 2, 4 hoặc 6), cộng 10 điểm, đợi 0.5 giây rồi tự xóa!
+          </p>
+          <div class="scratch-stack">
+            <div class="s-block s-hat s-control">Khi tôi bắt đầu là một bản sao</div>
+            <div class="s-block s-looks">hiện</div>
+            <div class="s-block s-control">đợi đến khi <span class="s-hex">&lt;đang chạm [Hồng tâm]?&gt; và &lt;chuột được nhấn?&gt;</span></div>
+            <div class="s-block s-looks">trang phục kế tiếp <span class="text-[11px] opacity-85">(Tự động đổi: 1➜2, 3➜4, 5➜6)</span></div>
+            <div class="s-block s-sound">bắt đầu âm thanh <span class="s-pill">Pop</span></div>
+            <div class="s-block s-var">thay đổi <span class="s-pill">Điểm</span> một lượng <span class="s-pill">10</span></div>
+            <div class="s-block s-control">đợi <span class="s-pill">0.5</span> giây</div>
+            <div class="s-block s-control">xóa bản sao này</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==================== AUDIO ENGINE (Web Audio API) ====================
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      if (type === 'shoot_hit') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.14);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+
+        // Chime +10
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.04);
+        osc2.frequency.setValueAtTime(1174, now + 0.09);
+        gain2.gain.setValueAtTime(0.18, now + 0.04);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.04);
+        osc2.stop(now + 0.22);
+      } else if (type === 'shoot_miss') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(190, now);
+        osc.frequency.exponentialRampToValueAtTime(75, now + 0.09);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else if (type === 'wave') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(480, now + 0.12);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.13);
+      } else if (type === 'gameover') {
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.1);
+          gain.gain.setValueAtTime(0.2, now + i * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.1);
+          osc.stop(now + i * 0.1 + 0.26);
+        });
+      }
+    }
+
+    // ==================== COSTUME ART RENDERER (6 COSTUMES) ====================
+    // Costumes:
+    // 1: Quả bí (intact)      | 2: Quả bí bị vỡ (broken)
+    // 3: Bộ xương (intact)    | 4: Bộ xương bị vỡ (broken)
+    // 5: Con ma (intact)      | 6: Con ma bị bắn (broken)
+
+    const COSTUME_INFO = {
+      1: { name: '1. Quả bí', pairName: 'Cặp 1: Quả bí ngô', color: '#f97316' },
+      2: { name: '2. Quả bí vỡ', pairName: 'Cặp 1: Quả bí ngô', color: '#fb923c' },
+      3: { name: '3. Bộ xương', pairName: 'Cặp 2: Bộ xương', color: '#38bdf8' },
+      4: { name: '4. Bộ xương vỡ', pairName: 'Cặp 2: Bộ xương', color: '#7dd3fc' },
+      5: { name: '5. Con ma', pairName: 'Cặp 3: Con ma', color: '#c084fc' },
+      6: { name: '6. Con ma bị bắn', pairName: 'Cặp 3: Con ma', color: '#e879f9' }
+    };
+
+    function drawBotCostume(ctx, costumeNum, cx, cy, scale = 1, hitProgress = 0) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+
+      if (costumeNum === 1) {
+        // 1: Quả bí nguyên vẹn
+        // Stem
+        ctx.fillStyle = '#15803d';
+        ctx.beginPath();
+        ctx.moveTo(-4, -22);
+        ctx.lineTo(4, -22);
+        ctx.lineTo(2, -31);
+        ctx.lineTo(-6, -29);
+        ctx.closePath();
+        ctx.fill();
+
+        // Shadow on shelf
+        ctx.fillStyle = 'rgba(0,0,0,0.35)';
+        ctx.beginPath();
+        ctx.ellipse(0, 22, 22, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pumpkin ribs
+        ctx.fillStyle = '#ea580c';
+        ctx.beginPath();
+        ctx.ellipse(-12, 0, 14, 21, 0, 0, Math.PI * 2);
+        ctx.ellipse(12, 0, 14, 21, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 16, 22, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Carved glowing eyes
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.moveTo(-12, -8);
+        ctx.lineTo(-4, -8);
+        ctx.lineTo(-8, -1);
+        ctx.closePath();
+        ctx.moveTo(12, -8);
+        ctx.lineTo(4, -8);
+        ctx.lineTo(8, -1);
+        ctx.closePath();
+        ctx.fill();
+
+        // Nose
+        ctx.beginPath();
+        ctx.moveTo(0, -2);
+        ctx.lineTo(-3, 3);
+        ctx.lineTo(3, 3);
+        ctx.closePath();
+        ctx.fill();
+
+        // Spooky grin
+        ctx.beginPath();
+        ctx.moveTo(-13, 7);
+        ctx.lineTo(-6, 11);
+        ctx.lineTo(0, 8);
+        ctx.lineTo(6, 11);
+        ctx.lineTo(13, 7);
+        ctx.lineTo(9, 15);
+        ctx.lineTo(-9, 15);
+        ctx.closePath();
+        ctx.fill();
+
+      } else if (costumeNum === 2) {
+        // 2: Quả bí bị vỡ (split pieces + seeds)
+        const spread = 4 + hitProgress * 10;
+        // Left half
+        ctx.save();
+        ctx.translate(-spread, 4);
+        ctx.rotate(-0.35);
+        ctx.fillStyle = '#ea580c';
+        ctx.beginPath();
+        ctx.arc(0, 0, 16, Math.PI * 0.5, Math.PI * 1.5);
+        ctx.lineTo(4, -8);
+        ctx.lineTo(-3, 0);
+        ctx.lineTo(4, 8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Right half
+        ctx.save();
+        ctx.translate(spread, 4);
+        ctx.rotate(0.35);
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.arc(0, 0, 16, -Math.PI * 0.5, Math.PI * 0.5);
+        ctx.lineTo(-4, 8);
+        ctx.lineTo(3, 0);
+        ctx.lineTo(-4, -8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Burst splatters & seeds
+        ctx.fillStyle = '#fde047';
+        for (let i = 0; i < 6; i++) {
+          const ang = (i / 6) * Math.PI * 2;
+          const r = 8 + hitProgress * 16;
+          ctx.beginPath();
+          ctx.arc(Math.cos(ang) * r, Math.sin(ang) * r - 4, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+      } else if (costumeNum === 3) {
+        // 3: Bộ xương nguyên vẹn
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.35)';
+        ctx.beginPath();
+        ctx.ellipse(0, 22, 18, 4.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ribcage
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        // Spine
+        ctx.beginPath();
+        ctx.moveTo(0, 4);
+        ctx.lineTo(0, 20);
+        ctx.stroke();
+        // Ribs
+        [-10, -7, -4].forEach((w, idx) => {
+          const ry = 8 + idx * 5;
+          ctx.beginPath();
+          ctx.moveTo(-11, ry);
+          ctx.quadraticCurveTo(0, ry + 3, 11, ry);
+          ctx.stroke();
+        });
+
+        // Skull cranium
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.arc(0, -10, 15, 0, Math.PI * 2);
+        ctx.fill();
+        // Jaw
+        ctx.fillRect(-9, -1, 18, 8);
+
+        // Glowing cyan eye sockets
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(-6, -10, 4.5, 0, Math.PI * 2);
+        ctx.arc(6, -10, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(-6, -10, 2, 0, Math.PI * 2);
+        ctx.arc(6, -10, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Nasal cavity
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.moveTo(0, -6);
+        ctx.lineTo(-2.5, -2);
+        ctx.lineTo(2.5, -2);
+        ctx.closePath();
+        ctx.fill();
+
+        // Teeth lines
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1.5;
+        for (let tx = -6; tx <= 6; tx += 4) {
+          ctx.beginPath();
+          ctx.moveTo(tx, 1);
+          ctx.lineTo(tx, 6);
+          ctx.stroke();
+        }
+
+      } else if (costumeNum === 4) {
+        // 4: Bộ xương bị vỡ (scattered skull & bones)
+        const d = 3 + hitProgress * 12;
+        // Tilted cracked skull
+        ctx.save();
+        ctx.translate(-d * 0.6, -6 - d * 0.3);
+        ctx.rotate(-0.45);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(0, 0, 13, 0, Math.PI * 2);
+        ctx.fill();
+        // Crack line
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-2, -12);
+        ctx.lineTo(3, -3);
+        ctx.lineTo(-3, 4);
+        ctx.stroke();
+        // X eyes
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(-5, 0, 3.5, 0, Math.PI * 2);
+        ctx.arc(5, 0, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Flying bones
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.save();
+        ctx.translate(d, 8);
+        ctx.rotate(0.6);
+        ctx.beginPath();
+        ctx.moveTo(-10, 0);
+        ctx.lineTo(10, 0);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(-d, 12);
+        ctx.rotate(-0.5);
+        ctx.beginPath();
+        ctx.moveTo(-9, 0);
+        ctx.lineTo(9, 0);
+        ctx.stroke();
+        ctx.restore();
+
+      } else if (costumeNum === 5) {
+        // 5: Con ma nguyên vẹn
+        // Glow aura
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.22)';
+        ctx.beginPath();
+        ctx.arc(0, -2, 24, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ghost body
+        ctx.fillStyle = '#f3e8ff';
+        ctx.beginPath();
+        ctx.arc(0, -8, 16, Math.PI, 0, false);
+        ctx.lineTo(16, 16);
+        // Wavy bottom
+        ctx.lineTo(10, 11);
+        ctx.lineTo(5, 17);
+        ctx.lineTo(0, 11);
+        ctx.lineTo(-5, 17);
+        ctx.lineTo(-10, 11);
+        ctx.lineTo(-16, 16);
+        ctx.closePath();
+        ctx.fill();
+
+        // Cute spooky face
+        ctx.fillStyle = '#3b0764';
+        ctx.beginPath();
+        ctx.ellipse(-6, -8, 3, 4.5, 0, 0, Math.PI * 2);
+        ctx.ellipse(6, -8, 3, 4.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Mouth "O"
+        ctx.beginPath();
+        ctx.ellipse(0, 1, 4, 5.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cheek blush
+        ctx.fillStyle = 'rgba(244, 114, 182, 0.45)';
+        ctx.beginPath();
+        ctx.arc(-11, -3, 3, 0, Math.PI * 2);
+        ctx.arc(11, -3, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (costumeNum === 6) {
+        // 6: Con ma bị bắn (ectoplasm poof + dizzy ghost)
+        ctx.strokeStyle = '#e879f9';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 16 + hitProgress * 10, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(232, 121, 249, 0.65)';
+        ctx.beginPath();
+        ctx.arc(0, -4, 13 * (1 - hitProgress * 0.25), 0, Math.PI * 2);
+        ctx.fill();
+
+        // X Eyes
+        ctx.strokeStyle = '#4a044e';
+        ctx.lineWidth = 2;
+        [-5, 5].forEach(ex => {
+          ctx.beginPath();
+          ctx.moveTo(ex - 3, -7);
+          ctx.lineTo(ex + 3, -1);
+          ctx.moveTo(ex + 3, -7);
+          ctx.lineTo(ex - 3, -1);
+          ctx.stroke();
+        });
+
+        // Wavy mouth
+        ctx.beginPath();
+        ctx.moveTo(-6, 5);
+        ctx.quadraticCurveTo(0, 1, 6, 5);
+        ctx.stroke();
+      }
+
+      // If broken costume (2, 4, 6), show floating "+10" badge
+      if (costumeNum % 2 === 0) {
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 13px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('+10', 0, -24 - hitProgress * 12);
+      }
+
+      ctx.restore();
+    }
+
+    // ==================== RENDER STATIC PREVIEW CANVASES IN TAB 2 ====================
+    function renderCostumePreviews() {
+      for (let c = 1; c <= 6; c++) {
+        const el = document.getElementById('previewCostume' + c);
+        if (!el) continue;
+        const pctx = el.getContext('2d');
+        pctx.clearRect(0, 0, el.width, el.height);
+        drawBotCostume(pctx, c, el.width / 2, el.height / 2 + 4, 1.15, 0.2);
+      }
+    }
+
+    // ==================== MAIN SCRATCH STAGE SIMULATION ====================
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Scratch coordinates: center (0,0), x in [-240, 240], y in [-180, 180]
+    // Canvas coordinates: (0,0) top-left, width 480, height 360
+    function scratchToCanvasX(sx) { return sx + 240; }
+    function scratchToCanvasY(sy) { return 180 - sy; }
+    function canvasToScratchX(cx) { return Math.round(cx - 240); }
+    function canvasToScratchY(cy) { return Math.round(180 - cy); }
+
+    const SHELF_ROWS_Y = [95, -5, -105]; // 3 rows in Scratch Y
+    const SHELF_COLS_X = [-160, -80, 0, 80, 160]; // 5 columns in Scratch X
+
+    let gameState = {
+      running: false,
+      gameOver: false,
+      score: 0,
+      bestScore: 0,
+      hits: 0,
+      misses: 0,
+      timeLeft: 30,
+      waveTimeLeft: 2.0,
+      showCoords: false,
+      mouseX: 0,      // Scratch X
+      mouseY: 0,      // Scratch Y
+      recoil: 0,      // Crosshair recoil animation
+      clones: [],     // Active Bot Halloween clones on stage
+      rowCostumes: [1, 3, 5], // Current costume assigned to Row 1, 2, 3
+      lastTimestamp: 0
+    };
+
+    // Load best score safely
+    try {
+      const savedBest = localStorage.getItem('halloween_scratch_best');
+      if (savedBest) gameState.bestScore = parseInt(savedBest, 10) || 0;
+    } catch (e) {}
+
+    // Shuffle [1, 3, 5] so each row gets one unique intact costume randomly
+    function spawnNewWave() {
+      const pool = [1, 3, 5];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = pool[i];
+        pool[i] = pool[j];
+        pool[j] = tmp;
+      }
+      gameState.rowCostumes = pool;
+      gameState.clones = [];
+
+      for (let r = 0; r < 3; r++) {
+        const sy = SHELF_ROWS_Y[r];
+        const baseCostume = pool[r];
+        for (let c = 0; c < 5; c++) {
+          const sx = SHELF_COLS_X[c];
+          gameState.clones.push({
+            id: `${r}_${c}`,
+            row: r,
+            col: c,
+            sx: sx,
+            sy: sy,
+            costume: baseCostume, // 1, 3, or 5
+            isHit: false,
+            hitTimer: 0 // counts up to 0.5s then disappears
+          });
+        }
+      }
+      updateRowAssignmentUI();
+    }
+
+    function updateRowAssignmentUI() {
+      const container = document.getElementById('rowAssignmentList');
+      if (!container) return;
+      const rowLabels = ['Hàng 1 (Trên, y = 95)', 'Hàng 2 (Giữa, y = -5)', 'Hàng 3 (Dưới, y = -105)'];
+      container.innerHTML = gameState.rowCostumes.map((costumeId, idx) => {
+        const info = COSTUME_INFO[costumeId];
+        return `
+          <div class="flex items-center justify-between p-2 rounded-lg bg-[#140b29] border border-purple-500/20">
+            <span class="font-medium text-purple-200">${rowLabels[idx]}</span>
+            <span class="px-2 py-0.5 rounded font-bold" style="background:${info.color}22; color:${info.color}">
+              ${info.name} (×5)
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateHUD() {
+      document.getElementById('hudScore').textContent = gameState.score;
+      document.getElementById('hudTime').textContent = gameState.timeLeft + 's';
+      document.getElementById('hudWaveTimer').textContent = gameState.waveTimeLeft.toFixed(1) + 's';
+      document.getElementById('cloneCountReadout').textContent = `${gameState.clones.length} / 15`;
+      document.getElementById('statHits').textContent = gameState.hits;
+      document.getElementById('statMisses').textContent = gameState.misses;
+      document.getElementById('statBest').textContent = gameState.bestScore;
+    }
+
+    function startGame() {
+      initAudio();
+      gameState.running = true;
+      gameState.gameOver = false;
+      gameState.score = 0;
+      gameState.hits = 0;
+      gameState.misses = 0;
+      gameState.timeLeft = 30;
+      gameState.waveTimeLeft = 2.0;
+      spawnNewWave();
+      updateHUD();
+      playSound('wave');
+    }
+
+    function stopGame() {
+      gameState.running = false;
+      gameState.gameOver = false;
+      updateHUD();
+    }
+
+    // Shoot handler at Scratch coordinates (sx, sy)
+    function handleShoot(sx, sy) {
+      gameState.mouseX = sx;
+      gameState.mouseY = sy;
+      gameState.recoil = 1.0;
+
+      if (!gameState.running) {
+        // If clicking start button on overlay
+        if (sx >= -90 && sx <= 90 && sy >= -45 && sy <= 15) {
+          startGame();
+        }
+        return;
+      }
+
+      // Check if touching any intact Bot Halloween clone
+      let hitAny = false;
+      for (let i = gameState.clones.length - 1; i >= 0; i--) {
+        const bot = gameState.clones[i];
+        if (!bot.isHit) {
+          const dx = sx - bot.sx;
+          const dy = sy - bot.sy;
+          if (Math.hypot(dx, dy) <= 28) {
+            // Switch to broken costume of that pair (costume + 1)
+            bot.isHit = true;
+            bot.costume = bot.costume + 1;
+            bot.hitTimer = 0;
+            gameState.score += 10;
+            gameState.hits += 1;
+            if (gameState.score > gameState.bestScore) {
+              gameState.bestScore = gameState.score;
+              try {
+                localStorage.setItem('halloween_scratch_best', String(gameState.bestScore));
+              } catch (e) {}
+            }
+            hitAny = true;
+            playSound('shoot_hit');
+            break;
+          }
+        }
+      }
+
+      if (!hitAny) {
+        gameState.misses += 1;
+        playSound('shoot_miss');
+      }
+      updateHUD();
+    }
+
+    // Pointer listeners on Canvas
+    function getScratchCoordsFromEvent(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const cx = ((clientX - rect.left) / rect.width) * 480;
+      const cy = ((clientY - rect.top) / rect.height) * 360;
+      return {
+        sx: Math.max(-240, Math.min(240, canvasToScratchX(cx))),
+        sy: Math.max(-180, Math.min(180, canvasToScratchY(cy)))
+      };
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const pos = getScratchCoordsFromEvent(e);
+      gameState.mouseX = pos.sx;
+      gameState.mouseY = pos.sy;
+      document.getElementById('coordReadout').textContent = `x: ${pos.sx}, y: ${pos.sy}`;
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      const pos = getScratchCoordsFromEvent(e);
+      handleShoot(pos.sx, pos.sy);
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const pos = getScratchCoordsFromEvent(e);
+      document.getElementById('coordReadout').textContent = `x: ${pos.sx}, y: ${pos.sy}`;
+      handleShoot(pos.sx, pos.sy);
+    }, { passive: false });
+
+    // ==================== STAGE RENDERING ====================
+    function drawBackgroundAndShelves() {
+      // Spooky night sky gradient
+      const grad = ctx.createLinearGradient(0, 0, 0, 360);
+      grad.addColorStop(0, '#130924');
+      grad.addColorStop(0.5, '#21103d');
+      grad.addColorStop(1, '#120821');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 480, 360);
+
+      // Decorative Halloween Moon & Stars
+      ctx.fillStyle = 'rgba(253, 224, 71, 0.14)';
+      ctx.beginPath();
+      ctx.arc(420, 52, 34, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(254, 240, 138, 0.28)';
+      ctx.beginPath();
+      ctx.arc(420, 52, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Wooden frame pillars on left and right
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(22, 25, 16, 325);
+      ctx.fillRect(442, 25, 16, 325);
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(22, 25, 16, 325);
+      ctx.strokeRect(442, 25, 16, 325);
+
+      // 3 Wooden Shelves corresponding to SHELF_ROWS_Y = [95, -5, -105]
+      SHELF_ROWS_Y.forEach((sy, idx) => {
+        const shelfTopY = scratchToCanvasY(sy) + 21; // right under the bots
+        // Shelf board top surface
+        const woodGrad = ctx.createLinearGradient(0, shelfTopY, 0, shelfTopY + 14);
+        woodGrad.addColorStop(0, '#92400e');
+        woodGrad.addColorStop(0.5, '#78350f');
+        woodGrad.addColorStop(1, '#451a03');
+        ctx.fillStyle = woodGrad;
+        ctx.fillRect(20, shelfTopY, 440, 14);
+
+        // Shelf highlight line
+        ctx.strokeStyle = '#b45309';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(20, shelfTopY + 1);
+        ctx.lineTo(460, shelfTopY + 1);
+        ctx.stroke();
+
+        // Row label tag on left pillar
+        ctx.fillStyle = 'rgba(251, 146, 60, 0.85)';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Hàng ${idx + 1} (y=${sy})`, 42, shelfTopY + 11);
+      });
+    }
+
+    function drawCrosshair(sx, sy, recoil) {
+      const cx = scratchToCanvasX(sx);
+      const cy = scratchToCanvasY(sy);
+      const r = 16 + recoil * 6;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // Outer ring
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner ring
+      ctx.strokeStyle = '#fde047';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Cross lines
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-r - 6, 0);
+      ctx.lineTo(-r * 0.35, 0);
+      ctx.moveTo(r * 0.35, 0);
+      ctx.lineTo(r + 6, 0);
+      ctx.moveTo(0, -r - 6);
+      ctx.lineTo(0, -r * 0.35);
+      ctx.moveTo(0, r * 0.35);
+      ctx.lineTo(0, r + 6);
+      ctx.stroke();
+
+      // Center dot
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(0, 0, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // ==================== MAIN GAME LOOP ====================
+    let accumSec = 0;
+
+    function gameLoop(timestamp) {
+      if (!gameState.lastTimestamp) gameState.lastTimestamp = timestamp;
+      const dt = Math.min(0.1, (timestamp - gameState.lastTimestamp) / 1000);
+      gameState.lastTimestamp = timestamp;
+
+      if (gameState.recoil > 0) {
+        gameState.recoil = Math.max(0, gameState.recoil - dt * 6);
+      }
+
+      if (gameState.running) {
+        // Update 2-second wave cycle
+        gameState.waveTimeLeft -= dt;
+        if (gameState.waveTimeLeft <= 0) {
+          // Delete all clones and respawn randomly every 2 seconds!
+          gameState.waveTimeLeft = 2.0;
+          spawnNewWave();
+          playSound('wave');
+        }
+
+        // Update 30-second countdown
+        accumSec += dt;
+        if (accumSec >= 1.0) {
+          accumSec -= 1.0;
+          gameState.timeLeft -= 1;
+          if (gameState.timeLeft <= 0) {
+            gameState.timeLeft = 0;
+            gameState.running = false;
+            gameState.gameOver = true;
+            gameState.clones = []; // clear all clones on game over
+            playSound('gameover');
+          }
+        }
+
+        // Update hit clones (0.5s broken costume timer before disappearing)
+        for (let i = gameState.clones.length - 1; i >= 0; i--) {
+          const bot = gameState.clones[i];
+          if (bot.isHit) {
+            bot.hitTimer += dt;
+            if (bot.hitTimer >= 0.5) {
+              gameState.clones.splice(i, 1);
+            }
+          }
+        }
+
+        updateHUD();
+      }
+
+      // Draw Stage
+      drawBackgroundAndShelves();
+
+      // Draw Clones
+      gameState.clones.forEach(bot => {
+        const cx = scratchToCanvasX(bot.sx);
+        const cy = scratchToCanvasY(bot.sy);
+        const hitProg = bot.isHit ? Math.min(1, bot.hitTimer / 0.5) : 0;
+        drawBotCostume(ctx, bot.costume, cx, cy, 1, hitProg);
+
+        // Optional Scratch coordinate overlay
+        if (gameState.showCoords) {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+          ctx.fillRect(cx - 28, cy + 22, 56, 13);
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = '600 9px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${bot.sx}, ${bot.sy}`, cx, cy + 31);
+        }
+      });
+
+      // Overlay when not running
+      if (!gameState.running) {
+        ctx.fillStyle = 'rgba(12, 7, 23, 0.72)';
+        ctx.fillRect(0, 0, 480, 360);
+
+        ctx.fillStyle = '#1e113a';
+        ctx.strokeStyle = '#f97316';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(100, 85, 280, 190, 16);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.textAlign = 'center';
+        if (gameState.gameOver) {
+          ctx.fillStyle = '#fde047';
+          ctx.font = '800 22px Inter, sans-serif';
+          ctx.fillText('🎉 HẾT GIỜ CHƠI!', 240, 125);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 16px Inter, sans-serif';
+          ctx.fillText(`Tổng điểm đạt được: ${gameState.score} điểm`, 240, 155);
+
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = '500 12px Inter, sans-serif';
+          ctx.fillText(`Bắn trúng: ${gameState.hits} mục tiêu (+10đ/mục tiêu)`, 240, 178);
+        } else {
+          ctx.fillStyle = '#fb923c';
+          ctx.font = '800 20px Inter, sans-serif';
+          ctx.fillText('🎃 HALLOWEEN SHOOTING', 240, 125);
+
+          ctx.fillStyle = '#e2e8f0';
+          ctx.font = '500 12px Inter, sans-serif';
+          ctx.fillText('Bắn trúng Quả bí, Bộ xương, Con ma trên 3 kệ gỗ!', 240, 150);
+          ctx.fillText('Mỗi 2 giây kệ gỗ đổi vị trí • Trúng +10đ • 30 giây', 240, 170);
+        }
+
+        // Start button on canvas
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.roundRect(155, 195, 170, 42, 10);
+        ctx.fill();
+
+        ctx.fillStyle = '#052e16';
+        ctx.font = '800 14px Inter, sans-serif';
+        ctx.fillText(gameState.gameOver ? '🚩 Chơi lại (30 giây)' : '🚩 Bắt đầu chơi ngay', 240, 221);
+      }
+
+      // Draw Crosshair Sprite on top layer (front layer)
+      drawCrosshair(gameState.mouseX, gameState.mouseY, gameState.recoil);
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // ==================== UI CONTROLS & TABS ====================
+    document.getElementById('btnGreenFlag').addEventListener('click', startGame);
+    document.getElementById('btnStopGame').addEventListener('click', stopGame);
+
+    document.getElementById('btnToggleCoords').addEventListener('click', (e) => {
+      gameState.showCoords = !gameState.showCoords;
+      e.currentTarget.textContent = gameState.showCoords ? '📐 Ẩn tọa độ (x, y)' : '📐 Hiện tọa độ (x, y)';
+      e.currentTarget.classList.toggle('bg-orange-500', gameState.showCoords);
+      e.currentTarget.classList.toggle('text-slate-950', gameState.showCoords);
+    });
+
+    document.getElementById('btnToggleSound').addEventListener('click', (e) => {
+      soundEnabled = !soundEnabled;
+      e.currentTarget.textContent = soundEnabled ? '🔊 Âm thanh: Bật' : '🔇 Âm thanh: Tắt';
+    });
+
+    const tabs = [
+      { btn: 'tabBtnDemo', panel: 'panelDemo' },
+      { btn: 'tabBtnScenario', panel: 'panelScenario' },
+      { btn: 'tabBtnScratch', panel: 'panelScratch' }
+    ];
+
+    function switchTab(activeBtnId) {
+      tabs.forEach(t => {
+        const btn = document.getElementById(t.btn);
+        const panel = document.getElementById(t.panel);
+        const isActive = t.btn === activeBtnId;
+        panel.classList.toggle('hidden', !isActive);
+        if (isActive) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-orange-500 text-slate-950 shadow';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-purple-200 hover:bg-purple-800/40';
+        }
+      });
+    }
+
+    tabs.forEach(t => {
+      document.getElementById(t.btn).addEventListener('click', () => switchTab(t.btn));
+    });
+
+    document.getElementById('btnJumpToDemoFromScenario').addEventListener('click', () => {
+      switchTab('tabBtnDemo');
+      startGame();
+    });
+
+    window.onload = () => {
+      spawnNewWave();
+      updateHUD();
+      renderCostumePreviews();
+      requestAnimationFrame(gameLoop);
+    };
+  </script>
+</body>
+</html>
