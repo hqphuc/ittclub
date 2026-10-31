@@ -3,13 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý vật chất</title>
+  <title>BÁO HỎNG CSVC</title>
+
+  <!-- 1. BIỂU TƯỢNG TRANG WEB (FAVICON) TRÊN TAB TRÌNH DUYỆT -->
+  <link rel="icon" type="image/png" href="https://thumbs.dreamstime.com/b/school-costom-logo-design-d-436103786.jpg">
+  <link rel="apple-touch-icon" href="https://thumbs.dreamstime.com/b/school-costom-logo-design-d-436103786.jpg">
+
+  <!-- 2. ẢNH & MÔ TẢ KHI CHIA SẺ LINK QUA ZALO / FACEBOOK -->
+  <meta property="og:title" content="BÁO HỎNG CSVC">
+  <meta property="og:description" content="Hệ thống quản lý và báo cáo CSVC hỏng">
+  <meta property="og:image" content="https://thumbs.dreamstime.com/b/school-costom-logo-design-d-436103786.jpg">
+  <meta property="og:type" content="website">
+
   <style>
-    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      height: 100dvh; /* Tối ưu chiều cao chuẩn trên điện thoại */
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Chia bố cục dọc: Banner ở trên, Iframe tự chiếm toàn bộ phần còn lại */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 3. KHUNG BANNER PHÍA TRÊN */
+    .top-banner {
+      width: 100%;
+      background: linear-gradient(90deg, #1e3a8a, #2563eb); /* Màu nền xanh chuyển sắc */
+      color: #ffffff;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+      flex-shrink: 0; /* Giữ nguyên chiều cao banner, không bị iframe ép nhỏ */
+    }
+
+    .top-banner img.logo {
+      height: 36px;
+      width: auto;
+      border-radius: 6px;
+    }
+
+    .top-banner .banner-text {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* NẾU DÙNG ẢNH BANNER NGANG THAY VÌ CHỮ, BỎ COMMENT ĐOẠN NÀY:
+    .top-banner-img {
+      width: 100%;
+      max-height: 90px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+    */
+
+    /* 4. KHUNG IFRAME TỰ CO GIÃN PHẦN DIỆN TÍCH CÒN LẠI */
+    iframe {
+      width: 100%;
+      flex: 1; /* Tự động lấp đầy khoảng trống bên dưới Banner */
+      border: none;
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbygNXsY-zYYR40D0twFHg9cgkzNgufzSd9bOIn06SYAi2LkE1d-s19DWGN1GIJ0V392dw/exec"></iframe>
+
+  <!-- CÁCH A: Banner dạng Logo + Tiêu đề chữ (Gọn nhẹ, tự co giãn tốt trên cả điện thoại và máy tính) -->
+  <header class="top-banner">
+    <img class="logo" src="https://img.magnific.com/premium-vector/education-logo-universities-colleges_946352-168.jpg" alt="Logo">
+    <div class="banner-text">UBND TỈNH KHÁNH HÒA<br>TRƯỜNG THPT CHUYÊN LÊ QUÝ ĐÔN - NAM NHA TRANG<br>HỆ THỐNG BÁO HỎNG CƠ SỞ VẬT CHẤT</div>
+  </header>
+
+  <!-- CÁCH B: Nếu bạn đã thiết kế sẵn 1 tấm ảnh Banner ngang, hãy xóa thẻ <header> ở trên và dùng dòng dưới đây: -->
+  <!-- <img class="top-banner-img" src="LINK_ẢNH_BANNER_NGANG.jpg" alt="Banner"> -->
+
+  <!-- KHUNG WEB APP APPS SCRIPT -->
+  <iframe 
+    src="https://script.google.com/macros/s/AKfycbygNXsY-zYYR40D0twFHg9cgkzNgufzSd9bOIn06SYAi2LkE1d-s19DWGN1GIJ0V392dw/exec" 
+    allow="clipboard-write">
+  </iframe>
+
 </body>
 </html>
