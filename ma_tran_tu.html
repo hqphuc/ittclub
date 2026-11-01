@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHANH TAY NHANH MẮT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .grid-cell {
+            transition: all 0.1s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .cell-highlight { background-color: #fee2e2 !important; color: #dc2626 !important; } /* Light red bg, Red text for dragging */
+        .cell-found { font-weight: bold; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); } /* Colors applied inline randomly */
+        
+        /* Chế độ in: Ẩn các màu đã tìm được, trả về ma trận gốc */
+        .print-mode .grid-cell {
+            background-color: white !important;
+            color: #1f2937 !important; /* text-gray-800 */
+            border-color: #d1d5db !important; /* border-gray-300 */
+            box-shadow: none !important;
+        }
+        .print-mode #word-list-container span {
+            background-color: #f3f4f6 !important; /* bg-gray-100 */
+            color: #6b7280 !important; /* text-gray-500 */
+            border-color: #d1d5db !important; /* border-gray-300 */
+            transform: scale(1) !important;
+        }
+
+        /* Hide print elements in screen if needed, or hide non-print elements in print */
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            #printable-area { box-shadow: none !important; border: none !important; }
+        }
+        
+        /* Modal transitions */
+        .modal-enter { opacity: 0; transform: scale(0.9); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.9); transition: all 0.2s ease-in; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+    <div class="w-full max-w-4xl">
+        <!-- Header & Control Panel (Non-printable) -->
+        <div class="no-print flex flex-col sm:flex-row justify-between items-center mb-6 p-4 bg-white rounded-xl shadow-md border-t-4 border-blue-600 gap-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-800 tracking-wider">NHANH TAY NHANH MẮT</h1>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="openPasswordModal()" title="Nhập từ khóa" class="w-12 h-12 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-700 text-xl rounded-full shadow transition duration-200">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button onclick="printMatrix()" title="In ma trận" class="w-12 h-12 flex items-center justify-center bg-purple-100 hover:bg-purple-200 text-purple-700 text-xl rounded-full shadow transition duration-200">
+                    <i class="fa-solid fa-print"></i>
+                </button>
+                <button onclick="resetGame()" title="Chơi lại" class="w-12 h-12 flex items-center justify-center bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xl rounded-full shadow transition duration-200">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+                <button onclick="submitGame()" class="px-6 h-12 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full shadow transition duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-check-circle"></i> NỘP BÀI
+                </button>
+            </div>
+        </div>
+
+        <!-- Printable Area -->
+        <div id="printable-area" class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+            <!-- Header Section -->
+            <div class="flex flex-col sm:flex-row gap-6 border-b-2 border-gray-200 pb-6 mb-8">
+                <div class="flex-1">
+                    <label class="block text-gray-700 font-bold mb-2 text-lg uppercase tracking-wide">Họ tên học sinh</label>
+                    <input type="text" placeholder="Nhập họ và tên..." class="w-full text-xl p-2 border-b-2 border-dashed border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent" oninput="this.setAttribute('value', this.value)">
+                </div>
+                <div class="w-full sm:w-1/3">
+                    <label class="block text-gray-700 font-bold mb-2 text-lg uppercase tracking-wide">Lớp</label>
+                    <input type="text" placeholder="Nhập lớp..." class="w-full text-xl p-2 border-b-2 border-dashed border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent" oninput="this.setAttribute('value', this.value)">
+                </div>
+            </div>
+
+            <!-- Game Board -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 uppercase tracking-wider text-center">Tìm từ khóa bị ẩn</h2>
+                
+                <div id="matrix-container" class="touch-none select-none inline-grid bg-gray-100 p-2 rounded-lg border-2 border-gray-300 shadow-inner">
+                    <!-- Grid will be injected here via JS -->
+                </div>
+
+                <!-- Word List to Find -->
+                <div class="mt-8 w-full max-w-2xl">
+                    <h3 class="text-lg font-bold text-gray-700 mb-3 border-b pb-2">Màn hình làm việc của Paint gồm: (<span id="found-count">0</span>/<span id="total-count">0</span>):</h3>
+                    <div id="word-list-container" class="flex flex-wrap gap-3">
+                        <!-- Word list injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm transform transition-all">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Xác thực giáo viên</h3>
+            <p class="text-sm text-gray-600 mb-4 text-center">Vui lòng nhập mật khẩu để quản lý từ khóa.</p>
+            <input type="password" id="teacher-password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Nhập mật khẩu...">
+            <div class="text-red-500 text-sm hidden mb-4" id="password-error">Mật khẩu không đúng!</div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closePasswordModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Hủy</button>
+                <button onclick="checkPassword()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keywords Management Modal -->
+    <div id="keyword-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Quản lý Từ Khóa</h3>
+            <p class="text-sm text-gray-600 mb-4">Nhập các từ khóa, mỗi từ trên một dòng. Hệ thống sẽ tự động loại bỏ khoảng trắng và chuyển thành chữ in hoa.</p>
+            
+            <textarea id="keywords-input" class="w-full flex-1 min-h-[250px] p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg resize-y" spellcheck="false"></textarea>
+            
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
+                <button onclick="closeKeywordModal()" class="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-semibold transition">Hủy</button>
+                <button onclick="saveKeywords()" class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow transition">Lưu & Tạo Ma Trận Mới</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats/Result Modal -->
+    <div id="result-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-trophy text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Kết quả</h3>
+            <p class="text-lg text-gray-600 mb-6">Bạn đã tìm được <strong id="result-found" class="text-green-600 text-xl">0</strong> trên tổng số <strong id="result-total" class="text-gray-800 text-xl">0</strong> từ khóa!</p>
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="flex-1 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-bold shadow-md transition">Đóng</button>
+                <button onclick="playAgainFromModal()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-md transition">Chơi Lại</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm text-center transform transition-all">
+            <h3 class="text-xl font-bold text-gray-800 mb-3">Thông báo</h3>
+            <p id="alert-message" class="text-gray-600 mb-5"></p>
+            <button onclick="closeAlertModal()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow transition">Đã hiểu</button>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let inputWords = ['HỘP CÔNG CỤ', 'HỘP MÀU', 'TRANG VẼ'];
+        let processedWords = [];
+        let gridSize = 0;
+        let grid = [];
+        let foundWords = new Set();
+        let noiseChars = [];
+        
+        // Interaction State
+        let isDragging = false;
+        let startCell = null;
+        let currentPath = [];
+
+        const PASSWORD = "hqphuc";
+
+        // Initialize Game
+        function initGame() {
+            // Process words: remove spaces, remove diacritics (optional, but keep it simple to just uppercase and remove spaces)
+            processedWords = inputWords
+                .map(w => w.replace(/\s+/g, '').toUpperCase())
+                .filter(w => w.length > 0);
+            
+            // Deduplicate
+            processedWords = [...new Set(processedWords)];
+
+            if (processedWords.length === 0) {
+                processedWords = ['HOCSINH']; 
+            }
+
+            // Extract noise chars pool
+            noiseChars = processedWords.join('').split('');
+            
+            // Determine matrix size: N + 3
+            let maxLength = Math.max(...processedWords.map(w => w.length));
+            gridSize = maxLength + 3;
+
+            foundWords.clear();
+            generateMatrix();
+            renderGrid();
+            renderWordList();
+            updateStats();
+        }
+
+        function generateMatrix() {
+            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+            
+            // Directions: [rowStep, colStep]
+            const dirs = [
+                [0, 1],   // Right (Trái qua phải)
+                [1, 0],   // Down
+                [1, 1],   // Diagonal Right-Down
+                [-1, 1],  // Diagonal Right-Up
+                // [0, -1],  // Left (Bị loại bỏ: Không đọc từ phải qua trái)
+                [-1, 0],  // Up
+                [-1, -1], // Diagonal Left-Up
+                [1, -1]   // Diagonal Left-Down
+            ];
+
+            // Sort words by length descending to place larger words first
+            let wordsToPlace = [...processedWords].sort((a, b) => b.length - a.length);
+
+            for (let word of wordsToPlace) {
+                let placed = false;
+                let attempts = 0;
+                
+                while (!placed && attempts < 200) {
+                    attempts++;
+                    // Random start position
+                    let r = Math.floor(Math.random() * gridSize);
+                    let c = Math.floor(Math.random() * gridSize);
+                    // Random direction
+                    let d = dirs[Math.floor(Math.random() * dirs.length)];
+                    let dr = d[0], dc = d[1];
+
+                    // Check boundaries
+                    let endR = r + dr * (word.length - 1);
+                    let endC = c + dc * (word.length - 1);
+                    
+                    if (endR >= 0 && endR < gridSize && endC >= 0 && endC < gridSize) {
+                        // Check overlap conflicts
+                        let canPlace = true;
+                        for (let i = 0; i < word.length; i++) {
+                            let cr = r + dr * i;
+                            let cc = c + dc * i;
+                            if (grid[cr][cc] !== '' && grid[cr][cc] !== word[i]) {
+                                canPlace = false;
+                                break;
+                            }
+                        }
+
+                        if (canPlace) {
+                            // Place word
+                            for (let i = 0; i < word.length; i++) {
+                                grid[r + dr * i][c + dc * i] = word[i];
+                            }
+                            placed = true;
+                        }
+                    }
+                }
+                
+                if (!placed) {
+                    console.warn(`Could not place word: ${word}`);
+                    // In a production app, we might resize the grid or keep trying, 
+                    // but with N+3 size, failures are rare unless word count is huge.
+                }
+            }
+
+            // Fill empty spaces with random noise characters
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    if (grid[r][c] === '') {
+                        let randChar = noiseChars[Math.floor(Math.random() * noiseChars.length)];
+                        grid[r][c] = randChar || 'A';
+                    }
+                }
+            }
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('matrix-container');
+            container.innerHTML = '';
+            
+            // Set CSS Grid template columns dynamically
+            container.style.gridTemplateColumns = `repeat(${gridSize}, minmax(0, 1fr))`;
+
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    let cell = document.createElement('div');
+                    cell.className = `grid-cell w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white border border-gray-300 flex items-center justify-center text-lg sm:text-xl font-bold cursor-pointer rounded-sm shadow-sm`;
+                    cell.textContent = grid[r][c];
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+                    
+                    // Mouse and Touch events
+                    cell.addEventListener('mousedown', (e) => startDrag(r, c, e));
+                    cell.addEventListener('mouseenter', () => enterCell(r, c));
+                    cell.addEventListener('touchstart', (e) => {
+                        e.preventDefault(); // prevent scrolling
+                        startDrag(r, c, e);
+                    });
+                    
+                    container.appendChild(cell);
+                }
+            }
+            
+            // Global mouse/touch up to stop dragging
+            document.removeEventListener('mouseup', endDrag);
+            document.addEventListener('mouseup', endDrag);
+            
+            document.removeEventListener('touchend', endDrag);
+            document.addEventListener('touchend', endDrag);
+            
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        }
+
+        function renderWordList() {
+            const container = document.getElementById('word-list-container');
+            container.innerHTML = '';
+            processedWords.forEach(word => {
+                let badge = document.createElement('span');
+                badge.id = `word-badge-${word}`;
+                badge.className = `px-3 py-1 rounded-full text-sm font-semibold border ${foundWords.has(word) ? 'bg-green-100 text-green-700 border-green-300' : 'bg-gray-100 text-gray-500 border-gray-300'}`;
+                badge.textContent = word;
+                container.appendChild(badge);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('found-count').textContent = foundWords.size;
+            document.getElementById('total-count').textContent = processedWords.length;
+        }
+
+        function getCellElement(r, c) {
+            const container = document.getElementById('matrix-container');
+            return container.children[r * gridSize + c];
+        }
+
+        function startDrag(r, c, event) {
+            if (event.button !== 0 && event.type !== 'touchstart') return; // Only left click or touch
+            isDragging = true;
+            startCell = { r, c };
+            currentPath = [{ r, c }];
+            highlightPath(currentPath);
+        }
+
+        function enterCell(r, c) {
+            if (!isDragging) return;
+            calculatePath(startCell.r, startCell.c, r, c);
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            let touch = e.touches[0];
+            let element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element && element.classList.contains('grid-cell')) {
+                let r = parseInt(element.dataset.r);
+                let c = parseInt(element.dataset.c);
+                enterCell(r, c);
+            }
+        }
+
+        function calculatePath(r1, c1, r2, c2) {
+            let dr = r2 - r1;
+            let dc = c2 - c1;
+            
+            // Check if valid direction (horizontal, vertical, diagonal)
+            if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return;
+
+            let stepR = dr === 0 ? 0 : dr / Math.abs(dr);
+            let stepC = dc === 0 ? 0 : dc / Math.abs(dc);
+            let steps = Math.max(Math.abs(dr), Math.abs(dc));
+
+            currentPath = [];
+            for (let i = 0; i <= steps; i++) {
+                currentPath.push({ r: r1 + i * stepR, c: c1 + i * stepC });
+            }
+            highlightPath(currentPath);
+        }
+
+        function highlightPath(path) {
+            // Remove temp highlights
+            document.querySelectorAll('.grid-cell').forEach(cell => {
+                cell.classList.remove('cell-highlight');
+            });
+
+            // Add highlight
+            path.forEach(pos => {
+                let cell = getCellElement(pos.r, pos.c);
+                if (cell) {
+                    cell.classList.add('cell-highlight');
+                }
+            });
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            if (currentPath.length > 0) {
+                // Construct string
+                let selectedWord = currentPath.map(pos => grid[pos.r][pos.c]).join('');
+                let reversedWord = selectedWord.split('').reverse().join('');
+                
+                let matchedWord = null;
+                if (processedWords.includes(selectedWord)) matchedWord = selectedWord;
+                else if (processedWords.includes(reversedWord)) matchedWord = reversedWord;
+
+                if (matchedWord && !foundWords.has(matchedWord)) {
+                    // Mark as found
+                    foundWords.add(matchedWord);
+                    
+                    // Tạo màu ngẫu nhiên cho từ khóa tìm được
+                    const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    currentPath.forEach(pos => {
+                        let cell = getCellElement(pos.r, pos.c);
+                        cell.classList.remove('cell-highlight');
+                        cell.classList.add('cell-found');
+                        cell.style.backgroundColor = randomColor;
+                        cell.style.color = 'white';
+                        cell.style.borderColor = randomColor;
+                    });
+                    
+                    // Update UI list
+                    let badge = document.getElementById(`word-badge-${matchedWord}`);
+                    if (badge) {
+                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold border text-white transition-all scale-110 shadow-sm';
+                        badge.style.backgroundColor = randomColor;
+                        badge.style.borderColor = randomColor;
+                        setTimeout(() => badge.classList.remove('scale-110'), 200);
+                    }
+                    updateStats();
+
+                    // Tự động thông báo nếu đã tìm được tất cả từ khóa
+                    if (foundWords.size === processedWords.length) {
+                        setTimeout(() => {
+                            submitGame();
+                        }, 500);
+                    }
+                } else {
+                    // Revert highlight
+                    currentPath.forEach(pos => {
+                        let cell = getCellElement(pos.r, pos.c);
+                        cell.classList.remove('cell-highlight');
+                    });
+                }
+            }
+            currentPath = [];
+        }
+
+        function openPasswordModal() {
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.getElementById('teacher-password').value = '';
+            document.getElementById('password-error').classList.add('hidden');
+            document.getElementById('teacher-password').focus();
+        }
+
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.add('hidden');
+        }
+
+        function checkPassword() {
+            const pwd = document.getElementById('teacher-password').value;
+            if (pwd === PASSWORD) {
+                closePasswordModal();
+                openKeywordModal();
+            } else {
+                document.getElementById('password-error').classList.remove('hidden');
+            }
+        }
+
+        // Handle enter key on password field
+        document.getElementById('teacher-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        function openKeywordModal() {
+            document.getElementById('keyword-modal').classList.remove('hidden');
+            document.getElementById('keywords-input').value = inputWords.join('\n');
+        }
+
+        function closeKeywordModal() {
+            document.getElementById('keyword-modal').classList.add('hidden');
+        }
+
+        function showAlert(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alert-modal').classList.add('hidden');
+        }
+
+        function saveKeywords() {
+            let rawText = document.getElementById('keywords-input').value;
+            let lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) {
+                showAlert("Vui lòng nhập ít nhất 1 từ khóa!");
+                return;
+            }
+            inputWords = lines;
+            closeKeywordModal();
+            initGame();
+        }
+
+        function printMatrix() {
+            const element = document.getElementById('printable-area');
+            
+            // Kích hoạt chế độ in: đưa ma trận về nguyên bản và đặt số từ đã tìm = 0
+            element.classList.add('print-mode');
+            const foundCountEl = document.getElementById('found-count');
+            const originalCount = foundCountEl.textContent;
+            foundCountEl.textContent = '0';
+            
+            // Adjust options for html2pdf
+            const opt = {
+                margin:       [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right in inches
+                filename:     'MaTranTu.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Xuất file PDF xong thì khôi phục lại trạng thái cũ
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.remove('print-mode');
+                foundCountEl.textContent = originalCount;
+            });
+        }
+
+        function submitGame() {
+            document.getElementById('result-found').textContent = foundWords.size;
+            document.getElementById('result-total').textContent = processedWords.length;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        function closeResultModal() {
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+
+        function resetGame() {
+            initGame();
+        }
+        
+        function playAgainFromModal() {
+            closeResultModal();
+            initGame();
+        }
+
+        // Start everything on load
+        window.onload = function() {
+            initGame();
+        }
+    </script>
+</body>
+</html>
