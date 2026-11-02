@@ -187,7 +187,7 @@
 
       <!-- Scratch Stage Header Controls & Variable Monitors -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div class="flex flex-wrap items-center justify-between gap-3">
           <!-- Green Flag & Stop Controls -->
           <div class="flex flex-wrap items-center gap-2">
             <button id="btnGreenFlag" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-sm transition">
@@ -218,41 +218,6 @@
             </button>
           </div>
         </div>
-
-        <!-- Scratch-Style Orange Variable Monitors -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
-          <div class="bg-orange-50 border-2 border-orange-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-orange-900 block">Tổng số phím đã bấm</span>
-              <span class="text-[11px] text-orange-700">Biến: <code class="font-mono">Tong_So_Phim</code></span>
-            </div>
-            <span id="statTotal" class="bg-[#FF8C1A] text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
-          </div>
-
-          <div class="bg-emerald-50 border-2 border-emerald-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-emerald-900 block">Số ký tự gõ ĐÚNG</span>
-              <span class="text-[11px] text-emerald-700">Biến: <code class="font-mono">Go_Dung</code></span>
-            </div>
-            <span id="statCorrect" class="bg-emerald-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
-          </div>
-
-          <div class="bg-rose-50 border-2 border-rose-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-rose-900 block">Số ký tự gõ SAI</span>
-              <span class="text-[11px] text-rose-700">Biến: <code class="font-mono">Go_Sai</code></span>
-            </div>
-            <span id="statWrong" class="bg-rose-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
-          </div>
-
-          <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-indigo-900 block">Tỷ lệ chính xác</span>
-              <span class="text-[11px] text-indigo-700">Đúng / Tổng số bấm</span>
-            </div>
-            <span id="statAccuracy" class="bg-indigo-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">100%</span>
-          </div>
-        </div>
       </div>
 
       <!-- Main Stage Area: Top Screen + Bottom Keyboard & 2 Hands -->
@@ -262,21 +227,38 @@
         <div class="bg-slate-950/90 border-2 border-slate-700 rounded-2xl p-4 sm:p-5 relative overflow-hidden">
           <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
 
-            <!-- Left Info: Scratch Broadcast & Status -->
-            <div class="space-y-2 text-center md:text-left">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-200 text-xs font-bold">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span id="gameStateBadge">Đang chạy - Hãy nhấn phím trên bàn phím!</span>
+            <!-- Left Info: 4 Scratch Variable Stat Boxes -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="bg-orange-50 border-2 border-orange-300 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold text-orange-950 block leading-tight">Tổng số phím đã bấm</span>
+                  <span class="text-[10px] text-orange-700">Biến: <code class="font-mono">Tong_So_Phim</code></span>
+                </div>
+                <span id="statTotal" class="bg-[#FF8C1A] text-white font-mono-key font-extrabold text-base sm:text-lg px-2.5 py-0.5 rounded-lg shadow-inner shrink-0">0</span>
               </div>
-              <h2 class="text-sm sm:text-base font-bold text-slate-300">
-                MÀN HÌNH HIỂN THỊ KÝ TỰ NGẪU NHIÊN
-              </h2>
-              <p id="feedbackMessage" class="text-xs sm:text-sm font-semibold text-amber-300 min-h-[1.5rem]">
-                Quan sát màu sáng của phím và ngón tay tương ứng để gõ đúng!
-              </p>
-              <div class="text-xs text-slate-400 flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
-                <span>Phím vừa nhấn:</span>
-                <span id="lastPressedBadge" class="px-2.5 py-0.5 rounded bg-slate-800 border border-slate-600 font-mono-key font-bold text-white">Chưa nhấn</span>
+
+              <div class="bg-emerald-50 border-2 border-emerald-300 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold text-emerald-950 block leading-tight">Số ký tự gõ ĐÚNG</span>
+                  <span class="text-[10px] text-emerald-700">Biến: <code class="font-mono">Go_Dung</code></span>
+                </div>
+                <span id="statCorrect" class="bg-emerald-600 text-white font-mono-key font-extrabold text-base sm:text-lg px-2.5 py-0.5 rounded-lg shadow-inner shrink-0">0</span>
+              </div>
+
+              <div class="bg-rose-50 border-2 border-rose-300 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold text-rose-950 block leading-tight">Số ký tự gõ SAI</span>
+                  <span class="text-[10px] text-rose-700">Biến: <code class="font-mono">Go_Sai</code></span>
+                </div>
+                <span id="statWrong" class="bg-rose-600 text-white font-mono-key font-extrabold text-base sm:text-lg px-2.5 py-0.5 rounded-lg shadow-inner shrink-0">0</span>
+              </div>
+
+              <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold text-indigo-950 block leading-tight">Tỷ lệ chính xác</span>
+                  <span class="text-[10px] text-indigo-700">Đúng / Tổng số bấm</span>
+                </div>
+                <span id="statAccuracy" class="bg-indigo-600 text-white font-mono-key font-extrabold text-base sm:text-lg px-2.5 py-0.5 rounded-lg shadow-inner shrink-0">100%</span>
               </div>
             </div>
 
@@ -367,12 +349,7 @@
               </g>
             </svg>
 
-            <div class="w-full grid grid-cols-2 gap-1 text-[11px] text-slate-300 mt-1">
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f43f5e]"></span>Út: 1, Q, A, Z</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f97316]"></span>Áp út: 2, W, S, X</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#eab308]"></span>Giữa: 3, E, D, C</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>Trỏ: 4,5,R,T,F,G,V,B</div>
-            </div>
+
           </div>
 
           <!-- CENTER KEYBOARD VISUAL (6 Columns on Desktop) -->
@@ -387,18 +364,7 @@
               <!-- Populated dynamically by JS -->
             </div>
 
-            <!-- Finger Color Legend Bar -->
-            <div class="mt-3 pt-2.5 border-t border-slate-800 flex flex-wrap items-center justify-center gap-2 text-[11px]">
-              <span class="px-2 py-0.5 rounded bg-[#f43f5e]/20 text-rose-300 border border-[#f43f5e]/50 font-semibold">Út trái</span>
-              <span class="px-2 py-0.5 rounded bg-[#f97316]/20 text-orange-300 border border-[#f97316]/50 font-semibold">Áp út trái</span>
-              <span class="px-2 py-0.5 rounded bg-[#eab308]/20 text-yellow-200 border border-[#eab308]/50 font-semibold">Giữa trái</span>
-              <span class="px-2 py-0.5 rounded bg-[#10b981]/20 text-emerald-300 border border-[#10b981]/50 font-semibold">Trỏ trái</span>
-              <span class="px-2 py-0.5 rounded bg-[#a855f7]/20 text-purple-300 border border-[#a855f7]/50 font-semibold">2 Ngón cái (Space)</span>
-              <span class="px-2 py-0.5 rounded bg-[#06b6d4]/20 text-cyan-300 border border-[#06b6d4]/50 font-semibold">Trỏ phải</span>
-              <span class="px-2 py-0.5 rounded bg-[#3b82f6]/20 text-blue-300 border border-[#3b82f6]/50 font-semibold">Giữa phải</span>
-              <span class="px-2 py-0.5 rounded bg-[#ec4899]/20 text-pink-300 border border-[#ec4899]/50 font-semibold">Áp út phải</span>
-              <span class="px-2 py-0.5 rounded bg-[#14b8a6]/20 text-teal-300 border border-[#14b8a6]/50 font-semibold">Út phải</span>
-            </div>
+
           </div>
 
           <!-- RIGHT HAND VISUAL (3 Columns on Desktop) -->
@@ -450,12 +416,7 @@
               </g>
             </svg>
 
-            <div class="w-full grid grid-cols-2 gap-1 text-[11px] text-slate-300 mt-1">
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#06b6d4]"></span>Trỏ: 6,7,Y,U,H,J,N,M</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6]"></span>Giữa: 8, I, K, ,</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#ec4899]"></span>Áp út: 9, O, L, .</div>
-              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#14b8a6]"></span>Út: 0, P, ;, /</div>
-            </div>
+
           </div>
 
         </div>
@@ -1430,22 +1391,13 @@
 
         state.totalPressed += 1;
 
-        const lastPressedBadge = document.getElementById('lastPressedBadge');
-        lastPressedBadge.textContent = normalized === ' ' ? 'SPACE' : normalized;
-
-        const feedbackMessage = document.getElementById('feedbackMessage');
-
         if (normalized === state.currentChar) {
           state.correctCount += 1;
           playSound('correct');
-          feedbackMessage.textContent = '🎉 Chính xác! Bạn đã gõ đúng phím "' + state.currentChar + '" bằng ' + FINGERS[KEY_MAP[state.currentChar].finger].name + '!';
-          feedbackMessage.className = 'text-xs sm:text-sm font-bold text-emerald-400 min-h-[1.5rem]';
           nextTargetCharacter();
         } else {
           state.wrongCount += 1;
           playSound('wrong');
-          feedbackMessage.textContent = '⚠️ Chưa đúng! Bạn vừa bấm "' + normalized + '", hãy bấm phím "' + state.currentChar + '" đang sáng đèn nhé!';
-          feedbackMessage.className = 'text-xs sm:text-sm font-bold text-rose-400 min-h-[1.5rem]';
           updateStageUI();
         }
       }
@@ -1471,24 +1423,16 @@
         state.correctCount = 0;
         state.wrongCount = 0;
         state.upcoming = [];
-        document.getElementById('lastPressedBadge').textContent = 'Chưa nhấn';
-        document.getElementById('gameStateBadge').textContent = 'Đang chạy - Hãy nhấn phím trên bàn phím!';
         document.getElementById('btnPauseGame').innerHTML = '<span>🛑</span> Tạm dừng';
-        const fb = document.getElementById('feedbackMessage');
-        fb.textContent = '🚩 Đã khởi tạo lại trò chơi! Hãy gõ ký tự đang phát sáng.';
-        fb.className = 'text-xs sm:text-sm font-semibold text-amber-300 min-h-[1.5rem]';
         nextTargetCharacter();
       });
 
       document.getElementById('btnPauseGame').addEventListener('click', () => {
         state.isRunning = !state.isRunning;
-        const badge = document.getElementById('gameStateBadge');
         const btn = document.getElementById('btnPauseGame');
         if (state.isRunning) {
-          badge.textContent = 'Đang chạy - Hãy nhấn phím trên bàn phím!';
           btn.innerHTML = '<span>🛑</span> Tạm dừng';
         } else {
-          badge.textContent = '⏸️ Đang tạm dừng (Bấm Tiếp tục hoặc Lá cờ xanh)';
           btn.innerHTML = '<span>▶️</span> Tiếp tục';
         }
       });
