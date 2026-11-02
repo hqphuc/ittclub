@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luyện Gõ Bàn Phím 10 Ngón Cùng Scratch - Demo, Kịch Bản & Khối Lệnh</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+      color: #1e293b;
+    }
+    .font-mono-key {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Scratch Block Styling */
+    .s-block {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      width: 100%;
+    }
+    .sb-row {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+      border: 1px solid rgba(0,0,0,0.12);
+      position: relative;
+    }
+    .sb-hat {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding-top: 10px;
+    }
+    .sb-c-wrap {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .sb-c-body {
+      margin-left: 18px;
+      padding-left: 10px;
+      border-left: 6px solid rgba(255, 171, 25, 0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    /* Scratch 3.0 Official Colors */
+    .sb-event { background-color: #FFBF00; color: #3d2c00; }
+    .sb-control { background-color: #FFAB19; color: #3d2600; }
+    .sb-motion { background-color: #4C97FF; }
+    .sb-looks { background-color: #9966FF; }
+    .sb-sound { background-color: #CF63CF; }
+    .sb-sensing { background-color: #5CB1D6; }
+    .sb-operator { background-color: #59C059; }
+    .sb-variable { background-color: #FF8C1A; }
+    .sb-list { background-color: #FF661A; }
+    .sb-myblock { background-color: #FF6680; }
+
+    .sb-input {
+      background: #ffffff;
+      color: #1e293b;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+    }
+    .sb-dropdown {
+      background: rgba(0,0,0,0.18);
+      color: inherit;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .sb-pill-var {
+      background: #FF8C1A;
+      color: #ffffff;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255,255,255,0.45);
+    }
+    .sb-pill-list {
+      background: #FF661A;
+      color: #ffffff;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255,255,255,0.45);
+    }
+    .sb-pill-bool {
+      background: #59C059;
+      color: #ffffff;
+      padding: 2px 10px;
+      clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0% 50%);
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+    .sb-pill-sense {
+      background: #5CB1D6;
+      color: #ffffff;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255,255,255,0.45);
+    }
+
+    /* Key animations */
+    @keyframes pulseGlow {
+      0%, 100% { transform: translateY(-2px) scale(1.06); }
+      50% { transform: translateY(-4px) scale(1.11); }
+    }
+    .key-target-active {
+      animation: pulseGlow 1.1s infinite ease-in-out;
+      z-index: 20;
+    }
+    .finger-node {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .finger-active {
+      filter: drop-shadow(0 0 10px currentColor);
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-gradient-to-r from-indigo-700 via-blue-700 to-sky-600 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-900 font-black flex items-center justify-center text-xl shadow-inner">
+          S
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold tracking-tight leading-tight">
+            Trò Chơi Luyện Gõ Phím 10 Ngón Bằng Scratch
+          </h1>
+          <p class="text-xs text-sky-100">
+            Mô phỏng trực quan Bàn phím + 2 Bàn tay phát sáng đồng bộ màu + Kịch bản &amp; Khối lệnh Scratch 3.0
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 bg-slate-900/25 p-1 rounded-xl" aria-label="Chuyển phần">
+        <button id="tabBtnDemo" type="button" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-indigo-700 shadow-sm">
+          🎮 1. Demo Trò Chơi
+        </button>
+        <button id="tabBtnScript" type="button" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all text-white hover:bg-white/15">
+          📋 2. Kịch Bản Scratch
+        </button>
+        <button id="tabBtnBlocks" type="button" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all text-white hover:bg-white/15">
+          🧩 3. Đề Xuất Lệnh Scratch
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5">
+
+    <!-- ==========================================
+         SECTION 1: INTERACTIVE GAME DEMO
+         ========================================== -->
+    <section id="sectionDemo" class="space-y-5">
+
+      <!-- Scratch Stage Header Controls & Variable Monitors -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <!-- Green Flag & Stop Controls -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btnGreenFlag" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-sm transition">
+              <span>🚩</span> Bắt đầu / Chơi mới
+            </button>
+            <button id="btnPauseGame" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm transition">
+              <span>🛑</span> Tạm dừng
+            </button>
+            <button id="btnNextChar" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm shadow-sm transition" title="Đổi ngẫu nhiên ký tự khác">
+              🎲 Đổi ký tự ngẫu nhiên
+            </button>
+          </div>
+
+          <!-- Level / Row Filter & Sound Toggle -->
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="selectKeyPool" class="text-xs font-bold text-slate-600">Phạm vi ký tự:</label>
+            <select id="selectKeyPool" class="bg-slate-100 border border-slate-300 text-slate-800 text-xs sm:text-sm font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="all">Chữ cái A-Z &amp; Số 0-9 (Đầy đủ)</option>
+              <option value="letters" selected>Toàn bộ chữ cái (A - Z)</option>
+              <option value="home">Hàng phím cơ sở (A S D F G H J K L ;)</option>
+              <option value="top">Hàng phím trên (Q W E R T Y U I O P)</option>
+              <option value="bottom">Hàng phím dưới (Z X C V B N M , . /)</option>
+              <option value="numbers">Hàng phím số (1 2 3 4 5 6 7 8 9 0)</option>
+            </select>
+
+            <button id="btnToggleSound" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-300 transition">
+              <span id="soundIcon">🔊</span> <span id="soundLabel">Âm thanh: Bật</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scratch-Style Orange Variable Monitors -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
+          <div class="bg-orange-50 border-2 border-orange-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-orange-900 block">Tổng số phím đã bấm</span>
+              <span class="text-[11px] text-orange-700">Biến: <code class="font-mono">Tong_So_Phim</code></span>
+            </div>
+            <span id="statTotal" class="bg-[#FF8C1A] text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
+          </div>
+
+          <div class="bg-emerald-50 border-2 border-emerald-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-emerald-900 block">Số ký tự gõ ĐÚNG</span>
+              <span class="text-[11px] text-emerald-700">Biến: <code class="font-mono">Go_Dung</code></span>
+            </div>
+            <span id="statCorrect" class="bg-emerald-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
+          </div>
+
+          <div class="bg-rose-50 border-2 border-rose-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-rose-900 block">Số ký tự gõ SAI</span>
+              <span class="text-[11px] text-rose-700">Biến: <code class="font-mono">Go_Sai</code></span>
+            </div>
+            <span id="statWrong" class="bg-rose-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">0</span>
+          </div>
+
+          <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-indigo-900 block">Tỷ lệ chính xác</span>
+              <span class="text-[11px] text-indigo-700">Đúng / Tổng số bấm</span>
+            </div>
+            <span id="statAccuracy" class="bg-indigo-600 text-white font-mono-key font-extrabold text-lg sm:text-xl px-3 py-1 rounded-lg shadow-inner">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Stage Area: Top Screen + Bottom Keyboard & 2 Hands -->
+      <div class="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 rounded-3xl shadow-xl border-4 border-slate-700 p-4 sm:p-6 text-white space-y-5">
+
+        <!-- TOP: CHARACTER DISPLAY SCREEN -->
+        <div class="bg-slate-950/90 border-2 border-slate-700 rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+          <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+
+            <!-- Left Info: Scratch Broadcast & Status -->
+            <div class="space-y-2 text-center md:text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-200 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span id="gameStateBadge">Đang chạy - Hãy nhấn phím trên bàn phím!</span>
+              </div>
+              <h2 class="text-sm sm:text-base font-bold text-slate-300">
+                MÀN HÌNH HIỂN THỊ KÝ TỰ NGẪU NHIÊN
+              </h2>
+              <p id="feedbackMessage" class="text-xs sm:text-sm font-semibold text-amber-300 min-h-[1.5rem]">
+                Quan sát màu sáng của phím và ngón tay tương ứng để gõ đúng!
+              </p>
+              <div class="text-xs text-slate-400 flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
+                <span>Phím vừa nhấn:</span>
+                <span id="lastPressedBadge" class="px-2.5 py-0.5 rounded bg-slate-800 border border-slate-600 font-mono-key font-bold text-white">Chưa nhấn</span>
+              </div>
+            </div>
+
+            <!-- Center: Giant Target Character Box -->
+            <div class="flex flex-col items-center justify-center">
+              <div class="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-1.5">
+                Ký tự cần gõ hiện tại
+              </div>
+              <div id="targetScreenBox" class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl flex flex-col items-center justify-center border-4 shadow-2xl transition-all duration-200 select-none" style="background-color: rgba(16, 185, 129, 0.18); border-color: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);">
+                <span id="targetCharText" class="font-mono-key text-5xl sm:text-6xl font-black tracking-wider text-white drop-shadow">
+                  F
+                </span>
+                <span id="targetKeySublabel" class="text-[11px] font-bold uppercase tracking-wider mt-1 px-2 py-0.5 rounded bg-black/40 text-white">
+                  Phím F
+                </span>
+              </div>
+            </div>
+
+            <!-- Right Info: Responsible Finger Indicator -->
+            <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 flex flex-col items-center md:items-end justify-center text-center md:text-right space-y-1.5">
+              <span class="text-xs text-slate-400 font-semibold">Ngón tay phụ trách gõ phím này:</span>
+              <div id="fingerInstructionBadge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-extrabold text-sm sm:text-base shadow-sm" style="background-color: #10b981; color: #052e16;">
+                <span id="fingerColorDot" class="w-3 h-3 rounded-full bg-white"></span>
+                <span id="fingerNameText">Ngón trỏ trái</span>
+              </div>
+              <p id="fingerTipHint" class="text-xs text-slate-300">
+                Đặt nhẹ 2 ngón trỏ lên phím có gai <strong class="text-amber-300">F</strong> và <strong class="text-amber-300">J</strong>.
+              </p>
+              <!-- Upcoming Random Queue Preview -->
+              <div class="pt-1 flex items-center gap-1.5">
+                <span class="text-[11px] text-slate-400">Ký tự tiếp theo:</span>
+                <div id="upcomingQueue" class="flex items-center gap-1"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM: 2 HANDS (LEFT & RIGHT) + KEYBOARD IN THE MIDDLE -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+
+          <!-- LEFT HAND VISUAL (3 Columns on Desktop) -->
+          <div class="lg:col-span-3 bg-slate-950/75 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center">
+            <div class="w-full flex items-center justify-between mb-1 px-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">✋ Bàn Tay Trái</span>
+              <span id="leftHandActiveTag" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Đang chờ</span>
+            </div>
+
+            <!-- Left Hand SVG with 5 Color-Coded Fingers -->
+            <svg viewBox="0 0 220 230" class="w-44 sm:w-48 h-auto select-none" aria-label="Sơ đồ bàn tay trái">
+              <!-- Palm -->
+              <path d="M50,125 C45,175 60,210 105,215 C150,215 168,185 172,145 L155,115 L55,115 Z" fill="#334155" stroke="#64748b" stroke-width="2.5" />
+              <text x="110" y="175" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">TAY TRÁI</text>
+
+              <!-- L_PINKY: Út trái (#f43f5e) -->
+              <g id="svg_L_PINKY" class="finger-node" style="color: #f43f5e;">
+                <rect x="24" y="52" width="24" height="72" rx="12" fill="#475569" stroke="#f43f5e" stroke-width="3" class="finger-shape" />
+                <circle cx="36" cy="66" r="7" fill="#f43f5e" />
+                <text x="36" y="44" text-anchor="middle" fill="#fda4af" font-size="10" font-weight="700">Út</text>
+              </g>
+
+              <!-- L_RING: Áp út trái (#f97316) -->
+              <g id="svg_L_RING" class="finger-node" style="color: #f97316;">
+                <rect x="56" y="28" width="25" height="92" rx="12.5" fill="#475569" stroke="#f97316" stroke-width="3" class="finger-shape" />
+                <circle cx="68.5" cy="44" r="7" fill="#f97316" />
+                <text x="68.5" y="20" text-anchor="middle" fill="#fdba74" font-size="10" font-weight="700">Áp út</text>
+              </g>
+
+              <!-- L_MIDDLE: Giữa trái (#eab308) -->
+              <g id="svg_L_MIDDLE" class="finger-node" style="color: #eab308;">
+                <rect x="89" y="16" width="26" height="104" rx="13" fill="#475569" stroke="#eab308" stroke-width="3" class="finger-shape" />
+                <circle cx="102" cy="32" r="7" fill="#eab308" />
+                <text x="102" y="11" text-anchor="middle" fill="#fde047" font-size="10" font-weight="700">Giữa</text>
+              </g>
+
+              <!-- L_INDEX: Trỏ trái (#10b981) -->
+              <g id="svg_L_INDEX" class="finger-node" style="color: #10b981;">
+                <rect x="123" y="30" width="26" height="90" rx="13" fill="#475569" stroke="#10b981" stroke-width="3" class="finger-shape" />
+                <circle cx="136" cy="46" r="7" fill="#10b981" />
+                <text x="136" y="22" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="700">Trỏ</text>
+              </g>
+
+              <!-- L_THUMB: Cái trái (#8b5cf6) -->
+              <g id="svg_L_THUMB" class="finger-node" style="color: #a855f7;">
+                <rect x="162" y="102" width="44" height="26" rx="13" transform="rotate(-28 162 102)" fill="#475569" stroke="#a855f7" stroke-width="3" class="finger-shape" />
+                <circle cx="188" cy="103" r="6.5" fill="#a855f7" />
+                <text x="192" y="82" text-anchor="middle" fill="#d8b4fe" font-size="10" font-weight="700">Cái</text>
+              </g>
+            </svg>
+
+            <div class="w-full grid grid-cols-2 gap-1 text-[11px] text-slate-300 mt-1">
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f43f5e]"></span>Út: 1, Q, A, Z</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f97316]"></span>Áp út: 2, W, S, X</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#eab308]"></span>Giữa: 3, E, D, C</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>Trỏ: 4,5,R,T,F,G,V,B</div>
+            </div>
+          </div>
+
+          <!-- CENTER KEYBOARD VISUAL (6 Columns on Desktop) -->
+          <div class="lg:col-span-6 bg-slate-950/90 border-2 border-slate-700 rounded-2xl p-3 sm:p-4 shadow-inner">
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">⌨️ Bàn Phím Chuẩn (Bấm phím thật hoặc Click chuột vào phím)</span>
+              <span class="text-[11px] text-amber-300 font-semibold">Màu đèn phím = Màu ngón tay</span>
+            </div>
+
+            <!-- Keyboard Rows Container -->
+            <div id="keyboardContainer" class="space-y-1.5 select-none">
+              <!-- Populated dynamically by JS -->
+            </div>
+
+            <!-- Finger Color Legend Bar -->
+            <div class="mt-3 pt-2.5 border-t border-slate-800 flex flex-wrap items-center justify-center gap-2 text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-[#f43f5e]/20 text-rose-300 border border-[#f43f5e]/50 font-semibold">Út trái</span>
+              <span class="px-2 py-0.5 rounded bg-[#f97316]/20 text-orange-300 border border-[#f97316]/50 font-semibold">Áp út trái</span>
+              <span class="px-2 py-0.5 rounded bg-[#eab308]/20 text-yellow-200 border border-[#eab308]/50 font-semibold">Giữa trái</span>
+              <span class="px-2 py-0.5 rounded bg-[#10b981]/20 text-emerald-300 border border-[#10b981]/50 font-semibold">Trỏ trái</span>
+              <span class="px-2 py-0.5 rounded bg-[#a855f7]/20 text-purple-300 border border-[#a855f7]/50 font-semibold">2 Ngón cái (Space)</span>
+              <span class="px-2 py-0.5 rounded bg-[#06b6d4]/20 text-cyan-300 border border-[#06b6d4]/50 font-semibold">Trỏ phải</span>
+              <span class="px-2 py-0.5 rounded bg-[#3b82f6]/20 text-blue-300 border border-[#3b82f6]/50 font-semibold">Giữa phải</span>
+              <span class="px-2 py-0.5 rounded bg-[#ec4899]/20 text-pink-300 border border-[#ec4899]/50 font-semibold">Áp út phải</span>
+              <span class="px-2 py-0.5 rounded bg-[#14b8a6]/20 text-teal-300 border border-[#14b8a6]/50 font-semibold">Út phải</span>
+            </div>
+          </div>
+
+          <!-- RIGHT HAND VISUAL (3 Columns on Desktop) -->
+          <div class="lg:col-span-3 bg-slate-950/75 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center">
+            <div class="w-full flex items-center justify-between mb-1 px-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">🤚 Bàn Tay Phải</span>
+              <span id="rightHandActiveTag" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Đang chờ</span>
+            </div>
+
+            <!-- Right Hand SVG with 5 Color-Coded Fingers -->
+            <svg viewBox="0 0 220 230" class="w-44 sm:w-48 h-auto select-none" aria-label="Sơ đồ bàn tay phải">
+              <!-- Palm -->
+              <path d="M48,145 C52,185 70,215 115,215 C160,210 175,175 170,125 L165,115 L65,115 Z" fill="#334155" stroke="#64748b" stroke-width="2.5" />
+              <text x="110" y="175" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">TAY PHẢI</text>
+
+              <!-- R_THUMB: Cái phải (#a855f7) -->
+              <g id="svg_R_THUMB" class="finger-node" style="color: #a855f7;">
+                <rect x="16" y="82" width="44" height="26" rx="13" transform="rotate(28 16 82)" fill="#475569" stroke="#a855f7" stroke-width="3" class="finger-shape" />
+                <circle cx="32" cy="103" r="6.5" fill="#a855f7" />
+                <text x="28" y="82" text-anchor="middle" fill="#d8b4fe" font-size="10" font-weight="700">Cái</text>
+              </g>
+
+              <!-- R_INDEX: Trỏ phải (#06b6d4) -->
+              <g id="svg_R_INDEX" class="finger-node" style="color: #06b6d4;">
+                <rect x="71" y="30" width="26" height="90" rx="13" fill="#475569" stroke="#06b6d4" stroke-width="3" class="finger-shape" />
+                <circle cx="84" cy="46" r="7" fill="#06b6d4" />
+                <text x="84" y="22" text-anchor="middle" fill="#67e8f9" font-size="10" font-weight="700">Trỏ</text>
+              </g>
+
+              <!-- R_MIDDLE: Giữa phải (#3b82f6) -->
+              <g id="svg_R_MIDDLE" class="finger-node" style="color: #3b82f6;">
+                <rect x="105" y="16" width="26" height="104" rx="13" fill="#475569" stroke="#3b82f6" stroke-width="3" class="finger-shape" />
+                <circle cx="118" cy="32" r="7" fill="#3b82f6" />
+                <text x="118" y="11" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="700">Giữa</text>
+              </g>
+
+              <!-- R_RING: Áp út phải (#ec4899) -->
+              <g id="svg_R_RING" class="finger-node" style="color: #ec4899;">
+                <rect x="139" y="28" width="25" height="92" rx="12.5" fill="#475569" stroke="#ec4899" stroke-width="3" class="finger-shape" />
+                <circle cx="151.5" cy="44" r="7" fill="#ec4899" />
+                <text x="151.5" y="20" text-anchor="middle" fill="#f9a8d4" font-size="10" font-weight="700">Áp út</text>
+              </g>
+
+              <!-- R_PINKY: Út phải (#14b8a6) -->
+              <g id="svg_R_PINKY" class="finger-node" style="color: #14b8a6;">
+                <rect x="172" y="52" width="24" height="72" rx="12" fill="#475569" stroke="#14b8a6" stroke-width="3" class="finger-shape" />
+                <circle cx="184" cy="66" r="7" fill="#14b8a6" />
+                <text x="184" y="44" text-anchor="middle" fill="#5eead4" font-size="10" font-weight="700">Út</text>
+              </g>
+            </svg>
+
+            <div class="w-full grid grid-cols-2 gap-1 text-[11px] text-slate-300 mt-1">
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#06b6d4]"></span>Trỏ: 6,7,Y,U,H,J,N,M</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6]"></span>Giữa: 8, I, K, ,</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#ec4899]"></span>Áp út: 9, O, L, .</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#14b8a6]"></span>Út: 0, P, ;, /</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Quick Callout Linking Demo to Scratch Concepts -->
+      <div class="bg-indigo-900 text-indigo-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow">
+        <div class="space-y-1">
+          <h3 class="font-extrabold text-white text-sm sm:text-base">
+            💡 Nguyên lý hoạt động khi học sinh chuyển thành dự án Scratch:
+          </h3>
+          <p class="text-xs sm:text-sm text-indigo-200">
+            Mỗi khi phát tin nhắn <code class="bg-indigo-800 px-1.5 py-0.5 rounded text-amber-300 font-mono">Sinh_Ky_Tu_Moi</code>, Scratch lấy ngẫu nhiên 1 vị trí trong danh sách, di chuyển nhân vật <strong>Đèn Sáng Phím</strong> tới tọa độ <code class="font-mono">(X, Y)</code> của phím đó, đồng thời đổi trang phục của nhân vật <strong>Bàn Tay</strong> sang đúng ngón tay có cùng màu!
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="btnJumpScript" type="button" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs sm:text-sm transition shadow">
+            Xem Kịch Bản Scratch →
+          </button>
+          <button id="btnJumpBlocks" type="button" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm transition">
+            Xem Khối Lệnh →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 2: SCRATCH SCENARIO / BLUEPRINT
+         ========================================== -->
+    <section id="sectionScript" class="hidden space-y-6">
+
+      <!-- Intro Banner -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+              Tài liệu hướng dẫn thiết kế dự án
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+              Kịch Bản Xây Dựng Trò Chơi Luyện Gõ Phím Trên Scratch 3.0
+            </h2>
+            <p class="text-sm text-slate-600 mt-1">
+              Thiết kế tối ưu giúp học sinh không cần tạo 36 nhân vật cho 36 phím, mà chỉ cần <strong>4 nhân vật (Sprites)</strong> kết hợp tọa độ hoặc trang phục cực kỳ khoa học.
+            </p>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-900 max-w-xs">
+            <strong>🎯 Mục tiêu sư phạm:</strong> Giúp học sinh rèn kỹ năng sử dụng <em>Biến số (Variables)</em>, <em>Phát tin nhắn (Broadcast)</em>, <em>Lấy số ngẫu nhiên</em> và <em>Danh sách (Lists)</em>.
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. Sprites & Backdrop Architecture -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white text-sm flex items-center justify-center">1</span>
+          Thiết kế Sân khấu (Stage) &amp; Danh sách Nhân vật (Sprites)
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Sprite 1 -->
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800 font-bold text-xs">Nhân vật 1</span>
+              <span class="text-xl">🖥️</span>
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Man_Hinh_Ky_Tu</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Đặt ở chính giữa phía trên sân khấu <code class="font-mono">(x: 0, y: 115)</code>. Có 26 trang phục chữ cái (<code class="font-mono">A → Z</code>) hoặc 36 trang phục cả số. Tên mỗi trang phục đặt đúng bằng ký tự đó (ví dụ trang phục chữ A đặt tên là <code class="font-mono">a</code>).
+            </p>
+          </div>
+
+          <!-- Sprite 2 -->
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs">Nhân vật 2</span>
+              <span class="text-xl">💡</span>
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Den_Sang_Phim</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Hình vuông bo góc bán trong suốt (độ trong suốt <code class="font-mono">Ghost = 30</code>). Khi cần gõ phím nào, nhân vật này nhảy tới tọa độ <code class="font-mono">(X, Y)</code> của phím đó trên hình nền bàn phím và đổi màu trùng với màu ngón tay!
+            </p>
+          </div>
+
+          <!-- Sprite 3 -->
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-bold text-xs">Nhân vật 3</span>
+              <span class="text-xl">👐</span>
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Hai_Ban_Tay</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Gồm 2 bàn tay đặt ở 2 bên bàn phím. Có <strong>9 trang phục</strong> ứng với 8 ngón tay (Út trái, Áp út trái, Giữa trái, Trỏ trái, Trỏ phải, Giữa phải, Áp út phải, Út phải) và Ngón cái. Mỗi trang phục tô sáng màu 1 ngón tay.
+            </p>
+          </div>
+
+          <!-- Backdrop / Sprite 4 -->
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800 font-bold text-xs">Phông nền (Stage)</span>
+              <span class="text-xl">⌨️</span>
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Nen_Ban_Phim</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Vẽ khung màn hình phía trên <code class="font-mono">(y từ 60 đến 170)</code> và hình bàn phím ở chính giữa phía dưới <code class="font-mono">(y từ -160 đến 30)</code>, chừa 2 khoảng trống bên trái <code class="font-mono">(x: -185)</code> và bên phải <code class="font-mono">(x: 185)</code> cho 2 bàn tay.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Variables & Lists Specification Table -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white text-sm flex items-center justify-center">2</span>
+          Thiết lập Biến số (Variables) &amp; Danh sách (Lists)
+        </h3>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-800 border-b border-slate-200">
+                <th class="py-2.5 px-3 font-extrabold">Tên Biến / Danh sách</th>
+                <th class="py-2.5 px-3 font-extrabold">Phạm vi</th>
+                <th class="py-2.5 px-3 font-extrabold">Hiển thị trên Sân khấu?</th>
+                <th class="py-2.5 px-3 font-extrabold">Công dụng trong chương trình</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-orange-600">Ky_Tu_Can_Go</td>
+                <td class="py-2.5 px-3">Tất cả nhân vật</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Có (Hoặc hiện qua Sprite)</span></td>
+                <td class="py-2.5 px-3">Lưu ký tự ngẫu nhiên hiện tại học sinh cần nhấn (VD: <code class="font-mono">f</code>, <code class="font-mono">j</code>, <code class="font-mono">k</code>).</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-orange-600">Tong_So_Phim</td>
+                <td class="py-2.5 px-3">Tất cả nhân vật</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Có (Bật tích chọn)</span></td>
+                <td class="py-2.5 px-3">Tăng thêm 1 mỗi khi học sinh nhấn bất kỳ phím nào trên bàn phím.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-orange-600">Go_Dung</td>
+                <td class="py-2.5 px-3">Tất cả nhân vật</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Có (Bật tích chọn)</span></td>
+                <td class="py-2.5 px-3">Tăng thêm 1 khi học sinh nhấn đúng phím trùng với <code class="font-mono">Ky_Tu_Can_Go</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-orange-600">Go_Sai</td>
+                <td class="py-2.5 px-3">Tất cả nhân vật</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Có (Bật tích chọn)</span></td>
+                <td class="py-2.5 px-3">Tăng thêm 1 khi học sinh nhấn phím nhưng không trùng với <code class="font-mono">Ky_Tu_Can_Go</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-orange-600">STT_Phim</td>
+                <td class="py-2.5 px-3">Tất cả nhân vật</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">Ẩn</span></td>
+                <td class="py-2.5 px-3">Lưu số thứ tự ngẫu nhiên từ <code class="font-mono">1</code> đến <code class="font-mono">kích thước danh sách</code> để đồng bộ phím, tọa độ và ngón tay.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-red-600">DS_Ky_Tu (Danh sách)</td>
+                <td class="py-2.5 px-3">Danh sách chung</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">Ẩn</span></td>
+                <td class="py-2.5 px-3">Chứa các ký tự luyện tập (VD: <code class="font-mono">a, s, d, f, g, h, j, k, l...</code>).</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-mono font-bold text-red-600">DS_Ngon_Tay (Danh sách)</td>
+                <td class="py-2.5 px-3">Danh sách chung</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">Ẩn</span></td>
+                <td class="py-2.5 px-3">Chứa tên trang phục ngón tay tương ứng với từng phần tử của <code class="font-mono">DS_Ky_Tu</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. Finger-to-Key Color & Costume Mapping Table -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white text-sm flex items-center justify-center">3</span>
+          Bảng Phân Công Ngón Tay &amp; Mã Màu Đồng Bộ (Dùng để vẽ Trang phục)
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-800 border-b border-slate-200">
+                <th class="py-2.5 px-3 font-extrabold">Bàn tay &amp; Ngón tay</th>
+                <th class="py-2.5 px-3 font-extrabold">Tên Trang phục (Costume)</th>
+                <th class="py-2.5 px-3 font-extrabold">Màu đèn đồng bộ</th>
+                <th class="py-2.5 px-3 font-extrabold">Hiệu ứng màu Scratch (Color Effect)</th>
+                <th class="py-2.5 px-3 font-extrabold">Các phím phụ trách</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="py-2 px-3 font-bold">✋ Ngón út trái</td>
+                <td class="py-2 px-3 font-mono">ut_trai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#f43f5e] text-white font-bold text-xs">Đỏ hồng</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 0</td>
+                <td class="py-2 px-3 font-mono font-bold">1, Q, A, Z</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">✋ Ngón áp út trái</td>
+                <td class="py-2 px-3 font-mono">ap_ut_trai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#f97316] text-white font-bold text-xs">Cam</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 15</td>
+                <td class="py-2 px-3 font-mono font-bold">2, W, S, X</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">✋ Ngón giữa trái</td>
+                <td class="py-2 px-3 font-mono">giua_trai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#eab308] text-slate-900 font-bold text-xs">Vàng</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 30</td>
+                <td class="py-2 px-3 font-mono font-bold">3, E, D, C</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">✋ Ngón trỏ trái</td>
+                <td class="py-2 px-3 font-mono">tro_trai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#10b981] text-white font-bold text-xs">Xanh lá</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 65</td>
+                <td class="py-2 px-3 font-mono font-bold">4, 5, R, T, F, G, V, B</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">🤚 Ngón trỏ phải</td>
+                <td class="py-2 px-3 font-mono">tro_phai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#06b6d4] text-slate-900 font-bold text-xs">Xanh ngọc</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 95</td>
+                <td class="py-2 px-3 font-mono font-bold">6, 7, Y, U, H, J, N, M</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">🤚 Ngón giữa phải</td>
+                <td class="py-2 px-3 font-mono">giua_phai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#3b82f6] text-white font-bold text-xs">Xanh dương</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 120</td>
+                <td class="py-2 px-3 font-mono font-bold">8, I, K, ,</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">🤚 Ngón áp út phải</td>
+                <td class="py-2 px-3 font-mono">ap_ut_phai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#ec4899] text-white font-bold text-xs">Hồng tím</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 175</td>
+                <td class="py-2 px-3 font-mono font-bold">9, O, L, .</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-bold">🤚 Ngón út phải</td>
+                <td class="py-2 px-3 font-mono">ut_phai</td>
+                <td class="py-2 px-3"><span class="px-2.5 py-1 rounded bg-[#14b8a6] text-white font-bold text-xs">Xanh cổ vịt</span></td>
+                <td class="py-2 px-3 font-mono">Hiệu ứng màu = 80</td>
+                <td class="py-2 px-3 font-mono font-bold">0, P, ;, /</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. Step-by-Step Interactive Implementation Checklist for Students -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white text-sm flex items-center justify-center">4</span>
+            Quy trình 5 bước thực hành trên Scratch (Học sinh tích chọn khi hoàn thành)
+          </h3>
+          <span id="checklistProgressText" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">
+            Tiến độ: 0/5 bước
+          </span>
+        </div>
+
+        <div id="studentChecklistContainer" class="space-y-2.5">
+          <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="checkbox" class="step-check mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div class="text-xs sm:text-sm">
+              <strong class="text-slate-900 block">Bước 1: Vẽ Sân khấu Bàn phím và 3 Nhân vật chính</strong>
+              <span class="text-slate-600">Tạo phông nền có khung màn hình ở trên và bàn phím ở dưới. Tạo 3 nhân vật: <code class="font-mono">Man_Hinh_Ky_Tu</code>, <code class="font-mono">Den_Sang_Phim</code>, và <code class="font-mono">Hai_Ban_Tay</code> (với các trang phục ngón tay tô màu).</span>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="checkbox" class="step-check mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div class="text-xs sm:text-sm">
+              <strong class="text-slate-900 block">Bước 2: Tạo 4 Biến số đếm &amp; Danh sách dữ liệu phím</strong>
+              <span class="text-slate-600">Tạo các biến <code class="font-mono">Ky_Tu_Can_Go</code>, <code class="font-mono">Tong_So_Phim</code>, <code class="font-mono">Go_Dung</code>, <code class="font-mono">Go_Sai</code>, <code class="font-mono">STT_Phim</code>. Tạo danh sách <code class="font-mono">DS_Ky_Tu</code>, <code class="font-mono">DS_Toa_Do_X</code>, <code class="font-mono">DS_Toa_Do_Y</code>, <code class="font-mono">DS_Ngon_Tay</code>.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="checkbox" class="step-check mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div class="text-xs sm:text-sm">
+              <strong class="text-slate-900 block">Bước 3: Lập trình sự kiện "Sinh ký tự mới" (Ngẫu nhiên)</strong>
+              <span class="text-slate-600">Khi nhận tin nhắn <code class="font-mono">Sinh_Ky_Tu_Moi</code>, đặt <code class="font-mono">STT_Phim</code> bằng số ngẫu nhiên từ 1 đến kích thước danh sách, lấy ký tự tương ứng hiển thị lên màn hình.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="checkbox" class="step-check mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div class="text-xs sm:text-sm">
+              <strong class="text-slate-900 block">Bước 4: Đồng bộ Đèn sáng phím &amp; Ngón tay cùng màu</strong>
+              <span class="text-slate-600">Cho nhân vật <code class="font-mono">Den_Sang_Phim</code> đi tới điểm <code class="font-mono">x: phần tử thứ (STT_Phim) của DS_Toa_Do_X</code>, <code class="font-mono">y: phần tử thứ (STT_Phim) của DS_Toa_Do_Y</code> và đổi trang phục <code class="font-mono">Hai_Ban_Tay</code> sang phần tử thứ <code class="font-mono">STT_Phim</code> của <code class="font-mono">DS_Ngon_Tay</code>.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="checkbox" class="step-check mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div class="text-xs sm:text-sm">
+              <strong class="text-slate-900 block">Bước 5: Lập trình bắt sự kiện nhấn phím, cộng điểm Đúng / Sai</strong>
+              <span class="text-slate-600">Sử dụng sự kiện <code class="font-mono">Khi bấm phím (bất kỳ)</code> kết hợp kiểm tra <code class="font-mono">Nếu phím (Ky_Tu_Can_Go) được bấm?</code> để tăng <code class="font-mono">Tong_So_Phim</code>, phân nhánh cộng <code class="font-mono">Go_Dung</code> (và phát tin nhắn sinh chữ mới) hoặc cộng <code class="font-mono">Go_Sai</code> (phát âm báo lỗi).</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: SCRATCH BLOCKS PROPOSALS
+         ========================================== -->
+    <section id="sectionBlocks" class="hidden space-y-6">
+
+      <!-- Header & Approach Selector -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+            Hướng dẫn lắp ghép khối lệnh chuẩn Scratch 3.0
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+            Đề Xuất Các Khối Lệnh Scratch Cho Học Sinh Lập Trình
+          </h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Có 2 phương án lập trình phù hợp với từng lứa tuổi: <strong>Phương án 1 (Dùng Trang phục - Dễ hiểu cho Tiểu học)</strong> và <strong>Phương án 2 (Dùng Danh sách &amp; Khối tự định nghĩa - Tối ưu cho THCS)</strong>.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnModeEasy" type="button" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 text-white shadow-sm transition">
+            🌟 Cách 1: Dùng Trang Phục (Cơ bản - Dễ làm nhất)
+          </button>
+          <button id="btnModeList" type="button" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            🚀 Cách 2: Dùng Danh Sách &amp; Tọa Độ (Nâng cao)
+          </button>
+          <button id="btnCopyScratchCode" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition">
+            📋 Sao chép toàn bộ mã giả Scratch
+          </button>
+        </div>
+      </div>
+
+      <!-- Copy Toast Notification -->
+      <div id="copyToast" class="hidden bg-emerald-800 text-white text-xs sm:text-sm font-bold px-4 py-3 rounded-xl shadow-md flex items-center justify-between">
+        <span>✅ Đã sao chép toàn bộ hướng dẫn khối lệnh Scratch vào bộ nhớ tạm! Bạn có thể dán vào giáo án hoặc phiếu học tập.</span>
+        <button id="btnCloseToast" type="button" class="text-emerald-200 hover:text-white font-extrabold ml-4">✕</button>
+      </div>
+
+      <!-- ==========================================
+           MODE 1: COSTUME-BASED (SUPER EASY FOR KIDS)
+           ========================================== -->
+      <div id="blocksModeEasy" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Block Group 1: Khởi tạo & Sinh ký tự ngẫu nhiên -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase">Nhân vật 1: Man_Hinh_Ky_Tu</span>
+              <h3 class="text-base font-extrabold text-slate-900">1. Khởi tạo biến &amp; Sinh ký tự ngẫu nhiên</h3>
+            </div>
+            <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-lg">Mẹo: Dùng "tên trang phục"</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Khi đặt tên các trang phục của nhân vật <code class="font-mono">Man_Hinh_Ky_Tu</code> lần lượt là <code class="font-mono">a, b, c, d... z</code>, ta chỉ cần chuyển sang trang phục số ngẫu nhiên từ 1 đến 26 rồi gán <code class="font-mono">Ky_Tu_Can_Go = tên trang phục</code>!
+          </p>
+
+          <!-- Visual Scratch Blocks -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-5 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi bấm vào 🚩</div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">Tong_So_Phim ▾</span> thành <span class="sb-input">0</span></div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">Go_Dung ▾</span> thành <span class="sb-input">0</span></div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">Go_Sai ▾</span> thành <span class="sb-input">0</span></div>
+              <div class="sb-row sb-event">phát tin nhắn <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span></div>
+            </div>
+
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi nhận <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span></div>
+              <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-pill-bool">lấy ngẫu nhiên từ <span class="sb-input">1</span> đến <span class="sb-input">26</span></span></div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">Ky_Tu_Can_Go ▾</span> thành <span class="sb-pill-sense" style="background:#9966FF;">trang phục <span class="sb-dropdown">tên ▾</span></span></div>
+              <div class="sb-row sb-event">phát tin nhắn <span class="sb-dropdown">Cap_Nhat_Den_Va_Tay ▾</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block Group 2: Kiểm tra phím bấm Đúng / Sai -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase">Nhân vật 1: Man_Hinh_Ky_Tu</span>
+              <h3 class="text-base font-extrabold text-slate-900">2. Bắt sự kiện nhấn phím, tính tổng, Đúng &amp; Sai</h3>
+            </div>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg">Xử lý tức thì</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Scratch 3.0 cho phép kéo biến <code class="font-mono">Ky_Tu_Can_Go</code> thả trực tiếp vào ô tròn của khối cảm biến <code class="font-mono">phím [...] được bấm?</code>. Nhờ đó không cần viết 26 lệnh Nếu-Thì rời rạc!
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi bấm phím <span class="sb-dropdown">bất kỳ (any) ▾</span></div>
+              <div class="sb-row sb-variable">thay đổi <span class="sb-dropdown">Tong_So_Phim ▾</span> một lượng <span class="sb-input">1</span></div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-sense">phím <span class="sb-pill-var">Ky_Tu_Can_Go</span> được bấm?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-variable">thay đổi <span class="sb-dropdown">Go_Dung ▾</span> một lượng <span class="sb-input">1</span></div>
+                  <div class="sb-row sb-sound">bắt đầu âm thanh <span class="sb-dropdown">Pop / Coin ▾</span></div>
+                  <div class="sb-row sb-event">phát tin nhắn <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span></div>
+                </div>
+                <div class="sb-row sb-control">nếu không</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-variable">thay đổi <span class="sb-dropdown">Go_Sai ▾</span> một lượng <span class="sb-input">1</span></div>
+                  <div class="sb-row sb-sound">bắt đầu âm thanh <span class="sb-dropdown">Boing / Oops ▾</span></div>
+                </div>
+                <div class="sb-row sb-control">đợi đến khi <span class="sb-pill-bool">không <span class="sb-pill-sense">phím <span class="sb-dropdown">bất kỳ ▾</span> được bấm?</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block Group 3: Nhân vật Bàn phím phát sáng -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-emerald-600 uppercase">Nhân vật 2: Ban_Phim_Sang_Den</span>
+              <h3 class="text-base font-extrabold text-slate-900">3. Làm sáng đèn phím cần gõ</h3>
+            </div>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg">Đồng bộ tên trang phục</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Nhân vật <code class="font-mono">Ban_Phim_Sang_Den</code> có các trang phục đặt tên <code class="font-mono">a, b, c... z</code>. Trên mỗi trang phục, phím tương ứng được tô màu sáng rực (trùng màu với ngón tay phụ trách phím đó).
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi nhận <span class="sb-dropdown">Cap_Nhat_Den_Va_Tay ▾</span></div>
+              <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-pill-var">Ky_Tu_Can_Go</span></div>
+              <div class="sb-row sb-looks">đặt hiệu ứng <span class="sb-dropdown">độ sáng (brightness) ▾</span> bằng <span class="sb-input">15</span></div>
+              <div class="sb-row sb-control">đợi <span class="sb-input">0.15</span> giây</div>
+              <div class="sb-row sb-looks">đặt hiệu ứng <span class="sb-dropdown">độ sáng (brightness) ▾</span> bằng <span class="sb-input">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block Group 4: Nhân vật 2 Bàn tay sáng ngón tay tương ứng -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-amber-600 uppercase">Nhân vật 3: Hai_Ban_Tay</span>
+              <h3 class="text-base font-extrabold text-slate-900">4. Sáng đèn ngón tay phụ trách phím đó</h3>
+            </div>
+            <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-lg">Kiểm tra nhóm phím</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Sử dụng khối toán tử <code class="font-mono">[chuỗi] chứa [Ky_Tu_Can_Go]?</code> của Scratch 3.0 để kiểm tra xem ký tự thuộc nhóm ngón tay nào cực kỳ ngắn gọn!
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi nhận <span class="sb-dropdown">Cap_Nhat_Den_Va_Tay ▾</span></div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">1qaz</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">ut_trai (Đỏ hồng) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">2wsx</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">ap_ut_trai (Cam) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">3edc</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">giua_trai (Vàng) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">45rtfgvb</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">tro_trai (Xanh lá) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">67yuhjnm</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">tro_phai (Xanh ngọc) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">8ik,</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">giua_phai (Xanh dương) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">9ol.</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">ap_ut_phai (Hồng tím) ▾</span></div>
+                </div>
+              </div>
+              <div class="sb-c-wrap">
+                <div class="sb-row sb-control">nếu <span class="sb-pill-bool"><span class="sb-input">0p;/</span> chứa <span class="sb-pill-var">Ky_Tu_Can_Go</span> ?</span> thì</div>
+                <div class="sb-c-body">
+                  <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-dropdown">ut_phai (Xanh cổ vịt) ▾</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==========================================
+           MODE 2: LIST & MY-BLOCKS BASED (ADVANCED)
+           ========================================== -->
+      <div id="blocksModeList" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Advanced Block 1: Tạo Khối tự định nghĩa Thêm Phím -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-rose-600 uppercase">Khối của tôi (My Blocks)</span>
+              <h3 class="text-base font-extrabold text-slate-900">1. Định nghĩa khối nạp dữ liệu phím &amp; tọa độ</h3>
+            </div>
+            <span class="text-xs bg-rose-100 text-rose-800 font-bold px-2.5 py-1 rounded-lg">Không cần vẽ 26 trang phục bàn phím</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Thay vì vẽ 26 trang phục bàn phím, ta chỉ cần 1 nhân vật <code class="font-mono">Den_Sang_Phim</code> di chuyển tới tọa độ <code class="font-mono">(X, Y)</code> của phím tương ứng trên sân khấu.
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-myblock sb-hat">định nghĩa <strong>Thêm_Phím</strong> <span class="sb-input">ky_tu</span> <span class="sb-input">x</span> <span class="sb-input">y</span> <span class="sb-input">ngon_tay</span> <span class="sb-input">mau</span></div>
+              <div class="sb-row sb-list">thêm <span class="sb-pill-var">ky_tu</span> vào <span class="sb-dropdown">DS_Ky_Tu ▾</span></div>
+              <div class="sb-row sb-list">thêm <span class="sb-pill-var">x</span> vào <span class="sb-dropdown">DS_Toa_Do_X ▾</span></div>
+              <div class="sb-row sb-list">thêm <span class="sb-pill-var">y</span> vào <span class="sb-dropdown">DS_Toa_Do_Y ▾</span></div>
+              <div class="sb-row sb-list">thêm <span class="sb-pill-var">ngon_tay</span> vào <span class="sb-dropdown">DS_Ngon_Tay ▾</span></div>
+              <div class="sb-row sb-list">thêm <span class="sb-pill-var">mau</span> vào <span class="sb-dropdown">DS_Mau_Sac ▾</span></div>
+            </div>
+
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi bấm vào 🚩</div>
+              <div class="sb-row sb-list">xóa hết tất cả trong <span class="sb-dropdown">DS_Ky_Tu ▾</span> (và các DS khác)</div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">a</span> <span class="sb-input">-105</span> <span class="sb-input">-60</span> <span class="sb-input">ut_trai</span> <span class="sb-input">0</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">s</span> <span class="sb-input">-80</span> <span class="sb-input">-60</span> <span class="sb-input">ap_ut_trai</span> <span class="sb-input">15</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">d</span> <span class="sb-input">-55</span> <span class="sb-input">-60</span> <span class="sb-input">giua_trai</span> <span class="sb-input">30</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">f</span> <span class="sb-input">-30</span> <span class="sb-input">-60</span> <span class="sb-input">tro_trai</span> <span class="sb-input">65</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">j</span> <span class="sb-input">20</span> <span class="sb-input">-60</span> <span class="sb-input">tro_phai</span> <span class="sb-input">95</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">k</span> <span class="sb-input">45</span> <span class="sb-input">-60</span> <span class="sb-input">giua_phai</span> <span class="sb-input">120</span></div>
+              <div class="sb-row sb-myblock">Thêm_Phím <span class="sb-input">l</span> <span class="sb-input">70</span> <span class="sb-input">-60</span> <span class="sb-input">ap_ut_phai</span> <span class="sb-input">175</span></div>
+              <div class="sb-row sb-event">phát tin nhắn <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Block 2: Đồng bộ Tọa độ & Màu qua STT_Phim -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase">Nhân vật: Den_Sang_Phim &amp; Hai_Ban_Tay</span>
+              <h3 class="text-base font-extrabold text-slate-900">2. Nhảy tới tọa độ phím &amp; Đổi màu theo STT_Phim</h3>
+            </div>
+            <span class="text-xs bg-indigo-100 text-indigo-800 font-bold px-2.5 py-1 rounded-lg">Chuẩn thuật toán</span>
+          </div>
+
+          <p class="text-xs text-slate-600">
+            Mọi thông tin của phím (ký tự, tọa độ X, tọa độ Y, ngón tay, mã màu) đều nằm ở cùng vị trí <code class="font-mono">STT_Phim</code> trong các danh sách:
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 overflow-x-auto">
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi nhận <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span></div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">STT_Phim ▾</span> thành <span class="sb-pill-bool">lấy ngẫu nhiên từ <span class="sb-input">1</span> đến <span class="sb-pill-list">kích thước của DS_Ky_Tu</span></span></div>
+              <div class="sb-row sb-variable">đặt <span class="sb-dropdown">Ky_Tu_Can_Go ▾</span> thành <span class="sb-pill-list">phần tử thứ <span class="sb-pill-var">STT_Phim</span> của DS_Ky_Tu</span></div>
+              <div class="sb-row sb-motion">đi tới điểm x: <span class="sb-pill-list">phần tử thứ <span class="sb-pill-var">STT_Phim</span> của DS_Toa_Do_X</span> y: <span class="sb-pill-list">phần tử thứ <span class="sb-pill-var">STT_Phim</span> của DS_Toa_Do_Y</span></div>
+              <div class="sb-row sb-looks">đặt hiệu ứng <span class="sb-dropdown">màu (color) ▾</span> bằng <span class="sb-pill-list">phần tử thứ <span class="sb-pill-var">STT_Phim</span> của DS_Mau_Sac</span></div>
+            </div>
+
+            <div class="s-block">
+              <div class="sb-row sb-event sb-hat">Khi nhận <span class="sb-dropdown">Sinh_Ky_Tu_Moi ▾</span> (Tại nhân vật Hai_Ban_Tay)</div>
+              <div class="sb-row sb-looks">chuyển sang trang phục <span class="sb-pill-list">phần tử thứ <span class="sb-pill-var">STT_Phim</span> của DS_Ngon_Tay</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-8 py-4 px-4 text-center text-xs text-slate-500">
+    Học liệu tương tác Luyện Gõ Bàn Phím 10 Ngón Bằng Scratch • Hỗ trợ bàn phím vật lý, màn hình cảm ứng, kịch bản thiết kế &amp; khối lệnh Scratch 3.0.
+  </footer>
+
+  <!-- ==========================================
+       APPLICATION LOGIC (INLINE SCRIPT)
+       ========================================== -->
+  <script>
+    (function () {
+      // 1. Finger Definitions with vibrant colors and Vietnamese labels
+      const FINGERS = {
+        L_PINKY:  { id: 'L_PINKY',  hand: 'LEFT',  name: 'Ngón út trái',     color: '#f43f5e', textDark: false, hint: 'Dùng ngón út bàn tay trái vươn nhẹ tới phím.' },
+        L_RING:   { id: 'L_RING',   hand: 'LEFT',  name: 'Ngón áp út trái',  color: '#f97316', textDark: false, hint: 'Dùng ngón áp út bàn tay trái gõ phím.' },
+        L_MIDDLE: { id: 'L_MIDDLE', hand: 'LEFT',  name: 'Ngón giữa trái',   color: '#eab308', textDark: true,  hint: 'Dùng ngón giữa bàn tay trái gõ phím.' },
+        L_INDEX:  { id: 'L_INDEX',  hand: 'LEFT',  name: 'Ngón trỏ trái',    color: '#10b981', textDark: false, hint: 'Ngón trỏ trái đặt chuẩn tại phím có gai F.' },
+        THUMB:    { id: 'THUMB',    hand: 'BOTH',  name: 'Hai ngón cái',     color: '#a855f7', textDark: false, hint: 'Dùng ngón cái để nhấn phím Cách (Space).' },
+        R_INDEX:  { id: 'R_INDEX',  hand: 'RIGHT', name: 'Ngón trỏ phải',    color: '#06b6d4', textDark: true,  hint: 'Ngón trỏ phải đặt chuẩn tại phím có gai J.' },
+        R_MIDDLE: { id: 'R_MIDDLE', hand: 'RIGHT', name: 'Ngón giữa phải',   color: '#3b82f6', textDark: false, hint: 'Dùng ngón giữa bàn tay phải gõ phím.' },
+        R_RING:   { id: 'R_RING',   hand: 'RIGHT', name: 'Ngón áp út phải',  color: '#ec4899', textDark: false, hint: 'Dùng ngón áp út bàn tay phải gõ phím.' },
+        R_PINKY:  { id: 'R_PINKY',  hand: 'RIGHT', name: 'Ngón út phải',     color: '#14b8a6', textDark: false, hint: 'Dùng ngón út bàn tay phải gõ phím.' }
+      };
+
+      // 2. Keyboard Layout Rows
+      const KEYBOARD_ROWS = [
+        [
+          { char: '1', label: '1', finger: 'L_PINKY',  group: 'numbers' },
+          { char: '2', label: '2', finger: 'L_RING',   group: 'numbers' },
+          { char: '3', label: '3', finger: 'L_MIDDLE', group: 'numbers' },
+          { char: '4', label: '4', finger: 'L_INDEX',  group: 'numbers' },
+          { char: '5', label: '5', finger: 'L_INDEX',  group: 'numbers' },
+          { char: '6', label: '6', finger: 'R_INDEX',  group: 'numbers' },
+          { char: '7', label: '7', finger: 'R_INDEX',  group: 'numbers' },
+          { char: '8', label: '8', finger: 'R_MIDDLE', group: 'numbers' },
+          { char: '9', label: '9', finger: 'R_RING',   group: 'numbers' },
+          { char: '0', label: '0', finger: 'R_PINKY',  group: 'numbers' }
+        ],
+        [
+          { char: 'Q', label: 'Q', finger: 'L_PINKY',  group: 'top' },
+          { char: 'W', label: 'W', finger: 'L_RING',   group: 'top' },
+          { char: 'E', label: 'E', finger: 'L_MIDDLE', group: 'top' },
+          { char: 'R', label: 'R', finger: 'L_INDEX',  group: 'top' },
+          { char: 'T', label: 'T', finger: 'L_INDEX',  group: 'top' },
+          { char: 'Y', label: 'Y', finger: 'R_INDEX',  group: 'top' },
+          { char: 'U', label: 'U', finger: 'R_INDEX',  group: 'top' },
+          { char: 'I', label: 'I', finger: 'R_MIDDLE', group: 'top' },
+          { char: 'O', label: 'O', finger: 'R_RING',   group: 'top' },
+          { char: 'P', label: 'P', finger: 'R_PINKY',  group: 'top' }
+        ],
+        [
+          { char: 'A', label: 'A', finger: 'L_PINKY',  group: 'home' },
+          { char: 'S', label: 'S', finger: 'L_RING',   group: 'home' },
+          { char: 'D', label: 'D', finger: 'L_MIDDLE', group: 'home' },
+          { char: 'F', label: 'F', finger: 'L_INDEX',  group: 'home', bump: true },
+          { char: 'G', label: 'G', finger: 'L_INDEX',  group: 'home' },
+          { char: 'H', label: 'H', finger: 'R_INDEX',  group: 'home' },
+          { char: 'J', label: 'J', finger: 'R_INDEX',  group: 'home', bump: true },
+          { char: 'K', label: 'K', finger: 'R_MIDDLE', group: 'home' },
+          { char: 'L', label: 'L', finger: 'R_RING',   group: 'home' },
+          { char: ';', label: ';', finger: 'R_PINKY',  group: 'home' }
+        ],
+        [
+          { char: 'Z', label: 'Z', finger: 'L_PINKY',  group: 'bottom' },
+          { char: 'X', label: 'X', finger: 'L_RING',   group: 'bottom' },
+          { char: 'C', label: 'C', finger: 'L_MIDDLE', group: 'bottom' },
+          { char: 'V', label: 'V', finger: 'L_INDEX',  group: 'bottom' },
+          { char: 'B', label: 'B', finger: 'L_INDEX',  group: 'bottom' },
+          { char: 'N', label: 'N', finger: 'R_INDEX',  group: 'bottom' },
+          { char: 'M', label: 'M', finger: 'R_INDEX',  group: 'bottom' },
+          { char: ',', label: ',', finger: 'R_MIDDLE', group: 'bottom' },
+          { char: '.', label: '.', finger: 'R_RING',   group: 'bottom' },
+          { char: '/', label: '/', finger: 'R_PINKY',  group: 'bottom' }
+        ],
+        [
+          { char: ' ', label: 'PHÍM CÁCH (SPACE)', finger: 'THUMB', group: 'space', wide: true }
+        ]
+      ];
+
+      // Flatten lookup map
+      const KEY_MAP = {};
+      KEYBOARD_ROWS.forEach(row => {
+        row.forEach(k => {
+          KEY_MAP[k.char] = k;
+        });
+      });
+
+      // 3. Game State
+      let state = {
+        isRunning: true,
+        soundEnabled: true,
+        poolMode: 'letters',
+        currentChar: 'F',
+        upcoming: [],
+        totalPressed: 0,
+        correctCount: 0,
+        wrongCount: 0
+      };
+
+      // 4. Web Audio Synthesizer for Scratch-like Sound Effects
+      let audioCtx = null;
+      function playSound(type) {
+        if (!state.soundEnabled) return;
+        try {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) audioCtx = new AudioContextClass();
+          }
+          if (!audioCtx) return;
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          const now = audioCtx.currentTime;
+          if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.11); // G5
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+            osc.start(now);
+            osc.stop(now + 0.14);
+          } else {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(190, now);
+            osc.frequency.linearRampToValueAtTime(130, now + 0.18);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          }
+        } catch (err) {
+          // Ignore audio errors on restricted devices
+        }
+      }
+
+      // 5. Build Keyboard DOM
+      const keyboardContainer = document.getElementById('keyboardContainer');
+
+      function renderKeyboardDOM() {
+        keyboardContainer.innerHTML = '';
+        KEYBOARD_ROWS.forEach((row, rIdx) => {
+          const rowDiv = document.createElement('div');
+          rowDiv.className = 'flex items-center justify-center gap-1 sm:gap-1.5';
+          if (rIdx === 1) rowDiv.classList.add('pl-2');
+          if (rIdx === 2) rowDiv.classList.add('pl-4');
+          if (rIdx === 3) rowDiv.classList.add('pl-6');
+
+          row.forEach(keyObj => {
+            const fingerInfo = FINGERS[keyObj.finger];
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.keyChar = keyObj.char;
+            btn.className = [
+              'key-btn relative rounded-xl font-mono-key font-extrabold transition-all duration-150 flex flex-col items-center justify-center border-b-4 active:translate-y-0.5',
+              keyObj.wide ? 'w-56 sm:w-72 h-10 sm:h-11 text-xs' : 'w-8 sm:w-11 h-10 sm:h-12 text-xs sm:text-sm'
+            ].join(' ');
+
+            // Subtle base border matching finger color
+            btn.style.backgroundColor = '#1e293b';
+            btn.style.borderColor = fingerInfo.color;
+            btn.style.color = '#f8fafc';
+
+            const mainSpan = document.createElement('span');
+            mainSpan.textContent = keyObj.label;
+            btn.appendChild(mainSpan);
+
+            // Color dot indicator on each key
+            const dot = document.createElement('span');
+            dot.className = 'w-1.5 h-1.5 rounded-full mt-0.5 opacity-80';
+            dot.style.backgroundColor = fingerInfo.color;
+            btn.appendChild(dot);
+
+            // Tactile bump on F and J
+            if (keyObj.bump) {
+              const bumpBar = document.createElement('span');
+              bumpBar.className = 'absolute bottom-1 w-3 h-0.5 bg-amber-300 rounded-full';
+              btn.appendChild(bumpBar);
+            }
+
+            btn.addEventListener('click', () => {
+              handleUserKeyInput(keyObj.char);
+            });
+
+            rowDiv.appendChild(btn);
+          });
+
+          keyboardContainer.appendChild(rowDiv);
+        });
+      }
+
+      // 6. Pool Filtering & Random Selection
+      function getActiveKeyPool() {
+        const mode = state.poolMode;
+        const allKeys = Object.values(KEY_MAP).filter(k => k.char !== ' ');
+        if (mode === 'letters') {
+          return allKeys.filter(k => /^[A-Z]$/.test(k.char));
+        }
+        if (mode === 'home') {
+          return allKeys.filter(k => k.group === 'home');
+        }
+        if (mode === 'top') {
+          return allKeys.filter(k => k.group === 'top');
+        }
+        if (mode === 'bottom') {
+          return allKeys.filter(k => k.group === 'bottom');
+        }
+        if (mode === 'numbers') {
+          return allKeys.filter(k => k.group === 'numbers');
+        }
+        return allKeys;
+      }
+
+      function pickRandomChar(excludeChar) {
+        const pool = getActiveKeyPool();
+        if (pool.length === 0) return 'F';
+        if (pool.length === 1) return pool[0].char;
+        let candidates = pool.filter(k => k.char !== excludeChar);
+        if (candidates.length === 0) candidates = pool;
+        const idx = Math.floor(Math.random() * candidates.length);
+        return candidates[idx].char;
+      }
+
+      function refillQueue() {
+        while (state.upcoming.length < 4) {
+          const prev = state.upcoming.length > 0 ? state.upcoming[state.upcoming.length - 1] : state.currentChar;
+          state.upcoming.push(pickRandomChar(prev));
+        }
+      }
+
+      function nextTargetCharacter() {
+        if (state.upcoming.length === 0) {
+          refillQueue();
+        }
+        state.currentChar = state.upcoming.shift();
+        refillQueue();
+        updateStageUI();
+      }
+
+      // 7. Synchronize Screen, Keyboard Key Highlight, and Finger Highlight
+      function updateStageUI() {
+        const keyObj = KEY_MAP[state.currentChar] || KEY_MAP['F'];
+        const fingerInfo = FINGERS[keyObj.finger];
+
+        // Update Top Target Character Box
+        const targetScreenBox = document.getElementById('targetScreenBox');
+        const targetCharText = document.getElementById('targetCharText');
+        const targetKeySublabel = document.getElementById('targetKeySublabel');
+
+        targetCharText.textContent = keyObj.char === ' ' ? '␣' : keyObj.char;
+        targetKeySublabel.textContent = keyObj.char === ' ' ? 'Phím Cách' : ('Phím ' + keyObj.label);
+        targetScreenBox.style.borderColor = fingerInfo.color;
+        targetScreenBox.style.backgroundColor = fingerInfo.color + '2E';
+        targetScreenBox.style.boxShadow = '0 0 32px ' + fingerInfo.color + '66';
+
+        // Update Finger Instruction Badge
+        const badge = document.getElementById('fingerInstructionBadge');
+        const fingerNameText = document.getElementById('fingerNameText');
+        const fingerTipHint = document.getElementById('fingerTipHint');
+        badge.style.backgroundColor = fingerInfo.color;
+        badge.style.color = fingerInfo.textDark ? '#0f172a' : '#ffffff';
+        fingerNameText.textContent = fingerInfo.name;
+        fingerTipHint.textContent = fingerInfo.hint;
+
+        // Update Upcoming Queue Chips
+        const upcomingContainer = document.getElementById('upcomingQueue');
+        upcomingContainer.innerHTML = '';
+        state.upcoming.forEach(ch => {
+          const k = KEY_MAP[ch];
+          const f = k ? FINGERS[k.finger] : FINGERS.L_INDEX;
+          const span = document.createElement('span');
+          span.className = 'w-6 h-6 rounded-lg font-mono-key font-bold text-xs flex items-center justify-center border';
+          span.style.borderColor = f.color;
+          span.style.backgroundColor = f.color + '25';
+          span.style.color = '#ffffff';
+          span.textContent = ch;
+          upcomingContainer.appendChild(span);
+        });
+
+        // Update Keyboard Key Buttons (Highlight active key in matching finger color)
+        const keyButtons = keyboardContainer.querySelectorAll('.key-btn');
+        keyButtons.forEach(btn => {
+          const ch = btn.dataset.keyChar;
+          const k = KEY_MAP[ch];
+          const f = FINGERS[k.finger];
+          if (ch === state.currentChar) {
+            btn.classList.add('key-target-active');
+            btn.style.backgroundColor = f.color;
+            btn.style.color = f.textDark ? '#0f172a' : '#ffffff';
+            btn.style.borderColor = '#ffffff';
+            btn.style.boxShadow = '0 0 18px ' + f.color;
+          } else {
+            btn.classList.remove('key-target-active');
+            btn.style.backgroundColor = '#1e293b';
+            btn.style.color = '#f8fafc';
+            btn.style.borderColor = f.color;
+            btn.style.boxShadow = 'none';
+          }
+        });
+
+        // Update SVG Fingers on Both Hands
+        const allSvgFingerIds = [
+          'L_PINKY', 'L_RING', 'L_MIDDLE', 'L_INDEX', 'L_THUMB',
+          'R_THUMB', 'R_INDEX', 'R_MIDDLE', 'R_RING', 'R_PINKY'
+        ];
+
+        allSvgFingerIds.forEach(fid => {
+          const g = document.getElementById('svg_' + fid);
+          if (!g) return;
+          const shape = g.querySelector('.finger-shape');
+          const isMatch = (keyObj.finger === 'THUMB' && (fid === 'L_THUMB' || fid === 'R_THUMB')) || (keyObj.finger === fid);
+
+          if (isMatch) {
+            g.classList.add('finger-active');
+            if (shape) {
+              shape.setAttribute('fill', fingerInfo.color);
+              shape.setAttribute('stroke', '#ffffff');
+              shape.setAttribute('stroke-width', '4');
+            }
+          } else {
+            g.classList.remove('finger-active');
+            const baseF = FINGERS[fid === 'L_THUMB' || fid === 'R_THUMB' ? 'THUMB' : fid];
+            if (shape && baseF) {
+              shape.setAttribute('fill', '#475569');
+              shape.setAttribute('stroke', baseF.color);
+              shape.setAttribute('stroke-width', '3');
+            }
+          }
+        });
+
+        // Update Left / Right Hand Active Status Tags
+        const leftTag = document.getElementById('leftHandActiveTag');
+        const rightTag = document.getElementById('rightHandActiveTag');
+
+        if (fingerInfo.hand === 'LEFT' || fingerInfo.hand === 'BOTH') {
+          leftTag.textContent = '✨ ' + fingerInfo.name;
+          leftTag.style.backgroundColor = fingerInfo.color;
+          leftTag.style.color = fingerInfo.textDark ? '#0f172a' : '#ffffff';
+        } else {
+          leftTag.textContent = 'Đang nghỉ';
+          leftTag.style.backgroundColor = '#1e293b';
+          leftTag.style.color = '#94a3b8';
+        }
+
+        if (fingerInfo.hand === 'RIGHT' || fingerInfo.hand === 'BOTH') {
+          rightTag.textContent = '✨ ' + fingerInfo.name;
+          rightTag.style.backgroundColor = fingerInfo.color;
+          rightTag.style.color = fingerInfo.textDark ? '#0f172a' : '#ffffff';
+        } else {
+          rightTag.textContent = 'Đang nghỉ';
+          rightTag.style.backgroundColor = '#1e293b';
+          rightTag.style.color = '#94a3b8';
+        }
+
+        // Update Scratch Variable Counters
+        document.getElementById('statTotal').textContent = state.totalPressed;
+        document.getElementById('statCorrect').textContent = state.correctCount;
+        document.getElementById('statWrong').textContent = state.wrongCount;
+
+        const acc = state.totalPressed === 0
+          ? 100
+          : Math.round((state.correctCount / state.totalPressed) * 100);
+        document.getElementById('statAccuracy').textContent = acc + '%';
+      }
+
+      // 8. Handle Key Press (Physical Keyboard or Virtual Click)
+      function handleUserKeyInput(rawKey) {
+        if (!state.isRunning) return;
+
+        const normalized = rawKey.length === 1 ? rawKey.toUpperCase() : rawKey;
+        if (!KEY_MAP[normalized] && normalized.length !== 1) return;
+
+        state.totalPressed += 1;
+
+        const lastPressedBadge = document.getElementById('lastPressedBadge');
+        lastPressedBadge.textContent = normalized === ' ' ? 'SPACE' : normalized;
+
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
+        if (normalized === state.currentChar) {
+          state.correctCount += 1;
+          playSound('correct');
+          feedbackMessage.textContent = '🎉 Chính xác! Bạn đã gõ đúng phím "' + state.currentChar + '" bằng ' + FINGERS[KEY_MAP[state.currentChar].finger].name + '!';
+          feedbackMessage.className = 'text-xs sm:text-sm font-bold text-emerald-400 min-h-[1.5rem]';
+          nextTargetCharacter();
+        } else {
+          state.wrongCount += 1;
+          playSound('wrong');
+          feedbackMessage.textContent = '⚠️ Chưa đúng! Bạn vừa bấm "' + normalized + '", hãy bấm phím "' + state.currentChar + '" đang sáng đèn nhé!';
+          feedbackMessage.className = 'text-xs sm:text-sm font-bold text-rose-400 min-h-[1.5rem]';
+          updateStageUI();
+        }
+      }
+
+      // Listen to physical keyboard events when Demo tab is active
+      window.addEventListener('keydown', (e) => {
+        const sectionDemo = document.getElementById('sectionDemo');
+        if (sectionDemo.classList.contains('hidden')) return;
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        if (['Shift', 'CapsLock', 'Tab', 'Escape', 'Control', 'Alt', 'Meta', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+          return;
+        }
+        if (e.key === ' ' || e.key === '/') {
+          e.preventDefault();
+        }
+        handleUserKeyInput(e.key);
+      });
+
+      // 9. Controls Wiring
+      document.getElementById('btnGreenFlag').addEventListener('click', () => {
+        state.isRunning = true;
+        state.totalPressed = 0;
+        state.correctCount = 0;
+        state.wrongCount = 0;
+        state.upcoming = [];
+        document.getElementById('lastPressedBadge').textContent = 'Chưa nhấn';
+        document.getElementById('gameStateBadge').textContent = 'Đang chạy - Hãy nhấn phím trên bàn phím!';
+        document.getElementById('btnPauseGame').innerHTML = '<span>🛑</span> Tạm dừng';
+        const fb = document.getElementById('feedbackMessage');
+        fb.textContent = '🚩 Đã khởi tạo lại trò chơi! Hãy gõ ký tự đang phát sáng.';
+        fb.className = 'text-xs sm:text-sm font-semibold text-amber-300 min-h-[1.5rem]';
+        nextTargetCharacter();
+      });
+
+      document.getElementById('btnPauseGame').addEventListener('click', () => {
+        state.isRunning = !state.isRunning;
+        const badge = document.getElementById('gameStateBadge');
+        const btn = document.getElementById('btnPauseGame');
+        if (state.isRunning) {
+          badge.textContent = 'Đang chạy - Hãy nhấn phím trên bàn phím!';
+          btn.innerHTML = '<span>🛑</span> Tạm dừng';
+        } else {
+          badge.textContent = '⏸️ Đang tạm dừng (Bấm Tiếp tục hoặc Lá cờ xanh)';
+          btn.innerHTML = '<span>▶️</span> Tiếp tục';
+        }
+      });
+
+      document.getElementById('btnNextChar').addEventListener('click', () => {
+        nextTargetCharacter();
+      });
+
+      document.getElementById('selectKeyPool').addEventListener('change', (e) => {
+        state.poolMode = e.target.value;
+        state.upcoming = [];
+        nextTargetCharacter();
+      });
+
+      document.getElementById('btnToggleSound').addEventListener('click', () => {
+        state.soundEnabled = !state.soundEnabled;
+        document.getElementById('soundIcon').textContent = state.soundEnabled ? '🔊' : '🔇';
+        document.getElementById('soundLabel').textContent = state.soundEnabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt';
+      });
+
+      // 10. Tab Navigation Switching
+      const tabs = [
+        { btn: 'tabBtnDemo',   sec: 'sectionDemo' },
+        { btn: 'tabBtnScript', sec: 'sectionScript' },
+        { btn: 'tabBtnBlocks', sec: 'sectionBlocks' }
+      ];
+
+      function switchTab(targetSecId) {
+        tabs.forEach(t => {
+          const btnEl = document.getElementById(t.btn);
+          const secEl = document.getElementById(t.sec);
+          if (t.sec === targetSecId) {
+            secEl.classList.remove('hidden');
+            btnEl.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-indigo-700 shadow-sm';
+          } else {
+            secEl.classList.add('hidden');
+            btnEl.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all text-white hover:bg-white/15';
+          }
+        });
+      }
+
+      document.getElementById('tabBtnDemo').addEventListener('click', () => switchTab('sectionDemo'));
+      document.getElementById('tabBtnScript').addEventListener('click', () => switchTab('sectionScript'));
+      document.getElementById('tabBtnBlocks').addEventListener('click', () => switchTab('sectionBlocks'));
+      document.getElementById('btnJumpScript').addEventListener('click', () => switchTab('sectionScript'));
+      document.getElementById('btnJumpBlocks').addEventListener('click', () => switchTab('sectionBlocks'));
+
+      // 11. Checklist Progress Counter in Section 2
+      const stepChecks = document.querySelectorAll('.step-check');
+      stepChecks.forEach(chk => {
+        chk.addEventListener('change', () => {
+          const done = Array.from(stepChecks).filter(c => c.checked).length;
+          document.getElementById('checklistProgressText').textContent = 'Tiến độ: ' + done + '/' + stepChecks.length + ' bước';
+        });
+      });
+
+      // 12. Mode Toggle in Section 3 (Easy vs List Mode)
+      const btnModeEasy = document.getElementById('btnModeEasy');
+      const btnModeList = document.getElementById('btnModeList');
+      const blocksModeEasy = document.getElementById('blocksModeEasy');
+      const blocksModeList = document.getElementById('blocksModeList');
+
+      btnModeEasy.addEventListener('click', () => {
+        blocksModeEasy.classList.remove('hidden');
+        blocksModeList.classList.add('hidden');
+        btnModeEasy.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 text-white shadow-sm transition';
+        btnModeList.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+      });
+
+      btnModeList.addEventListener('click', () => {
+        blocksModeList.classList.remove('hidden');
+        blocksModeEasy.classList.add('hidden');
+        btnModeList.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 text-white shadow-sm transition';
+        btnModeEasy.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+      });
+
+      // 13. Copy Scratch Code Guide
+      const scratchTextGuide = [
+        '=== HƯỚNG DẪN LẬP TRÌNH SCRATCH: TRÒ CHƠI LUYỆN GÕ BÀN PHÍM 10 NGÓN ===',
+        '',
+        '1. BIẾN SỐ CẦN TẠO:',
+        '- Ky_Tu_Can_Go (Ký tự cần gõ hiện tại)',
+        '- Tong_So_Phim (Tổng số lần nhấn phím)',
+        '- Go_Dung (Số ký tự gõ đúng)',
+        '- Go_Sai (Số ký tự gõ sai)',
+        '',
+        '2. KHỐI LỆNH TẠI NHÂN VẬT [Man_Hinh_Ky_Tu]:',
+        'Khi bấm vào Lá cờ xanh:',
+        '  đặt [Tong_So_Phim] thành 0',
+        '  đặt [Go_Dung] thành 0',
+        '  đặt [Go_Sai] thành 0',
+        '  phát tin nhắn [Sinh_Ky_Tu_Moi]',
+        '',
+        'Khi nhận [Sinh_Ky_Tu_Moi]:',
+        '  chuyển sang trang phục (lấy ngẫu nhiên từ 1 đến 26)',
+        '  đặt [Ky_Tu_Can_Go] thành (trang phục [tên])',
+        '  phát tin nhắn [Cap_Nhat_Den_Va_Tay]',
+        '',
+        'Khi bấm phím [bất kỳ]:',
+        '  thay đổi [Tong_So_Phim] một lượng 1',
+        '  nếu <phím (Ky_Tu_Can_Go) được bấm?> thì:',
+        '    thay đổi [Go_Dung] một lượng 1',
+        '    bắt đầu âm thanh [Pop]',
+        '    phát tin nhắn [Sinh_Ky_Tu_Moi]',
+        '  nếu không:',
+        '    thay đổi [Go_Sai] một lượng 1',
+        '    bắt đầu âm thanh [Boing]',
+        '  đợi đến khi <không <phím [bất kỳ] được bấm?>>',
+        '',
+        '3. KHỐI LỆNH TẠI NHÂN VẬT [Ban_Phim_Sang_Den]:',
+        'Khi nhận [Cap_Nhat_Den_Va_Tay]:',
+        '  chuyển sang trang phục (Ky_Tu_Can_Go)',
+        '',
+        '4. KHỐI LỆNH TẠI NHÂN VẬT [Hai_Ban_Tay]:',
+        'Khi nhận [Cap_Nhat_Den_Va_Tay]:',
+        '  nếu <"1qaz" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [ut_trai]',
+        '  nếu <"2wsx" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [ap_ut_trai]',
+        '  nếu <"3edc" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [giua_trai]',
+        '  nếu <"45rtfgvb" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [tro_trai]',
+        '  nếu <"67yuhjnm" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [tro_phai]',
+        '  nếu <"8ik," chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [giua_phai]',
+        '  nếu <"9ol." chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [ap_ut_phai]',
+        '  nếu <"0p;/" chứa (Ky_Tu_Can_Go)?> thì chuyển sang trang phục [ut_phai]'
+      ].join('\n');
+
+      document.getElementById('btnCopyScratchCode').addEventListener('click', () => {
+        const toast = document.getElementById('copyToast');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(scratchTextGuide).then(() => {
+            toast.classList.remove('hidden');
+          }).catch(() => {
+            fallbackCopy(scratchTextGuide, toast);
+          });
+        } else {
+          fallbackCopy(scratchTextGuide, toast);
+        }
+      });
+
+      function fallbackCopy(text, toastEl) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        toastEl.classList.remove('hidden');
+      }
+
+      document.getElementById('btnCloseToast').addEventListener('click', () => {
+        document.getElementById('copyToast').classList.add('hidden');
+      });
+
+      // Initialize App on Load
+      window.addEventListener('load', () => {
+        renderKeyboardDOM();
+        refillQueue();
+        nextTargetCharacter();
+      });
+    })();
+  </script>
+</body>
+</html>
