@@ -408,27 +408,50 @@
                     // Mark as found
                     foundWords.add(matchedWord);
                     
-                    // Tạo màu ngẫu nhiên cho từ khóa tìm được
-                    const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7', '#ec4899'];
-                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    // --- KHU VỰC CÀI ĐẶT MÀU SẮC (BẮT ĐẦU) ---
+                    // Danh sách các mã màu sẽ được dùng để tô cho các từ khóa. 
+                    // Bạn có thể đổi mã màu HEX (ví dụ: '#ff0000') hoặc thêm/bớt màu tùy ý.
+                    const colors = [
+                        '#ef4444', // Đỏ
+                        '#22c55e', // Xanh lá cây
+                        '#eab308', // Vàng
+                        '#f97316', // Cam
+                        '#06b6d4', // Xanh lơ (Cyan)
+                        '#3b82f6', // Xanh dương
+                        '#8b5cf6', // Tím
+                        '#ec4899', // Hồng
+                        '#14b8a6', // Xanh ngọc (Teal)
+                        '#84cc16', // Xanh đọt chuối (Lime)
+                        '#6366f1', // Xanh chàm (Indigo)
+                        '#f43f5e'  // Đỏ hồng (Rose)
+                    ];
                     
+                    // Chọn màu tuần tự dựa trên số lượng từ đã tìm được. 
+                    // Phép chia dư (%) giúp danh sách màu lặp lại từ đầu nếu số lượng từ nhiều hơn số màu.
+                    const colorIndex = (foundWords.size - 1) % colors.length; 
+                    const selectedColor = colors[colorIndex];
+                    
+                    // Tiến hành tô màu cho từng ô chữ trên ma trận
                     currentPath.forEach(pos => {
                         let cell = getCellElement(pos.r, pos.c);
                         cell.classList.remove('cell-highlight');
                         cell.classList.add('cell-found');
-                        cell.style.backgroundColor = randomColor;
+                        // Gán màu nền, màu chữ và viền
+                        cell.style.backgroundColor = selectedColor;
                         cell.style.color = 'white';
-                        cell.style.borderColor = randomColor;
+                        cell.style.borderColor = selectedColor;
                     });
                     
-                    // Update UI list
+                    // Cập nhật màu sắc cho nhãn từ khóa ở danh sách bên dưới
                     let badge = document.getElementById(`word-badge-${matchedWord}`);
                     if (badge) {
                         badge.className = 'px-3 py-1 rounded-full text-sm font-semibold border text-white transition-all scale-110 shadow-sm';
-                        badge.style.backgroundColor = randomColor;
-                        badge.style.borderColor = randomColor;
+                        badge.style.backgroundColor = selectedColor;
+                        badge.style.borderColor = selectedColor;
                         setTimeout(() => badge.classList.remove('scale-110'), 200);
                     }
+                    // --- KHU VỰC CÀI ĐẶT MÀU SẮC (KẾT THÚC) ---
+
                     updateStats();
 
                     // Tự động thông báo nếu đã tìm được tất cả từ khóa
