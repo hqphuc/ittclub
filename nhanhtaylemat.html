@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nhanh Tay Lẹ Mắt - Tìm Điểm Khác Nhau</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.4); opacity: 0; }
+      70% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .pop-in { animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .shake-anim { animation: shake 0.4s ease-in-out; }
+    .found-ring {
+      stroke-dasharray: 6 3;
+      animation: popIn 0.3s ease-out forwards;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    /* Scratch 3.0 Visual Block Styling */
+    .sb-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+    .sb-block {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 11px;
+      border-radius: 6px;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+      border: 1px solid rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .sb-hat {
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      padding-top: 9px;
+    }
+    .sb-indent {
+      padding-left: 18px;
+      border-left: 6px solid #FFAB19;
+      margin-left: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+    }
+    /* Official Scratch 3.0 Category Colors */
+    .sb-events { background-color: #FFBF00; border-color: #CC9900; color: #1e293b; }
+    .sb-control { background-color: #FFAB19; border-color: #CF8B17; color: #ffffff; }
+    .sb-motion { background-color: #4C97FF; border-color: #3373CC; color: #ffffff; }
+    .sb-looks { background-color: #9966FF; border-color: #774DCB; color: #ffffff; }
+    .sb-sound { background-color: #CF63CF; border-color: #BD42BD; color: #ffffff; }
+    .sb-sensing { background-color: #5CB1D6; border-color: #2E8EB8; color: #ffffff; }
+    .sb-operators { background-color: #59C059; border-color: #389438; color: #ffffff; }
+    .sb-variables { background-color: #FF8C1A; border-color: #DB6E00; color: #ffffff; }
+
+    /* Embedded Inputs inside Scratch Blocks */
+    .sb-input-num, .sb-input-txt {
+      background: #ffffff;
+      color: #1e293b;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+    .sb-dropdown {
+      background: rgba(0, 0, 0, 0.16);
+      color: inherit;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .sb-events .sb-dropdown {
+      background: rgba(255, 255, 255, 0.45);
+      border-color: rgba(0,0,0,0.15);
+    }
+    .sb-pill-var {
+      background-color: #FF8C1A;
+      border: 1px solid #DB6E00;
+      color: #ffffff;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .sb-pill-op {
+      background-color: #59C059;
+      border: 1px solid #389438;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+    }
+    .sb-bool-op {
+      background-color: #59C059;
+      border: 1px solid #389438;
+      color: #ffffff;
+      padding: 2px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-sky-100 via-indigo-50 to-amber-100 min-h-screen text-slate-800 flex flex-col">
+
+  <!-- Header / Top Bar -->
+  <header class="bg-white/90 backdrop-blur border-b border-sky-200 sticky top-0 z-20 shadow-sm">
+    <div class="max-w-5xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-white text-xl shadow">
+          🔍
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight">Nhanh Tay Lẹ Mắt</h1>
+          <p class="text-xs text-slate-500">Tìm 5 điểm khác nhau qua 5 bức tranh</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+        <button id="tabPlayBtn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-white text-indigo-600 shadow-sm transition">
+          🎮 Chơi Demo
+        </button>
+        <button id="tabScenarioBtn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-indigo-600 transition">
+          📋 2. Kịch Bản
+        </button>
+        <button id="tabScratchBtn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-indigo-600 transition">
+          🐱 Kịch Bản Scratch
+        </button>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-2">
+        <button id="soundToggleBtn" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs sm:text-sm font-semibold transition flex items-center gap-1" title="Bật/Tắt âm thanh">
+          <span id="soundIcon">🔊</span> <span class="hidden sm:inline">Âm thanh</span>
+        </button>
+        <button id="hintBtn" class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs sm:text-sm font-semibold transition flex items-center gap-1" title="Gợi ý 1 điểm khác">
+          💡 <span class="hidden sm:inline">Gợi ý</span>
+        </button>
+        <button id="restartBtn" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition">
+          🔄 Chơi lại
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 py-4 flex flex-col gap-4">
+
+    <!-- VIEW 1: PLAY GAME -->
+    <section id="playView" class="flex flex-col gap-3.5">
+      
+      <!-- HUD Status Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-white rounded-2xl p-3 shadow-sm border border-sky-100">
+        
+        <!-- Level Indicator -->
+        <div class="flex items-center justify-between sm:justify-start gap-2.5 bg-indigo-50/70 px-3.5 py-2 rounded-xl border border-indigo-100">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">Tranh</span>
+          <div class="flex items-center gap-1.5">
+            <span id="levelBadge" class="text-base sm:text-lg font-extrabold text-indigo-700">1 / 5</span>
+            <span id="levelTitle" class="text-xs sm:text-sm font-semibold text-slate-600 truncate">— Công viên nắng ấm</span>
+          </div>
+        </div>
+
+        <!-- Stars of Current Picture -->
+        <div class="flex items-center justify-between sm:justify-center gap-2 bg-amber-50/80 px-3.5 py-2 rounded-xl border border-amber-200/70">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Sao tranh này:</span>
+          <div id="starsContainer" class="flex items-center gap-1 text-lg sm:text-xl" aria-label="Số sao đạt được"></div>
+          <span id="starsCountText" class="text-xs font-extrabold text-amber-700 bg-amber-200/70 px-2 py-0.5 rounded-full">0/5</span>
+        </div>
+
+        <!-- Total Lives Across All 5 Pictures -->
+        <div class="flex items-center justify-between sm:justify-end gap-2 bg-rose-50/80 px-3.5 py-2 rounded-xl border border-rose-200/70">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Mạng (cả 5 tranh):</span>
+          <div id="livesContainer" class="flex items-center gap-0.5 text-lg sm:text-xl" aria-label="Số mạng còn lại"></div>
+          <span id="livesCountText" class="text-xs font-extrabold text-rose-700 bg-rose-200/70 px-2 py-0.5 rounded-full">5/5</span>
+        </div>
+
+      </div>
+
+      <!-- Feedback Toast Banner -->
+      <div id="statusBanner" class="text-center py-1.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-sky-100/90 text-sky-800 border border-sky-200 transition-all">
+        👆 Hãy bấm vào điểm khác nhau trên bức tranh bên phải (hoặc bên trái)! Tìm đủ 5 ⭐ để qua tranh mới nhé!
+      </div>
+
+      <!-- Dual Picture Stage -->
+      <div id="boardsWrapper" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-center">
+        
+        <!-- Left Picture (Original) -->
+        <div class="bg-white rounded-2xl p-2.5 sm:p-3 shadow-md border-2 border-sky-200 flex flex-col gap-2">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-xs sm:text-sm font-extrabold text-sky-700 flex items-center gap-1.5">
+              🖼️ TRANH GỐC (A)
+            </span>
+            <span class="text-[11px] font-semibold text-slate-400">Quan sát kỹ nhé</span>
+          </div>
+          <div id="leftStageContainer" class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-sky-50 border border-slate-200 cursor-pointer">
+            <svg id="leftSvg" viewBox="0 0 400 300" class="w-full h-full block"></svg>
+          </div>
+        </div>
+
+        <!-- Right Picture (Spot the difference) -->
+        <div class="bg-white rounded-2xl p-2.5 sm:p-3 shadow-md border-2 border-amber-300 flex flex-col gap-2">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-xs sm:text-sm font-extrabold text-amber-700 flex items-center gap-1.5">
+              🔎 TRANH TÌM ĐIỂM KHÁC (B)
+            </span>
+            <span id="foundListLabel" class="text-[11px] font-semibold text-emerald-600">Đã tìm: 0/5 điểm</span>
+          </div>
+          <div id="rightStageContainer" class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-sky-50 border border-slate-200 cursor-pointer">
+            <svg id="rightSvg" viewBox="0 0 400 300" class="w-full h-full block"></svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Stepper for 5 Pictures -->
+      <div class="bg-white rounded-2xl p-3 shadow-sm border border-sky-100 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tiến độ 5 bức tranh:</span>
+        <div id="levelPills" class="flex flex-wrap items-center gap-1.5"></div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: SCENARIO DESCRIPTION FOR PRIMARY STUDENTS -->
+    <section id="scenarioView" class="hidden flex-col gap-4 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-sky-100">
+      <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg sm:text-xl font-extrabold text-indigo-700 flex items-center gap-2">
+          📋 Mô Tả Kịch Bản Trò Chơi Trên Scratch (Dành Cho Học Sinh Tiểu Học)
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Sân khấu Scratch có kích thước <code>480 × 360</code>. Các em chia màn hình thành 2 nửa Trái – Phải để đặt cặp bức tranh và thiết kế 4 nhóm nhân vật đơn giản dưới đây:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-amber-50/70 rounded-xl p-4 border border-amber-200">
+          <h3 class="font-extrabold text-amber-800 text-sm sm:text-base mb-2">1. Các Nhân vật (Sprites) cần chuẩn bị</h3>
+          <ul class="text-xs sm:text-sm text-slate-700 space-y-2 list-disc pl-4">
+            <li><strong>Nhân vật <code>KhungTranh</code>:</strong> Có <strong>5 trang phục (Costumes)</strong> đặt tên là <code>tranh1</code>, <code>tranh2</code>, <code>tranh3</code>, <code>tranh4</code>, <code>tranh5</code>. Luôn đặt ở lớp <em>phía sau cùng</em>. Khi bấm nhầm vào <code>KhungTranh</code> sẽ bị trừ 1 mạng.</li>
+            <li><strong>5 Nhân vật <code>Diem1</code>, <code>Diem2</code>, <code>Diem3</code>, <code>Diem4</code>, <code>Diem5</code>:</strong> Vẽ hình tròn viền đỏ hoặc xanh lá. Khi mới vào tranh, đặt hiệu ứng <strong>Bóng ma (Ghost) = 99</strong> để tàng hình nhưng vẫn bấm chuột vào được.</li>
+            <li><strong>Nhân vật <code>ThanhSao</code>:</strong> Có 6 trang phục từ <code>0sao</code> đến <code>5sao</code> để hiển thị số sao của bức tranh hiện tại.</li>
+            <li><strong>Nhân vật <code>ThanhMang</code>:</strong> Có 6 trang phục từ <code>5tim</code> xuống <code>0tim</code> để hiển thị số mạng còn lại của cả trò chơi.</li>
+          </ul>
+        </div>
+
+        <div class="bg-sky-50/70 rounded-xl p-4 border border-sky-200">
+          <h3 class="font-extrabold text-sky-800 text-sm sm:text-base mb-2">2. Các Biến số (Variables) cần tạo</h3>
+          <ul class="text-xs sm:text-sm text-slate-700 space-y-2.5 list-disc pl-4">
+            <li><span class="px-2 py-0.5 rounded-full bg-[#FF8C1A] text-white font-bold text-xs">Mạng</span> : Đặt bằng <strong>5</strong> khi bấm Cờ xanh. Dùng chung cho cả 5 bức tranh (bấm sai vào <code>KhungTranh</code> giảm <code>-1</code>; về <code>0</code> là thua cuộc).</li>
+            <li><span class="px-2 py-0.5 rounded-full bg-[#FF8C1A] text-white font-bold text-xs">Sao</span> : Đặt bằng <strong>0</strong> khi bắt đầu mỗi bức tranh. Bấm đúng 1 điểm khác nhau tăng <code>+1</code>. Khi <code>Sao = 5</code> thì chuyển sang bức tranh tiếp theo và đặt lại <code>Sao = 0</code>.</li>
+            <li><span class="px-2 py-0.5 rounded-full bg-[#FF8C1A] text-white font-bold text-xs">Tranh số</span> : Bắt đầu từ <strong>1</strong>. Mỗi lần đủ 5 sao thì tăng thêm <code>+1</code>. Nếu <code>Tranh số = 5</code> mà đủ 5 sao thì phát tin <code>ChienThang</code>!</li>
+            <li><span class="px-2 py-0.5 rounded-full bg-[#FF8C1A] text-white font-bold text-xs">DaBamChua</span> <em>(Chọn "Chỉ dành cho nhân vật này" ở mỗi Điểm)</em>: Bằng <code>0</code> khi chưa bấm, chuyển thành <code>1</code> khi đã bấm trúng để học sinh bấm lại không bị cộng trùng sao.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: COLOR-CODED SCRATCH BLOCKS -->
+    <section id="scratchView" class="hidden flex-col gap-5 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-sky-100">
+      <div class="border-b border-slate-200 pb-3 flex flex-col gap-2.5">
+        <h2 class="text-lg sm:text-xl font-extrabold text-indigo-700 flex items-center gap-2">
+          🧩 Đề Xuất Câu Lệnh Scratch (Tô Màu Theo Nhóm Lệnh Chuẩn Scratch 3.0)
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600">
+          Mỗi khối lệnh dưới đây được tô đúng màu của nhóm lệnh trong Scratch 3.0 để các em học sinh tiểu học nhìn màu là tìm thấy ngay:
+        </p>
+        <!-- Color Legend Bar -->
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#FFBF00] text-slate-900 border border-[#CC9900]">🟨 Sự kiện (Events)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#FFAB19] text-white border border-[#CF8B17]">🟧 Điều khiển (Control)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#4C97FF] text-white border border-[#3373CC]">🟦 Chuyển động (Motion)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#9966FF] text-white border border-[#774DCB]">🟪 Hiển thị (Looks)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#CF63CF] text-white border border-[#BD42BD]">🩷 Âm thanh (Sound)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#59C059] text-white border border-[#389438]">🟩 Các phép toán (Operators)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-[#FF8C1A] text-white border border-[#DB6E00]">🟧 Các biến số (Variables)</span>
+        </div>
+      </div>
+
+      <!-- Code Groups Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+        <!-- CARD 1: KHUNG TRANH (INIT & CHANGE PICTURE) -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Nhân vật 1: KhungTranh (Phần A)</span>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-800 mt-1.5">1. Khởi động trò chơi & Đổi bức tranh</h3>
+          </div>
+
+          <!-- Stack 1A -->
+          <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="sb-block sb-hat sb-events">Khi bấm vào 🚩</div>
+            <div class="sb-block sb-variables">đặt <span class="sb-dropdown">Mạng ▾</span> thành <span class="sb-input-num">5</span></div>
+            <div class="sb-block sb-variables">đặt <span class="sb-dropdown">Sao ▾</span> thành <span class="sb-input-num">0</span></div>
+            <div class="sb-block sb-variables">đặt <span class="sb-dropdown">Tranh số ▾</span> thành <span class="sb-input-num">1</span></div>
+            <div class="sb-block sb-looks">đi tới lớp <span class="sb-dropdown">phía sau cùng ▾</span></div>
+            <div class="sb-block sb-looks">chuyển trang phục sang <span class="sb-dropdown">tranh1 ▾</span></div>
+            <div class="sb-block sb-events">phát tin <span class="sb-dropdown">BatDauTranhMoi ▾</span></div>
+          </div>
+
+          <!-- Stack 1B -->
+          <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="sb-block sb-hat sb-events">Khi nhận <span class="sb-dropdown">BatDauTranhMoi ▾</span></div>
+            <div class="sb-block sb-looks">
+              chuyển trang phục sang
+              <span class="sb-pill-op">kết hợp <span class="sb-input-txt">tranh</span> và <span class="sb-pill-var">Tranh số</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: KHUNG TRANH (WRONG CLICK -> LOSE LIFE) -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200">Nhân vật 1: KhungTranh (Phần B)</span>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-800 mt-1.5">2. Khi bấm SAI vào nền tranh (Mất 1 mạng)</h3>
+          </div>
+
+          <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="sb-block sb-hat sb-events">Khi bấm vào nhân vật này</div>
+            <div class="sb-block sb-sound">bắt đầu âm thanh <span class="sb-dropdown">Boing ▾</span></div>
+            <div class="sb-block sb-variables">thay đổi <span class="sb-dropdown">Mạng ▾</span> một lượng <span class="sb-input-num">-1</span></div>
+            <div class="sb-block sb-control">
+              nếu <span class="sb-bool-op"><span class="sb-pill-var">Mạng</span> = <span class="sb-input-num">0</span></span> thì
+            </div>
+            <div class="sb-indent">
+              <div class="sb-block sb-events">phát tin <span class="sb-dropdown">ThuaCuoc ▾</span></div>
+              <div class="sb-block sb-looks">nói <span class="sb-input-txt">Hết 5 mạng rồi! Thử lại nhé!</span> trong <span class="sb-input-num">2</span> giây</div>
+              <div class="sb-block sb-control">dừng lại <span class="sb-dropdown">tất cả ▾</span></div>
+            </div>
+            <div class="sb-block sb-control">hết</div>
+          </div>
+        </div>
+
+        <!-- CARD 3: DIEM 1..5 (SETUP POSITION & GHOST EFFECT) -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">Nhân vật 2: Diem1 đến Diem5 (Phần A)</span>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-800 mt-1.5">3. Làm tàng hình & Đặt tọa độ theo từng tranh</h3>
+          </div>
+
+          <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="sb-block sb-hat sb-events">Khi nhận <span class="sb-dropdown">BatDauTranhMoi ▾</span></div>
+            <div class="sb-block sb-looks">đi tới lớp <span class="sb-dropdown">phía trước cùng ▾</span></div>
+            <div class="sb-block sb-variables">đặt <span class="sb-dropdown">DaBamChua ▾</span> thành <span class="sb-input-num">0</span></div>
+            <div class="sb-block sb-looks">đặt hiệu ứng <span class="sb-dropdown">bóng ma ▾</span> thành <span class="sb-input-num">99</span></div>
+            <div class="sb-block sb-control">
+              nếu <span class="sb-bool-op"><span class="sb-pill-var">Tranh số</span> = <span class="sb-input-num">1</span></span> thì
+            </div>
+            <div class="sb-indent">
+              <div class="sb-block sb-motion">đi tới điểm x: <span class="sb-input-num">80</span> y: <span class="sb-input-num">60</span></div>
+            </div>
+            <div class="sb-block sb-control">hết</div>
+            <div class="sb-block sb-control">
+              nếu <span class="sb-bool-op"><span class="sb-pill-var">Tranh số</span> = <span class="sb-input-num">2</span></span> thì
+            </div>
+            <div class="sb-indent">
+              <div class="sb-block sb-motion">đi tới điểm x: <span class="sb-input-num">110</span> y: <span class="sb-input-num">-30</span></div>
+            </div>
+            <div class="sb-block sb-control">hết</div>
+            <div class="text-xs text-slate-500 font-semibold pl-1 pt-1">*(Lặp lại khối "nếu Tranh số = 3, 4, 5" với tọa độ tương ứng)*</div>
+          </div>
+        </div>
+
+        <!-- CARD 4: DIEM 1..5 (CORRECT CLICK -> +1 STAR & NEXT LEVEL) -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col gap-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">Nhân vật 2: Diem1 đến Diem5 (Phần B)</span>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-800 mt-1.5">4. Khi bấm ĐÚNG: Tăng 1 sao, đủ 5 sao qua tranh</h3>
+          </div>
+
+          <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+            <div class="sb-block sb-hat sb-events">Khi bấm vào nhân vật này</div>
+            <div class="sb-block sb-control">
+              nếu <span class="sb-bool-op"><span class="sb-pill-var">DaBamChua</span> = <span class="sb-input-num">0</span></span> thì
+            </div>
+            <div class="sb-indent">
+              <div class="sb-block sb-variables">đặt <span class="sb-dropdown">DaBamChua ▾</span> thành <span class="sb-input-num">1</span></div>
+              <div class="sb-block sb-looks">đặt hiệu ứng <span class="sb-dropdown">bóng ma ▾</span> thành <span class="sb-input-num">0</span></div>
+              <div class="sb-block sb-sound">bắt đầu âm thanh <span class="sb-dropdown">Collect ▾</span></div>
+              <div class="sb-block sb-variables">thay đổi <span class="sb-dropdown">Sao ▾</span> một lượng <span class="sb-input-num">1</span></div>
+              <div class="sb-block sb-control">
+                nếu <span class="sb-bool-op"><span class="sb-pill-var">Sao</span> = <span class="sb-input-num">5</span></span> thì
+              </div>
+              <div class="sb-indent">
+                <div class="sb-block sb-control">đợi <span class="sb-input-num">1</span> giây</div>
+                <div class="sb-block sb-control">
+                  nếu <span class="sb-bool-op"><span class="sb-pill-var">Tranh số</span> = <span class="sb-input-num">5</span></span> thì
+                </div>
+                <div class="sb-indent">
+                  <div class="sb-block sb-events">phát tin <span class="sb-dropdown">ChienThang ▾</span></div>
+                </div>
+                <div class="sb-block sb-control">nếu không</div>
+                <div class="sb-indent">
+                  <div class="sb-block sb-variables">thay đổi <span class="sb-dropdown">Tranh số ▾</span> một lượng <span class="sb-input-num">1</span></div>
+                  <div class="sb-block sb-variables">đặt <span class="sb-dropdown">Sao ▾</span> thành <span class="sb-input-num">0</span></div>
+                  <div class="sb-block sb-events">phát tin <span class="sb-dropdown">BatDauTranhMoi ▾</span></div>
+                </div>
+                <div class="sb-block sb-control">hết</div>
+              </div>
+              <div class="sb-block sb-control">hết</div>
+            </div>
+            <div class="sb-block sb-control">hết</div>
+          </div>
+        </div>
+
+        <!-- CARD 5: THANH SAO & THANH MANG -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col gap-3 lg:col-span-2">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200">Nhân vật 3 & 4: ThanhSao và ThanhMang</span>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-800 mt-1.5">5. Tự động cập nhật hình ảnh Ngôi Sao (0–5 ⭐) và Trái Tim (0–5 ❤️)</h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+              <div class="text-xs font-bold text-slate-500 mb-1">Tại nhân vật <code>ThanhSao</code>:</div>
+              <div class="sb-block sb-hat sb-events">Khi bấm vào 🚩</div>
+              <div class="sb-block sb-control">liên tục</div>
+              <div class="sb-indent">
+                <div class="sb-block sb-looks">
+                  chuyển trang phục sang
+                  <span class="sb-pill-op">kết hợp <span class="sb-pill-var">Sao</span> và <span class="sb-input-txt">sao</span></span>
+                </div>
+              </div>
+              <div class="sb-block sb-control">hết</div>
+            </div>
+
+            <div class="sb-stack bg-white p-3.5 rounded-xl border border-slate-200 overflow-x-auto">
+              <div class="text-xs font-bold text-slate-500 mb-1">Tại nhân vật <code>ThanhMang</code>:</div>
+              <div class="sb-block sb-hat sb-events">Khi bấm vào 🚩</div>
+              <div class="sb-block sb-control">liên tục</div>
+              <div class="sb-indent">
+                <div class="sb-block sb-looks">
+                  chuyển trang phục sang
+                  <span class="sb-pill-op">kết hợp <span class="sb-pill-var">Mạng</span> và <span class="sb-input-txt">tim</span></span>
+                </div>
+              </div>
+              <div class="sb-block sb-control">hết</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Overlay for Level Clear / Win / Game Over -->
+  <div id="modalOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-4 border-amber-300 pop-in">
+      <div id="modalEmoji" class="text-5xl mb-3">🎉</div>
+      <h2 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800 mb-2">Tuyệt vời!</h2>
+      <p id="modalMessage" class="text-sm text-slate-600 mb-5 leading-relaxed">
+        Em đã tìm đủ 5 ngôi sao ở bức tranh này!
+      </p>
+      <button id="modalActionBtn" class="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-700 hover:to-sky-600 text-white font-extrabold text-sm sm:text-base shadow-lg transition">
+        Qua tranh tiếp theo ➡️
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // --- AUDIO SYNTHESIS (Web Audio API) ---
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.linearRampToValueAtTime(130, now + 0.25);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      } else if (type === 'levelup') {
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, idx) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(freq, now + idx * 0.09);
+          g.gain.setValueAtTime(0.18, now + idx * 0.09);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.25);
+          o.start(now + idx * 0.09);
+          o.stop(now + idx * 0.09 + 0.25);
+        });
+      } else if (type === 'gameover') {
+        const notes = [392.0, 349.23, 329.63, 261.63];
+        notes.forEach((freq, idx) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(freq, now + idx * 0.12);
+          g.gain.setValueAtTime(0.12, now + idx * 0.12);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.25);
+          o.start(now + idx * 0.12);
+          o.stop(now + idx * 0.12 + 0.25);
+        });
+      }
+    }
+
+    // --- 5 LEVELS DATA (Verified exact SVG center coordinates for all 25 differences) ---
+    const LEVELS = [
+      {
+        id: 1,
+        name: "Công viên nắng ấm",
+        diffs: [
+          { id: 0, x: 65,  y: 55,  r: 30, label: "Mặt trời đổi màu cam và có mắt" },
+          { id: 1, x: 196, y: 58,  r: 30, label: "Đám mây biến thành chú chim" },
+          { id: 2, x: 315, y: 115, r: 26, label: "Quả táo trên cây đổi sang màu vàng" },
+          { id: 3, x: 105, y: 235, r: 28, label: "Bông hoa bên trái đổi màu tím" },
+          { id: 4, x: 226, y: 164, r: 28, label: "Ô cửa sổ ngôi nhà đổi sang đèn tròn vàng cam" }
+        ],
+        renderScene: (isRight) => `
+          <!-- Sky & Grass -->
+          <rect width="400" height="200" fill="#bae6fd" />
+          <rect y="200" width="400" height="100" fill="#86efac" />
+          <ellipse cx="200" cy="205" rx="220" ry="22" fill="#4ade80" />
+          
+          <!-- Diff 0: Sun (cx=65, cy=55) -->
+          <g>
+            <circle cx="65" cy="55" r="24" fill="${isRight ? '#f97316' : '#facc15'}" stroke="#fef08a" stroke-width="4" />
+            ${isRight ? '<circle cx="58" cy="50" r="3" fill="#7c2d12"/><circle cx="72" cy="50" r="3" fill="#7c2d12"/>' : ''}
+          </g>
+
+          <!-- Diff 1: Cloud / Bird (cx=196, cy=58) -->
+          <g>
+            ${!isRight ? `
+              <ellipse cx="195" cy="60" rx="26" ry="14" fill="#ffffff" />
+              <circle cx="182" cy="54" r="12" fill="#ffffff" />
+              <circle cx="206" cy="54" r="14" fill="#ffffff" />
+            ` : `
+              <path d="M175 62 Q188 45 198 60 Q208 45 220 62" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round" />
+              <circle cx="198" cy="56" r="5" fill="#f43f5e" />
+            `}
+          </g>
+
+          <!-- House -->
+          <rect x="165" y="135" width="85" height="75" fill="#fef3c7" stroke="#d97706" stroke-width="2.5" rx="4" />
+          <polygon points="155,135 207,90 260,135" fill="#ef4444" stroke="#b91c1c" stroke-width="2.5" />
+          <rect x="182" y="170" width="22" height="40" fill="#92400e" rx="2" />
+          <!-- Diff 4: House Window (x=214..238, y=152..176 -> center cx=226, cy=164) -->
+          <rect x="214" y="152" width="24" height="24" fill="${isRight ? '#fde047' : '#38bdf8'}" stroke="#78350f" stroke-width="2.5" rx="3" />
+          ${isRight ? '<circle cx="226" cy="164" r="6" fill="#f97316" />' : '<line x1="226" y1="152" x2="226" y2="176" stroke="#78350f" stroke-width="2"/>'}
+
+          <!-- Tree -->
+          <rect x="308" y="150" width="22" height="65" fill="#78350f" rx="3" />
+          <circle cx="319" cy="125" r="38" fill="#22c55e" />
+          <circle cx="295" cy="138" r="26" fill="#16a34a" />
+          <circle cx="342" cy="138" r="26" fill="#16a34a" />
+          <!-- Apples & Diff 2 (cx=315, cy=115) -->
+          <circle cx="300" cy="135" r="7" fill="#ef4444" />
+          <circle cx="335" cy="140" r="7" fill="#ef4444" />
+          <circle cx="315" cy="115" r="9" fill="${isRight ? '#facc15' : '#ef4444'}" stroke="#ffffff" stroke-width="1.5" />
+
+          <!-- Diff 3: Left Flower (cx=105, cy=235) -->
+          <line x1="105" y1="238" x2="105" y2="268" stroke="#15803d" stroke-width="4" />
+          <circle cx="105" cy="235" r="14" fill="${isRight ? '#a855f7' : '#f43f5e'}" />
+          <circle cx="105" cy="235" r="5" fill="#fef08a" />
+        `
+      },
+      {
+        id: 2,
+        name: "Đáy biển vui nhộn",
+        diffs: [
+          { id: 0, x: 82,  y: 110, r: 36, label: "Chú cá bên trái đổi màu hồng" },
+          { id: 1, x: 280, y: 80,  r: 28, label: "Thêm bong bóng nước lớn màu vàng" },
+          { id: 2, x: 205, y: 162, r: 32, label: "Bạch tuộc đội vương miện vàng" },
+          { id: 3, x: 80,  y: 250, r: 30, label: "Sao biển đổi sang màu xanh lá" },
+          { id: 4, x: 328, y: 236, r: 34, label: "Rương kho báu mở nắp sáng lấp lánh" }
+        ],
+        renderScene: (isRight) => `
+          <!-- Ocean Background & Sand -->
+          <rect width="400" height="235" fill="#0284c7" />
+          <rect y="230" width="400" height="70" fill="#fde68a" />
+          <path d="M0 230 Q100 220 200 230 T400 230 L400 300 L0 300 Z" fill="#fcd34d" />
+
+          <!-- Seaweed -->
+          <path d="M35 245 Q25 200 40 175 Q52 150 38 125" fill="none" stroke="#16a34a" stroke-width="10" stroke-linecap="round" />
+          <path d="M375 245 Q385 200 370 170" fill="none" stroke="#15803d" stroke-width="9" stroke-linecap="round" />
+
+          <!-- Diff 0: Left Fish (cx=82, cy=110) -->
+          <g>
+            <polygon points="55,110 35,92 35,128" fill="${isRight ? '#ec4899' : '#f97316'}" />
+            <ellipse cx="90" cy="110" rx="34" ry="20" fill="${isRight ? '#f472b6' : '#fb923c'}" />
+            <circle cx="108" cy="105" r="4" fill="#0f172a" />
+            <circle cx="109" cy="104" r="1.5" fill="#ffffff" />
+          </g>
+
+          <!-- Diff 1: Bubbles top right (cx=280, cy=80) -->
+          <circle cx="265" cy="95" r="7" fill="#e0f2fe" fill-opacity="0.7" stroke="#ffffff" stroke-width="1.5" />
+          <circle cx="290" cy="65" r="5" fill="#e0f2fe" fill-opacity="0.7" stroke="#ffffff" stroke-width="1.5" />
+          ${isRight ? '<circle cx="280" cy="80" r="15" fill="#fef08a" fill-opacity="0.85" stroke="#ffffff" stroke-width="2.5" />' : ''}
+
+          <!-- Octopus & Diff 2 (Crown at cx=205, cy=156) -->
+          <g>
+            <circle cx="205" cy="190" r="28" fill="#c084fc" />
+            <circle cx="195" cy="185" r="4" fill="#1e1b4b" />
+            <circle cx="215" cy="185" r="4" fill="#1e1b4b" />
+            <path d="M198 197 Q205 203 212 197" fill="none" stroke="#1e1b4b" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M182 212 Q175 232 188 235 M197 215 Q195 236 203 236 M213 215 Q215 236 222 236 M226 212 Q235 232 225 235" fill="none" stroke="#c084fc" stroke-width="6" stroke-linecap="round" />
+            ${isRight ? '<polygon points="190,164 196,146 205,156 214,146 220,164" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" />' : ''}
+          </g>
+
+          <!-- Diff 3: Starfish (cx=80, cy=250) -->
+          <polygon points="80,230 86,244 102,246 90,256 93,271 80,263 67,271 70,256 58,246 74,244" fill="${isRight ? '#22c55e' : '#f43f5e'}" stroke="#ffffff" stroke-width="1.5" />
+
+          <!-- Diff 4: Treasure Chest (cx=328, cy=236) -->
+          <g>
+            <rect x="302" y="235" width="52" height="34" fill="#92400e" stroke="#451a03" stroke-width="2" rx="3" />
+            ${isRight ? `
+              <rect x="302" y="220" width="52" height="15" fill="#fde047" stroke="#ca8a04" stroke-width="2" />
+              <circle cx="328" cy="228" r="6" fill="#ef4444" />
+            ` : `
+              <rect x="302" y="225" width="52" height="12" fill="#78350f" stroke="#451a03" stroke-width="2" rx="2" />
+              <rect x="323" y="232" width="10" height="10" fill="#facc15" />
+            `}
+          </g>
+        `
+      },
+      {
+        id: 3,
+        name: "Vũ trụ kỳ thú",
+        diffs: [
+          { id: 0, x: 85,  y: 75,  r: 36, label: "Hành tinh có thêm vành đai sáng" },
+          { id: 1, x: 205, y: 128, r: 28, label: "Cửa sổ tên lửa đổi hình ngôi sao" },
+          { id: 2, x: 205, y: 215, r: 30, label: "Ngọn lửa tên lửa đổi sang màu xanh" },
+          { id: 3, x: 325, y: 105, r: 36, label: "Đĩa bay UFO phát tia sáng vàng" },
+          { id: 4, x: 102, y: 223, r: 30, label: "Lá cờ trên mặt trăng đổi sang màu xanh lá" }
+        ],
+        renderScene: (isRight) => `
+          <!-- Space Background -->
+          <rect width="400" height="300" fill="#0f172a" />
+          <ellipse cx="200" cy="295" rx="210" ry="45" fill="#94a3b8" />
+          <circle cx="150" cy="280" r="10" fill="#64748b" />
+          <circle cx="280" cy="275" r="14" fill="#64748b" />
+
+          <!-- Small Stars -->
+          <circle cx="40" cy="35" r="2" fill="#ffffff" />
+          <circle cx="145" cy="45" r="2.5" fill="#fde047" />
+          <circle cx="265" cy="35" r="2" fill="#ffffff" />
+          <circle cx="365" cy="175" r="2.5" fill="#fde047" />
+
+          <!-- Diff 0: Planet Top Left (cx=85, cy=75) -->
+          <g>
+            <circle cx="85" cy="75" r="25" fill="#fb7185" />
+            ${isRight ? '<ellipse cx="85" cy="75" rx="42" ry="10" fill="none" stroke="#fde047" stroke-width="5" transform="rotate(-18 85 75)" />' : ''}
+          </g>
+
+          <!-- Rocket (Center) -->
+          <g>
+            <polygon points="180,175 162,202 180,198" fill="#ef4444" />
+            <polygon points="230,175 248,202 230,198" fill="#ef4444" />
+            <rect x="180" y="100" width="50" height="95" rx="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+            <polygon points="182,108 205,65 228,108" fill="#ef4444" />
+            <!-- Diff 1: Rocket Window (cx=205, cy=128) -->
+            ${!isRight ? `
+              <circle cx="205" cy="130" r="14" fill="#38bdf8" stroke="#64748b" stroke-width="3" />
+            ` : `
+              <polygon points="205,112 210,124 223,124 212,132 216,144 205,136 194,144 198,132 187,124 200,124" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" />
+            `}
+            <!-- Diff 2: Rocket Flame (cx=205, cy=215) -->
+            <polygon points="190,195 205,245 220,195" fill="${isRight ? '#22d3ee' : '#f97316'}" />
+            <polygon points="196,195 205,228 214,195" fill="${isRight ? '#a5f3fc' : '#fde047'}" />
+          </g>
+
+          <!-- Diff 3: UFO Top Right (cx=325, cy=105) -->
+          <g>
+            ${isRight ? '<polygon points="310,98 292,150 358,150 340,98" fill="#fde047" fill-opacity="0.45" />' : ''}
+            <ellipse cx="325" cy="82" rx="18" ry="14" fill="#67e8f9" />
+            <ellipse cx="325" cy="92" rx="34" ry="10" fill="#a855f7" stroke="#e9d5ff" stroke-width="2" />
+          </g>
+
+          <!-- Diff 4: Moon Flag Bottom Left (cx=102, cy=223) -->
+          <g>
+            <line x1="85" y1="210" x2="85" y2="265" stroke="#e2e8f0" stroke-width="3.5" />
+            <rect x="85" y="212" width="34" height="22" fill="${isRight ? '#22c55e' : '#ef4444'}" rx="2" />
+            <circle cx="102" cy="223" r="5" fill="#fef08a" />
+          </g>
+        `
+      },
+      {
+        id: 4,
+        name: "Nông trại vui vẻ",
+        diffs: [
+          { id: 0, x: 105, y: 115, r: 36, label: "Cánh cối xay gió đổi màu xanh dương" },
+          { id: 1, x: 270, y: 72,  r: 28, label: "Mái nhà kho có thêm chú chim vàng đậu" },
+          { id: 2, x: 198, y: 220, r: 32, label: "Chú cừu đeo thêm nơ đỏ xinh xắn" },
+          { id: 3, x: 325, y: 236, r: 30, label: "Quả bí ngô đổi sang màu xanh lá" },
+          { id: 4, x: 65,  y: 225, r: 32, label: "Xô nước có thêm bông hoa hướng dương" }
+        ],
+        renderScene: (isRight) => `
+          <!-- Sky & Field -->
+          <rect width="400" height="185" fill="#e0f2fe" />
+          <rect y="185" width="400" height="115" fill="#bef264" />
+          <path d="M0 185 Q200 170 400 185 L400 220 L0 220 Z" fill="#a3e635" />
+
+          <!-- Windmill & Diff 0 (cx=105, cy=115) -->
+          <polygon points="85,185 95,105 115,105 125,185" fill="#fcd34d" stroke="#b45309" stroke-width="2" />
+          <g>
+            <line x1="70" y1="80" x2="140" y2="150" stroke="${isRight ? '#2563eb' : '#92400e'}" stroke-width="7" stroke-linecap="round" />
+            <line x1="140" y1="80" x2="70" y2="150" stroke="${isRight ? '#2563eb' : '#92400e'}" stroke-width="7" stroke-linecap="round" />
+            <circle cx="105" cy="115" r="7" fill="#ef4444" />
+          </g>
+
+          <!-- Barn & Diff 1 (Bird at cx=270, cy=72) -->
+          <rect x="225" y="120" width="90" height="70" fill="#ef4444" stroke="#991b1b" stroke-width="2" />
+          <polygon points="215,120 270,78 325,120" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2" />
+          <rect x="252" y="145" width="36" height="45" fill="#fef3c7" stroke="#991b1b" stroke-width="2" />
+          ${isRight ? `
+            <circle cx="270" cy="70" r="9" fill="#facc15" />
+            <polygon points="279,70 287,67 279,74" fill="#f97316" />
+          ` : ''}
+
+          <!-- Sheep & Diff 2 (cx=198, cy=220) -->
+          <g>
+            <line x1="172" y1="240" x2="172" y2="258" stroke="#334155" stroke-width="4" />
+            <line x1="196" y1="240" x2="196" y2="258" stroke="#334155" stroke-width="4" />
+            <ellipse cx="185" cy="228" rx="26" ry="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+            <circle cx="206" cy="222" r="11" fill="#334155" />
+            <circle cx="209" cy="220" r="2" fill="#ffffff" />
+            ${isRight ? '<polygon points="195,210 205,216 195,220" fill="#ef4444" /><polygon points="215,210 205,216 215,220" fill="#ef4444" />' : ''}
+          </g>
+
+          <!-- Diff 3: Pumpkin Right (cx=325, cy=236) -->
+          <g>
+            <rect x="322" y="212" width="6" height="10" fill="#15803d" />
+            <ellipse cx="325" cy="238" rx="22" ry="17" fill="${isRight ? '#22c55e' : '#f97316'}" stroke="#7c2d12" stroke-width="2" />
+          </g>
+
+          <!-- Diff 4: Bucket Left (cx=65, cy=225) -->
+          <g>
+            <polygon points="48,225 82,225 77,258 53,258" fill="#94a3b8" stroke="#475569" stroke-width="2" />
+            ${isRight ? `
+              <circle cx="65" cy="215" r="11" fill="#facc15" stroke="#ca8a04" stroke-width="2" />
+              <circle cx="65" cy="215" r="4" fill="#78350f" />
+            ` : ''}
+          </g>
+        `
+      },
+      {
+        id: 5,
+        name: "Phòng học của em",
+        diffs: [
+          { id: 0, x: 75,  y: 65,  r: 30, label: "Kim đồng hồ chỉ giờ khác" },
+          { id: 1, x: 210, y: 100, r: 36, label: "Phép tính trên bảng đổi kết quả" },
+          { id: 2, x: 340, y: 112, r: 30, label: "Quả địa cầu đổi sang màu hồng" },
+          { id: 3, x: 121, y: 206, r: 28, label: "Quyển sách trên bàn đổi sang màu tím" },
+          { id: 4, x: 279, y: 214, r: 30, label: "Cặp sách có thêm huy hiệu ngôi sao vàng" }
+        ],
+        renderScene: (isRight) => `
+          <!-- Classroom Wall & Floor -->
+          <rect width="400" height="210" fill="#fef9c3" />
+          <rect y="210" width="400" height="90" fill="#fed7aa" />
+          <line x1="0" y1="210" x2="400" y2="210" stroke="#d97706" stroke-width="3" />
+
+          <!-- Diff 0: Wall Clock (cx=75, cy=65) -->
+          <g>
+            <circle cx="75" cy="65" r="22" fill="#ffffff" stroke="#0284c7" stroke-width="4" />
+            <line x1="75" y1="65" x2="75" y2="50" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="75" y1="65" x2="${isRight ? '60' : '88'}" y2="65" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" />
+          </g>
+
+          <!-- Blackboard & Diff 1 (cx=210, cy=100) -->
+          <rect x="130" y="50" width="160" height="95" fill="#14532d" stroke="#92400e" stroke-width="6" rx="4" />
+          <text x="210" y="108" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="bold" font-family="sans-serif">
+            ${isRight ? '2 + 3 = 6' : '2 + 3 = 5'}
+          </text>
+
+          <!-- Diff 2: Globe on Shelf (cx=340, cy=112) -->
+          <rect x="312" y="138" width="55" height="8" fill="#92400e" rx="2" />
+          <circle cx="340" cy="112" r="18" fill="${isRight ? '#f472b6' : '#38bdf8'}" stroke="#475569" stroke-width="2.5" />
+          <line x1="340" y1="130" x2="340" y2="138" stroke="#475569" stroke-width="3" />
+
+          <!-- Desk -->
+          <rect x="75" y="215" width="250" height="16" fill="#b45309" rx="3" />
+          <rect x="95" y="231" width="14" height="55" fill="#78350f" />
+          <rect x="290" y="231" width="14" height="55" fill="#78350f" />
+
+          <!-- Diff 3: Book on Desk (x=98..144, y=198..215 -> center cx=121, cy=206) -->
+          <rect x="98" y="198" width="46" height="17" fill="${isRight ? '#a855f7' : '#ef4444'}" stroke="#ffffff" stroke-width="1.5" rx="2" />
+
+          <!-- Diff 4: Schoolbag on Desk (cx=279, cy=214) -->
+          <g>
+            <rect x="255" y="195" width="48" height="42" fill="#2563eb" stroke="#1e3a8a" stroke-width="2" rx="8" />
+            <rect x="263" y="205" width="32" height="16" fill="#60a5fa" rx="4" />
+            ${isRight ? '<polygon points="279,207 281,212 287,212 282,215 284,220 279,217 274,220 276,215 271,212 277,212" fill="#facc15" />' : ''}
+          </g>
+        `
+      }
+    ];
+
+    // --- GAME STATE ---
+    let currentLevelIdx = 0; // 0 to 4
+    let lives = 5;           // 5 total lives across all 5 pictures
+    let foundSet = new Set(); // Found difference IDs (0..4) in current picture
+    let isLocked = false;    // Prevent clicks during transitions or modal
+
+    // --- DOM ELEMENTS ---
+    const leftSvg = document.getElementById('leftSvg');
+    const rightSvg = document.getElementById('rightSvg');
+    const levelBadge = document.getElementById('levelBadge');
+    const levelTitle = document.getElementById('levelTitle');
+    const starsContainer = document.getElementById('starsContainer');
+    const starsCountText = document.getElementById('starsCountText');
+    const livesContainer = document.getElementById('livesContainer');
+    const livesCountText = document.getElementById('livesCountText');
+    const foundListLabel = document.getElementById('foundListLabel');
+    const statusBanner = document.getElementById('statusBanner');
+    const levelPills = document.getElementById('levelPills');
+    const boardsWrapper = document.getElementById('boardsWrapper');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalEmoji = document.getElementById('modalEmoji');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalActionBtn = document.getElementById('modalActionBtn');
+
+    const tabPlayBtn = document.getElementById('tabPlayBtn');
+    const tabScenarioBtn = document.getElementById('tabScenarioBtn');
+    const tabScratchBtn = document.getElementById('tabScratchBtn');
+    const playView = document.getElementById('playView');
+    const scenarioView = document.getElementById('scenarioView');
+    const scratchView = document.getElementById('scratchView');
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const hintBtn = document.getElementById('hintBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // --- RENDER FUNCTIONS ---
+    function updateHUD() {
+      const level = LEVELS[currentLevelIdx];
+      levelBadge.textContent = `${currentLevelIdx + 1} / ${LEVELS.length}`;
+      levelTitle.textContent = `— ${level.name}`;
+
+      // Stars for current picture (out of 5)
+      const starsCount = foundSet.size;
+      starsContainer.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const span = document.createElement('span');
+        span.textContent = i < starsCount ? '⭐' : '☆';
+        span.className = i < starsCount ? 'text-amber-400 pop-in inline-block' : 'text-slate-300 inline-block';
+        starsContainer.appendChild(span);
+      }
+      starsCountText.textContent = `${starsCount}/5`;
+      foundListLabel.textContent = `Đã tìm: ${starsCount}/5 điểm`;
+
+      // Lives across all 5 pictures (out of 5)
+      livesContainer.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const span = document.createElement('span');
+        span.textContent = i < lives ? '❤️' : '🖤';
+        span.className = i < lives ? 'inline-block' : 'opacity-40 inline-block';
+        livesContainer.appendChild(span);
+      }
+      livesCountText.textContent = `${lives}/5`;
+
+      // Level Pills
+      levelPills.innerHTML = '';
+      LEVELS.forEach((lvl, idx) => {
+        const pill = document.createElement('div');
+        let statusClass = 'bg-slate-100 text-slate-500 border-slate-200';
+        let icon = '🔒';
+        if (idx < currentLevelIdx) {
+          statusClass = 'bg-emerald-100 text-emerald-800 border-emerald-300';
+          icon = '✅';
+        } else if (idx === currentLevelIdx) {
+          statusClass = 'bg-indigo-600 text-white border-indigo-600 shadow-sm';
+          icon = '🎯';
+        }
+        pill.className = `px-2.5 py-1 rounded-lg text-xs font-bold border flex items-center gap-1 ${statusClass}`;
+        pill.textContent = `${icon} Tranh ${idx + 1}`;
+        levelPills.appendChild(pill);
+      });
+    }
+
+    function renderBoards() {
+      const level = LEVELS[currentLevelIdx];
+      let hitboxesHtml = '';
+      let overlaysHtml = '';
+
+      level.diffs.forEach((d) => {
+        // Transparent SVG hit target right on each difference for 100% precision
+        hitboxesHtml += `
+          <circle data-diff-id="${d.id}" cx="${d.x}" cy="${d.y}" r="${d.r}" fill="transparent" class="cursor-pointer" />
+        `;
+        if (foundSet.has(d.id)) {
+          overlaysHtml += `
+            <g class="found-ring" style="pointer-events: none;">
+              <circle cx="${d.x}" cy="${d.y}" r="${d.r}" fill="rgba(16, 185, 129, 0.18)" stroke="#10b981" stroke-width="3.5" />
+              <circle cx="${d.x + d.r * 0.7}" cy="${d.y - d.r * 0.7}" r="10" fill="#10b981" />
+              <text x="${d.x + d.r * 0.7}" y="${d.y - d.r * 0.7 + 4}" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">✓</text>
+            </g>
+          `;
+        }
+      });
+
+      leftSvg.innerHTML = level.renderScene(false) + hitboxesHtml + overlaysHtml;
+      rightSvg.innerHTML = level.renderScene(true) + hitboxesHtml + overlaysHtml;
+    }
+
+    function setBanner(text, tone = 'info') {
+      statusBanner.textContent = text;
+      statusBanner.className = 'text-center py-1.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition-all ';
+      if (tone === 'success') {
+        statusBanner.className += 'bg-emerald-100 text-emerald-800 border-emerald-300';
+      } else if (tone === 'error') {
+        statusBanner.className += 'bg-rose-100 text-rose-800 border-rose-300';
+      } else {
+        statusBanner.className += 'bg-sky-100/90 text-sky-800 border-sky-200';
+      }
+    }
+
+    // --- CLICK DETECTION ON SVG ---
+    function handleBoardClick(evt, svgElem) {
+      if (isLocked || lives <= 0) return;
+
+      const rect = svgElem.getBoundingClientRect();
+      const scaleX = 400 / rect.width;
+      const scaleY = 300 / rect.height;
+      const clickX = (evt.clientX - rect.left) * scaleX;
+      const clickY = (evt.clientY - rect.top) * scaleY;
+
+      const level = LEVELS[currentLevelIdx];
+      let matchedDiff = null;
+
+      // 1. Direct SVG hit target check
+      const hitTarget = evt.target.closest('[data-diff-id]');
+      if (hitTarget) {
+        const hitId = Number(hitTarget.getAttribute('data-diff-id'));
+        matchedDiff = level.diffs.find(d => d.id === hitId) || null;
+      }
+
+      // 2. Fallback coordinate radius check
+      if (!matchedDiff) {
+        for (const d of level.diffs) {
+          const dist = Math.hypot(clickX - d.x, clickY - d.y);
+          if (dist <= d.r + 6) {
+            matchedDiff = d;
+            break;
+          }
+        }
+      }
+
+      if (matchedDiff) {
+        if (foundSet.has(matchedDiff.id)) {
+          setBanner(`✨ Điểm "${matchedDiff.label}" đã được tìm thấy rồi! Hãy tìm điểm khác nhé!`, 'info');
+          return;
+        }
+
+        // Correct click!
+        foundSet.add(matchedDiff.id);
+        playSound('correct');
+        updateHUD();
+        renderBoards();
+        setBanner(`🌟 Chính xác (+1 ⭐): ${matchedDiff.label}! (${foundSet.size}/5 sao)`, 'success');
+
+        // Check if 5 stars reached on current picture
+        if (foundSet.size === 5) {
+          isLocked = true;
+          setTimeout(() => {
+            playSound('levelup');
+            if (currentLevelIdx < LEVELS.length - 1) {
+              showModal(
+                '🎉',
+                `Hoàn thành Tranh ${currentLevelIdx + 1}/5!`,
+                `Xuất sắc! Em đã đạt đủ 5 ⭐ ở bức tranh "${level.name}". Cùng chuyển sang bức tranh tiếp theo nhé!`,
+                'Qua tranh tiếp theo ➡️',
+                () => {
+                  currentLevelIdx++;
+                  foundSet.clear();
+                  isLocked = false;
+                  updateHUD();
+                  renderBoards();
+                  setBanner(`🔎 Tranh ${currentLevelIdx + 1}: "${LEVELS[currentLevelIdx].name}" — Hãy tìm 5 điểm khác nhau nhé!`, 'info');
+                }
+              );
+            } else {
+              showModal(
+                '🏆',
+                'CHIẾN THẮNG TUYỆT ĐỐI!',
+                `Chúc mừng em đã vượt qua cả 5 bức tranh với tổng cộng 25 ⭐ và còn dư ${lives} ❤️ mạng!`,
+                '🔄 Chơi lại từ đầu',
+                () => resetGame()
+              );
+            }
+          }, 450);
+        }
+      } else {
+        // Wrong click! Lose 1 life out of 5 total lives
+        lives = Math.max(0, lives - 1);
+        playSound('wrong');
+        updateHUD();
+
+        showMissMarker(svgElem, clickX, clickY);
+        boardsWrapper.classList.remove('shake-anim');
+        void boardsWrapper.offsetWidth;
+        boardsWrapper.classList.add('shake-anim');
+
+        if (lives > 0) {
+          setBanner(`❌ Bấm sai rồi! Em bị trừ 1 mạng (Còn ${lives}/5 ❤️ cho cả trò chơi). Quan sát kỹ hơn nhé!`, 'error');
+        } else {
+          isLocked = true;
+          setTimeout(() => {
+            playSound('gameover');
+            showModal(
+              '💔',
+              'HẾT MẠNG RỒI!',
+              `Em đã dùng hết 5 ❤️ mạng ở Tranh ${currentLevelIdx + 1}. Đừng buồn nhé, hãy thử sức lại từ đầu nào!`,
+              '🔄 Thử lại ngay',
+              () => resetGame()
+            );
+          }, 400);
+        }
+      }
+    }
+
+    function showMissMarker(svgElem, x, y) {
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.innerHTML = `
+        <circle cx="${x}" cy="${y}" r="14" fill="rgba(244, 63, 94, 0.25)" stroke="#f43f5e" stroke-width="2.5" />
+        <text x="${x}" y="${y + 5}" text-anchor="middle" fill="#e11d48" font-size="15" font-weight="bold">✕</text>
+      `;
+      svgElem.appendChild(g);
+      setTimeout(() => {
+        if (g.parentNode) g.parentNode.removeChild(g);
+      }, 650);
+    }
+
+    // --- HINT FEATURE ---
+    function useHint() {
+      if (isLocked || lives <= 0) return;
+      const level = LEVELS[currentLevelIdx];
+      const remaining = level.diffs.filter(d => !foundSet.has(d.id));
+      if (remaining.length === 0) return;
+
+      const target = remaining[0];
+      [leftSvg, rightSvg].forEach(svg => {
+        const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        ring.setAttribute('cx', target.x);
+        ring.setAttribute('cy', target.y);
+        ring.setAttribute('r', target.r + 6);
+        ring.setAttribute('fill', 'none');
+        ring.setAttribute('stroke', '#f59e0b');
+        ring.setAttribute('stroke-width', '4');
+        svg.appendChild(ring);
+        setTimeout(() => {
+          if (ring.parentNode) ring.parentNode.removeChild(ring);
+        }, 1200);
+      });
+      setBanner(`💡 Gợi ý: Hãy chú ý vùng vòng tròn màu vàng vừa nhấp nháy (${target.label}) nhé!`, 'info');
+    }
+
+    // --- MODAL HELPER ---
+    let currentModalCallback = null;
+    function showModal(emoji, title, message, btnText, onConfirm) {
+      modalEmoji.textContent = emoji;
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      modalActionBtn.textContent = btnText;
+      currentModalCallback = onConfirm;
+      modalOverlay.classList.remove('hidden');
+      modalOverlay.classList.add('flex');
+    }
+
+    function hideModal() {
+      modalOverlay.classList.add('hidden');
+      modalOverlay.classList.remove('flex');
+    }
+
+    function resetGame() {
+      hideModal();
+      currentLevelIdx = 0;
+      lives = 5;
+      foundSet.clear();
+      isLocked = false;
+      updateHUD();
+      renderBoards();
+      setBanner('👆 Hãy bấm vào điểm khác nhau trên bức tranh bên phải (hoặc bên trái)! Tìm đủ 5 ⭐ để qua tranh mới nhé!', 'info');
+    }
+
+    function switchTab(activeTab) {
+      const views = [
+        { key: 'play', view: playView, btn: tabPlayBtn },
+        { key: 'scenario', view: scenarioView, btn: tabScenarioBtn },
+        { key: 'scratch', view: scratchView, btn: tabScratchBtn }
+      ];
+      views.forEach(({ key, view, btn }) => {
+        const shouldShow = (key === activeTab) || (activeTab === 'scratch' && key === 'scenario');
+        if (shouldShow) {
+          view.classList.remove('hidden');
+          view.classList.add('flex');
+        } else {
+          view.classList.add('hidden');
+          view.classList.remove('flex');
+        }
+        if (key === activeTab) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-white text-indigo-600 shadow-sm transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-indigo-600 transition';
+        }
+      });
+    }
+
+    // --- EVENT LISTENERS ---
+    leftSvg.addEventListener('click', (e) => handleBoardClick(e, leftSvg));
+    rightSvg.addEventListener('click', (e) => handleBoardClick(e, rightSvg));
+
+    modalActionBtn.addEventListener('click', () => {
+      hideModal();
+      if (currentModalCallback) currentModalCallback();
+    });
+
+    restartBtn.addEventListener('click', () => resetGame());
+    hintBtn.addEventListener('click', () => useHint());
+
+    soundToggleBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+    });
+
+    tabPlayBtn.addEventListener('click', () => switchTab('play'));
+    tabScenarioBtn.addEventListener('click', () => switchTab('scenario'));
+    tabScratchBtn.addEventListener('click', () => switchTab('scratch'));
+
+    window.onload = () => {
+      resetGame();
+    };
+  </script>
+</body>
+</html>
