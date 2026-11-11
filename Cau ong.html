@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí nghiệm Đĩa Newton - ITT Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tạo 7 sắc cầu vồng bằng conic-gradient */
+        .newton-disc {
+            background: conic-gradient(
+                red 0deg 51.4deg, 
+                #ff7f00 51.4deg 102.8deg, /* Cam */
+                yellow 102.8deg 154.2deg, 
+                #00ff00 154.2deg 205.7deg, /* Lục */
+                #0000ff 205.7deg 257.1deg, /* Lam */
+                #4b0082 257.1deg 308.5deg, /* Chàm */
+                #9400d3 308.5deg 360deg  /* Tím */
+            );
+            border-radius: 50%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            /* Thêm transition để hiệu ứng hòa màu mượt mà hơn */
+            transition: filter 1s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full text-center border-4 border-blue-100">
+        <h1 class="text-3xl font-extrabold text-blue-600 mb-2">Đĩa Newton</h1>
+        <p class="text-gray-500 mb-8 text-sm">Khám phá bí mật của ánh sáng trắng</p>
+
+        <!-- Khung chứa đĩa -->
+        <div class="relative w-64 h-64 mx-auto mb-8">
+            <!-- Điểm neo ở giữa đĩa -->
+            <div class="absolute inset-0 m-auto w-4 h-4 bg-gray-800 rounded-full z-10 shadow-inner"></div>
+            <!-- Đĩa quay -->
+            <div id="disc" class="newton-disc w-full h-full"></div>
+        </div>
+
+        <!-- Trạng thái -->
+        <div id="status" class="h-8 text-lg font-medium text-gray-600 mb-4 transition-all duration-300">
+            Đĩa đang đứng yên
+        </div>
+
+        <!-- Bộ điều khiển -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-gray-400">Chậm</span>
+                <input type="range" id="speedSlider" min="0" max="100" value="0" 
+                    class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                <span class="text-sm font-bold text-red-500">Nhanh</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button id="btnStop" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-xl transition transform hover:scale-105 active:scale-95">
+                    Dừng lại
+                </button>
+                <button id="btnMax" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl transition transform hover:scale-105 active:scale-95 shadow-lg">
+                    Xoay cực đại!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const disc = document.getElementById('disc');
+        const slider = document.getElementById('speedSlider');
+        const statusText = document.getElementById('status');
+        const btnStop = document.getElementById('btnStop');
+        const btnMax = document.getElementById('btnMax');
+
+        // Hàm cập nhật trạng thái đĩa quay
+        function updateDisc(speedValue) {
+            slider.value = speedValue;
+            
+            if (speedValue == 0) {
+                disc.style.animation = 'none';
+                disc.style.filter = 'none';
+                statusText.innerText = "Đĩa đang đứng yên";
+                statusText.className = "h-8 text-lg font-medium text-gray-600 mb-4";
+            } else {
+                // Tính toán thời gian 1 vòng quay (nhỏ nhất là 0.02s, lớn nhất là 2s)
+                const duration = 2.02 - (speedValue / 100) * 2;
+                disc.style.animation = `spin ${duration}s linear infinite`;
+
+                // Khi tốc độ rất cao (> 85%), bật hiệu ứng mô phỏng lưu ảnh của mắt
+                if (speedValue > 85) {
+                    // Trộn màu bằng blur, tăng độ sáng và giảm tương phản để tạo ra màu trắng ngà
+                    disc.style.filter = 'blur(6px) brightness(1.6) contrast(0.6) grayscale(0.2)';
+                    statusText.innerText = "Ảo ảnh quang học: 7 màu đã thành màu trắng!";
+                    statusText.className = "h-8 text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-green-500 to-blue-500 mb-4 animate-pulse";
+                } else {
+                    disc.style.filter = 'none';
+                    statusText.innerText = "Đĩa đang xoay...";
+                    statusText.className = "h-8 text-lg font-medium text-blue-600 mb-4";
+                }
+            }
+        }
+
+        // Bắt sự kiện kéo thanh trượt
+        slider.addEventListener('input', (e) => {
+            updateDisc(e.target.value);
+        });
+
+        // Nút Dừng
+        btnStop.addEventListener('click', () => {
+            updateDisc(0);
+        });
+
+        // Nút Xoay cực đại
+        btnMax.addEventListener('click', () => {
+            // Dùng setInterval để tạo hiệu ứng tăng tốc dần dần cho chân thực
+            let currentSpeed = parseInt(slider.value);
+            const accelerate = setInterval(() => {
+                currentSpeed += 5;
+                if (currentSpeed >= 100) {
+                    currentSpeed = 100;
+                    clearInterval(accelerate);
+                }
+                updateDisc(currentSpeed);
+            }, 50); // Mỗi 50ms tăng tốc một chút
+        });
+    </script>
+</body>
+</html>
