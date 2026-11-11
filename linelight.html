@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đom Đóm An: Bí ẩn Mê cung Quang học</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0f172a; }
+        /* Tắt bôi đen text khi click liên tục */
+        canvas { user-select: none; -webkit-user-select: none; cursor: pointer; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen font-sans text-white">
+
+    <div class="mb-4 text-center">
+        <h1 class="text-3xl font-bold text-cyan-400 mb-2">Mê cung Quang học (Prototype)</h1>
+        <p class="text-slate-400">Click chuột vào Gương để xoay 45 độ và đổi hướng tia laser.</p>
+    </div>
+
+    <!-- Khung Canvas -->
+    <div class="relative bg-slate-900 rounded-xl shadow-[0_0_40px_rgba(34,211,238,0.2)] border border-slate-700 p-2">
+        <canvas id="gameCanvas" width="800" height="500" class="rounded-lg bg-slate-950"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 1. Cấu hình Nguồn sáng (Bên trái chiếu sang phải)
+        const light = {
+            x: 50,
+            y: 250,
+            dx: 1, // Chiếu thẳng theo trục X
+            dy: 0
+        };
+
+        // 2. Cấu hình Gương
+        const mirror = {
+            x: 400,
+            y: 250,
+            length: 120,
+            angle: 135 // Góc ban đầu (độ)
+        };
+
+        // Hàm tính toán điểm đầu và cuối của đoạn thẳng gương
+        function getMirrorSegment() {
+            const rad = mirror.angle * Math.PI / 180;
+            const halfLen = mirror.length / 2;
+            return {
+                x1: mirror.x - Math.cos(rad) * halfLen,
+                y1: mirror.y - Math.sin(rad) * halfLen,
+                x2: mirror.x + Math.cos(rad) * halfLen,
+                y2: mirror.y + Math.sin(rad) * halfLen
+            };
+        }
+
+        // 3. Thuật toán tìm giao điểm giữa Tia (Ray) và Đoạn thẳng (Segment)
+        function getIntersection(ray, segment) {
+            const r_px = ray.x; const r_py = ray.y;
+            const r_dx = ray.dx; const r_dy = ray.dy;
+            const s_px = segment.x1; const s_py = segment.y1;
+            const s_dx = segment.x2 - segment.x1; const s_dy = segment.y2 - segment.y1;
+
+            const T2 = r_dx * s_dy - r_dy * s_dx;
+            if (T2 === 0) return null; // Song song, không cắt
+
+            const T1 = (s_px - r_px) * s_dy - (s_py - r_py) * s_dx;
+            const U1 = (s_px - r_px) * r_dy - (s_py - r_py) * r_dx;
+
+            const t = T1 / T2; // Khoảng cách trên tia sáng
+            const u = U1 / T2; // Vị trí trên mặt gương (từ 0 đến 1)
+
+            // Nếu t > 0 (tia chiếu về phía trước) và u nằm trong khoảng 0-1 (chạm trúng mặt gương)
+            if (t > 0 && u >= 0 && u <= 1) {
+                return { x: r_px + t * r_dx, y: r_py + t * r_dy };
+            }
+            return null;
+        }
+
+        // 4. Vòng lặp vẽ (Render Loop)
+        function draw() {
+            // Xóa khung hình cũ
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Vẽ lưới nền (Grid) cho giống game giải đố
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=50) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            }
+            for(let i=0; i<canvas.height; i+=50) {
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
+            // Lấy tọa độ gương
+            const seg = getMirrorSegment();
+
+            // Tính toán va chạm ánh sáng
+            const hitPoint = getIntersection(light, seg);
+
+            // -- VẼ TIA LASER --
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#06b6d4'; // Màu Cyan neon
+            ctx.strokeStyle = '#22d3ee';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            
+            ctx.beginPath();
+            ctx.moveTo(light.x, light.y);
+
+            if (hitPoint) {
+                // Nếu chạm gương -> Vẽ tới điểm chạm
+                ctx.lineTo(hitPoint.x, hitPoint.y);
+                ctx.stroke();
+
+                // Tính toán tia phản xạ (Reflection Math)
+                // 1. Tính pháp tuyến của gương (Normal Vector)
+                const rad = mirror.angle * Math.PI / 180;
+                // Vector chỉ phương của gương
+                const mirrorDx = Math.cos(rad);
+                const mirrorDy = Math.sin(rad);
+                // Vector pháp tuyến vuông góc với mặt gương (-dy, dx)
+                const normalX = -mirrorDy;
+                const normalY = mirrorDx;
+
+                // 2. Tính Dot Product giữa tia tới và pháp tuyến
+                const dotProduct = light.dx * normalX + light.dy * normalY;
+
+                // 3. Tính Vector phản xạ: R = D - 2*(D dot N)*N
+                const refDx = light.dx - 2 * dotProduct * normalX;
+                const refDy = light.dy - 2 * dotProduct * normalY;
+
+                // Vẽ tia phản xạ dài ra khỏi khung canvas
+                ctx.beginPath();
+                ctx.moveTo(hitPoint.x, hitPoint.y);
+                ctx.lineTo(hitPoint.x + refDx * 1000, hitPoint.y + refDy * 1000);
+                ctx.stroke();
+
+                // Vẽ đốm sáng tại điểm va chạm
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(hitPoint.x, hitPoint.y, 6, 0, Math.PI*2);
+                ctx.fill();
+
+            } else {
+                // Không chạm gương -> Bắn thẳng xuyên màn hình
+                ctx.lineTo(light.x + light.dx * 1000, light.y + light.dy * 1000);
+                ctx.stroke();
+            }
+
+            // Tắt hiệu ứng neon để vẽ vật thể
+            ctx.shadowBlur = 0;
+
+            // -- VẼ NGUỒN SÁNG --
+            ctx.fillStyle = '#facc15'; // Màu vàng
+            ctx.beginPath();
+            ctx.arc(light.x, light.y, 15, 0, Math.PI*2);
+            ctx.fill();
+
+            // -- VẼ GƯƠNG --
+            ctx.strokeStyle = '#cbd5e1'; // Khung gương màu bạc
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(seg.x1, seg.y1);
+            ctx.lineTo(seg.x2, seg.y2);
+            ctx.stroke();
+            
+            // Vẽ trục xoay của gương
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(mirror.x, mirror.y, 5, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        // 5. Bắt sự kiện Click để xoay gương
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // Kiểm tra click có nằm gần tâm gương không (bán kính 40px)
+            const dist = Math.hypot(mouseX - mirror.x, mouseY - mirror.y);
+            if (dist < 40) {
+                // Xoay 45 độ mỗi lần click
+                mirror.angle = (mirror.angle + 45) % 360;
+                draw(); // Vẽ lại khung hình
+            }
+        });
+
+        // Vẽ lần đầu tiên
+        draw();
+    </script>
+</body>
+</html>
