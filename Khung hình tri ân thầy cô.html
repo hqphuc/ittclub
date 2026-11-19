@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Khung hình tri ân thầy cô</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.js"></script>
+<style>
+:root{--bg:#f2f9f6;--card:#fff;--ink:#23375b;--muted:#5d6f8a;--line:#d5e5df;--board:#1e4a47;--sun:#ffc933;--coral:#ff7f6b;--sky:#6cc7f0;--field:#f7fbf9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101c1b;--card:#1a2d2b;--ink:#eaf5f1;--muted:#9db8b1;--line:#2c4543;--field:#142422;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101c1b;--card:#1a2d2b;--ink:#eaf5f1;--muted:#9db8b1;--line:#2c4543;--field:#142422;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Be Vietnam Pro",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--board);z-index:10}
+header{background:var(--board);color:#fff;padding:22px 20px 26px;border-bottom:6px solid var(--sun)}
+header h1{margin:0;font:800 clamp(26px,5vw,40px)/1.1 "Baloo 2",sans-serif;color:var(--sun);letter-spacing:.5px}
+header p{margin:6px 0 0;color:#d8efe8;max-width:60ch}
+main{display:grid;gap:18px;padding:18px;max-width:1180px;margin:0 auto}
+@media(min-width:920px){main{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}.right{position:sticky;top:12px}}
+section{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px}
+h2{margin:0 0 10px;font:800 20px/1.2 "Baloo 2",sans-serif}
+.drop{display:block;border:3px dashed var(--sky);border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;background:var(--field);transition:background .2s,border-color .2s}
+.drop.over{background:rgba(108,199,240,.2);border-color:var(--coral)}
+.drop b{font:800 18px "Baloo 2",sans-serif}.drop span{display:block;color:var(--muted);font-size:13px}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.drop:focus-within{outline:3px solid var(--coral);outline-offset:2px}
+#list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.it{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;background:var(--field);border:2px solid var(--line);border-radius:14px;padding:8px}
+.it img{width:64px;height:64px;object-fit:cover;border-radius:10px}
+.it input{width:100%;font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:8px 10px}
+.it .bt{display:flex;flex-direction:column;gap:4px}
+button{font:600 14px "Be Vietnam Pro",sans-serif;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--sky)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.mini{padding:2px 8px;line-height:1.2}
+.empty{color:var(--muted);margin:10px 0 0;text-align:center}
+.time{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.time input{width:110px;font:800 22px "Baloo 2",sans-serif;color:var(--ink);background:var(--field);border:2px solid var(--line);border-radius:12px;padding:4px 10px}
+#avg{background:var(--sun);color:#23375b;border-radius:12px;padding:6px 12px;font-weight:600}
+#warn{color:var(--coral);margin:8px 0 0;min-height:1.2em;font-size:13px}
+canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:14px;background:#ffe27a;border:2px solid var(--line)}
+.ctl{display:flex;gap:10px;align-items:center;margin-top:10px}
+.ctl input[type=range]{flex:1;accent-color:var(--coral)}
+.ctl small{color:var(--muted);min-width:84px;text-align:right}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px;border:0;padding:0}
+.modes label{border:2px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;display:block}
+.modes label:has(input:checked){border-color:var(--coral);background:rgba(255,127,107,.12)}
+.modes input{accent-color:var(--coral);margin-right:6px}
+.modes small{display:block;color:var(--muted)}
+#go{width:100%;font:800 19px "Baloo 2",sans-serif;background:var(--coral);color:#fff;border:0;border-radius:14px;padding:10px}
+#go:disabled{opacity:.55}
+progress{width:100%;height:12px;margin-top:10px;accent-color:var(--coral)}
+#msg{margin:8px 0 0;min-height:1.4em;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Khung hình tri ân thầy cô</h1>
+  <p>Tải ảnh lên, thêm lời tri ân nếu muốn, rồi xuất thành video MP4 hoặc bộ ảnh PNG.</p>
+</header>
+<main>
+  <div class="left" style="display:grid;gap:18px">
+    <section>
+      <h2>1. Ảnh và caption</h2>
+      <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple>
+        <b>Chọn ảnh hoặc thả vào đây</b><span>Mỗi ảnh là một khung hình. Caption để trống thì chỉ hiện ảnh.</span></label>
+      <ul id="list"></ul>
+      <p class="empty" id="empty">Chưa có ảnh nào.</p>
+    </section>
+    <section>
+      <h2>2. Thời lượng</h2>
+      <div class="time"><label for="tot">Tổng thời lượng (giây)</label>
+        <input type="number" id="tot" min="2" max="1200" step="1" value="30">
+        <span id="avg">Thêm ảnh để tính</span></div>
+      <p id="warn"></p>
+    </section>
+  </div>
+  <div class="right" style="display:grid;gap:18px">
+    <section>
+      <h2>Xem trước</h2>
+      <canvas id="pv" width="1280" height="720"></canvas>
+      <div class="ctl"><button id="play" type="button">Phát</button><input type="range" id="seek" min="0" max="100" step="0.1" value="0" aria-label="Tua"><small id="clock">0:00 / 0:00</small></div>
+    </section>
+    <section>
+      <h2>3. Xuất kết quả</h2>
+      <fieldset class="modes">
+        <label><input type="radio" name="mode" value="mp4" checked>Video MP4<small>1280×720, 30 khung/giây</small></label>
+        <label><input type="radio" name="mode" value="png">Ảnh PNG<small>Mỗi khung một ảnh, nén .zip</small></label>
+      </fieldset>
+      <button id="go" type="button" disabled>Xuất</button>
+      <progress id="bar" value="0" max="1" hidden></progress>
+      <p id="msg" role="status"></p>
+    </section>
+  </div>
+</main>
+<script>
+const W=1280,H=720,FPS=30,NAVY='#23375b';
+const PAL=[['#ffe27a','#ffb86b'],['#9ee3ff','#b9f0d0'],['#ffc1d6','#ffe3a3'],['#c5b8ff','#9fe3f5'],['#b6f0b0','#fff0a0']];
+const EMO=['🍎','📚','✏️','🌻','🎓','🖍️','🌸','⭐','💐','🔔','🎒','📐','🧡','🌈'];
+const SL=[[64,66,58],[1216,66,58],[40,360,48],[1240,360,48],[64,654,56],[1216,654,56],[150,200,40],[1130,200,40]];
+const TILT=[0,-7,5.5,0,8,-9,0,6,-5,10,0,-6];
+const EF='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+const $=s=>document.querySelector(s), sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const items=[]; let playing=false,t=0,busy=false,dl=null;
+
+function total(){return Math.max(2,+$('#tot').value||30)}
+function per(){return total()/Math.max(1,items.length)}
+const ease=u=>u*u*(3-2*u);
+
+function wrap(c,txt,max){const out=[];let cur='';for(const w of txt.split(/\s+/)){const n=cur?cur+' '+w:w;if(c.measureText(n).width>max&&cur){out.push(cur);cur=w}else cur=n}if(cur)out.push(cur);return out}
+
+function scene(c,it,i,lt,p){
+  const pal=PAL[i%PAL.length];
+  const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,pal[0]);g.addColorStop(1,pal[1]);
+  c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.fillStyle='rgba(255,255,255,.32)';
+  for(let k=0;k<5;k++){const x=((k*290+lt*14*(k%2?1:-1))%(W+240)+W+240)%(W+240)-120;c.beginPath();c.arc(x,110+k*140,70+k*18,0,7);c.fill()}
+  c.fillStyle='rgba(255,255,255,.55)';
+  for(let x=24;x<W;x+=48)for(let y=24;y<H;y+=48)c.fillRect(x,y,3,3);
+  SL.forEach((s,k)=>{c.save();c.translate(s[0],s[1]+Math.sin(lt*1.5+k*1.3)*9);c.rotate(Math.sin(lt*1.1+k)*.12);
+    c.font=`${s[2]}px ${EF}`;c.textAlign='center';c.textBaseline='middle';c.fillText(EMO[(i*3+k)%EMO.length],0,0);c.restore()});
+  c.textAlign='center';c.textBaseline='middle';
+  if(!it){
+    c.fillStyle=NAVY;c.font='800 112px "Baloo 2",sans-serif';c.fillText('Tri ân thầy cô',W/2,300);
+    c.font='600 38px "Baloo 2",sans-serif';c.fillText('Thêm ảnh để bắt đầu',W/2,410);return}
+  const cap=it.cap.trim(),bx=40,bw=1200,bh=cap?516:650,by=34,ZM=1.035;
+  const th=TILT[i%TILT.length]*Math.PI/180,co=Math.cos(th),si=Math.abs(Math.sin(th));
+  const iw=it.img.naturalWidth,ih=it.img.naturalHeight;
+  const s=Math.min((bw/ZM-28*(co+si))/(iw*co+ih*si),(bh/ZM-28*(co+si))/(iw*si+ih*co)),dw=iw*s,dh=ih*s,z=1+.035*lt/p;
+  c.save();c.translate(bx+bw/2,by+bh/2);c.rotate(th);c.scale(z,z);
+  c.shadowColor='rgba(35,55,91,.28)';c.shadowBlur=30;c.shadowOffsetY=12;
+  c.fillStyle='#fff';c.beginPath();c.roundRect(-dw/2-14,-dh/2-14,dw+28,dh+28,22);c.fill();
+  c.shadowColor='transparent';
+  c.save();c.beginPath();c.roundRect(-dw/2,-dh/2,dw,dh,12);c.clip();c.drawImage(it.img,-dw/2,-dh/2,dw,dh);c.restore();
+  c.fillStyle='rgba(255,127,107,.88)';c.rotate(-.06);c.fillRect(-60,-dh/2-30,120,32);c.restore();
+  if(cap){
+    let fs=46,ln;for(;fs>=28;fs-=3){c.font=`800 ${fs}px "Baloo 2",sans-serif`;ln=wrap(c,cap,900);if(ln.length<=2)break}
+    if(ln.length>2){ln=ln.slice(0,2);ln[1]=ln[1].replace(/.{0,2}$/,'…')}
+    const tw=Math.max(...ln.map(x=>c.measureText(x).width))+110,lh=fs*1.1,rh=ln.length*lh+26;
+    c.fillStyle='rgba(255,255,255,.95)';c.strokeStyle='#ff7f6b';c.lineWidth=4;
+    c.beginPath();c.roundRect(W/2-tw/2,614-rh/2,tw,rh,30);c.fill();c.stroke();
+    c.fillStyle=NAVY;ln.forEach((x,k)=>c.fillText(x,W/2,614-rh/2+13+lh*(k+.5)+2));
+  }
+}
+function renderAt(c,tm){
+  if(!items.length){scene(c,null,0,tm,1);return}
+  const n=items.length,p=per(),i=Math.min(n-1,Math.floor(tm/p)),lt=tm-i*p,tr=Math.min(.8,p*.3);
+  if(i>0&&lt<tr){const e=ease(lt/tr);scene(c,items[i-1],i-1,p+lt,p);c.save();c.globalAlpha=e;c.translate(0,(1-e)*16);scene(c,items[i],i,lt,p);c.restore()}
+  else scene(c,items[i],i,lt,p);
+}
+
+const pv=$('#pv'),pc=pv.getContext('2d');
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+let last=performance.now();
+function tick(now){
+  const d=(now-last)/1000;last=now;
+  if(playing){t+=d;if(t>=total())t=0}
+  renderAt(pc,t);
+  $('#seek').max=total();if(playing)$('#seek').value=t;
+  $('#clock').textContent=fmt(t)+' / '+fmt(total());
+  requestAnimationFrame(tick);
+}
+$('#seek').oninput=e=>{t=+e.target.value};
+$('#play').onclick=()=>{playing=!playing;$('#play').textContent=playing?'Tạm dừng':'Phát'};
+
+function refresh(){
+  const n=items.length,list=$('#list');list.innerHTML='';
+  items.forEach((it,i)=>{
+    const li=document.createElement('li');li.className='it';
+    const im=document.createElement('img');im.src=it.url;im.alt='Ảnh '+(i+1);
+    const inp=document.createElement('input');inp.value=it.cap;inp.placeholder='Caption cho ảnh '+(i+1)+' (có thể bỏ trống)';inp.setAttribute('aria-label','Caption ảnh '+(i+1));
+    inp.oninput=()=>{it.cap=inp.value};
+    const bt=document.createElement('div');bt.className='bt';
+    [['↑','Chuyển lên',()=>mv(i,-1),i===0],['↓','Chuyển xuống',()=>mv(i,1),i===n-1],['✕','Xóa ảnh',()=>rm(i),false]].forEach(([tx,lb,fn,dis])=>{
+      const b=document.createElement('button');b.type='button';b.className='mini';b.textContent=tx;b.title=lb;b.setAttribute('aria-label',lb);b.disabled=dis;b.onclick=fn;bt.append(b)});
+    li.append(im,inp,bt);list.append(li)});
+  $('#empty').hidden=n>0;$('#go').disabled=busy||!n;timing();
+}
+function mv(i,d){[items[i],items[i+d]]=[items[i+d],items[i]];refresh()}
+function rm(i){URL.revokeObjectURL(items[i].url);items.splice(i,1);refresh()}
+function timing(){
+  const n=items.length;
+  $('#avg').textContent=n?`${n} ảnh, mỗi ảnh ≈ ${(per()).toFixed(1)} giây`:'Thêm ảnh để tính';
+  $('#warn').textContent=n&&per()<2?'Mỗi ảnh dưới 2 giây có thể hơi nhanh, hãy tăng tổng thời lượng.':'';
+}
+$('#tot').oninput=timing;
+
+async function addFiles(fs){
+  for(const f of fs){if(!f.type.startsWith('image/'))continue;
+    const url=URL.createObjectURL(f),img=new Image();img.src=url;
+    try{await img.decode()}catch{URL.revokeObjectURL(url);continue}
+    items.push({img,url,cap:''})}
+  refresh();
+}
+$('#file').onchange=e=>{addFiles([...e.target.files]);e.target.value=''};
+const dz=$('#drop');
+['dragenter','dragover'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.add('over')}));
+['dragleave','drop'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.remove('over')}));
+dz.addEventListener('drop',e=>addFiles([...e.dataTransfer.files]));
+
+async function saveFile(name,blob){
+  if(dl){await dl.save({filename:name,data:blob});return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+const prog=v=>{$('#bar').value=v};
+async function loadFonts(){
+  const txt='Tri ân thầy cô '+items.map(x=>x.cap).join(' ');
+  try{await Promise.all([document.fonts.load('800 40px "Baloo 2"',txt),document.fonts.load('600 38px "Baloo 2"',txt)])}catch{}
+}
+async function exportPng(){
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),zip=new JSZip(),p=per();
+  for(let i=0;i<items.length;i++){
+    scene(c,items[i],i,p*.5,p);
+    const b=await new Promise(r=>cv.toBlob(r,'image/png'));
+    zip.file(`khung-hinh-${String(i+1).padStart(2,'0')}.png`,b);prog((i+1)/items.length);await sleep(0)}
+  return[await zip.generateAsync({type:'blob'}),'anh-tri-an-thay-co.zip'];
+}
+async function exportMp4(){
+  const bad='Trình duyệt này chưa hỗ trợ xuất MP4. Hãy dùng Chrome, Edge hoặc Safari bản mới.';
+  if(!window.VideoEncoder||!window.Mp4Muxer)throw new Error(bad);
+  const cfg={codec:'avc1.640028',width:W,height:H,bitrate:6e6,framerate:FPS};
+  if(!(await VideoEncoder.isConfigSupported(cfg)).supported)throw new Error(bad);
+  const muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+  let err=null;const enc=new VideoEncoder({output:(ch,m)=>muxer.addVideoChunk(ch,m),error:e=>{err=e}});
+  enc.configure(cfg);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),N=Math.round(total()*FPS);
+  for(let f=0;f<N;f++){
+    if(err)throw err;
+    renderAt(c,f/FPS);
+    const vf=new VideoFrame(cv,{timestamp:Math.round(f*1e6/FPS),duration:Math.round(1e6/FPS)});
+    enc.encode(vf,{keyFrame:f%FPS===0});vf.close();
+    while(enc.encodeQueueSize>8)await sleep(4);
+    if(f%8===0){prog(f/N);$('#msg').textContent=`Đang dựng video… ${Math.round(f/N*100)}%`;await sleep(0)}
+  }
+  await enc.flush();if(err)throw err;muxer.finalize();
+  return[new Blob([muxer.target.buffer],{type:'video/mp4'}),'tri-an-thay-co.mp4'];
+}
+$('#go').onclick=async()=>{
+  if(busy||!items.length)return;busy=true;playing=false;$('#play').textContent='Phát';
+  $('#go').disabled=true;$('#bar').hidden=false;prog(0);$('#msg').textContent='Đang chuẩn bị…';
+  try{
+    await loadFonts();
+    const mode=document.querySelector('input[name=mode]:checked').value;
+    const [blob,name]=mode==='mp4'?await exportMp4():await exportPng();
+    prog(1);$('#msg').textContent='Đang lưu tệp…';
+    await saveFile(name,blob);$('#msg').textContent='Xong rồi: '+name;
+  }catch(e){$('#msg').textContent=e&&e.code==='declined'?'Bạn đã hủy lưu tệp.':'Chưa xuất được: '+(e.message||'lỗi không rõ');}
+  busy=false;$('#bar').hidden=true;refresh();
+};
+
+document.fonts.load('800 40px "Baloo 2"','Tri ân thầy cô').catch(()=>{});
+requestAnimationFrame(tick);refresh();
+(async()=>{try{dl=await claude.use('downloads')}catch{dl=null}})();
+</script>
+</body>
+</html>
