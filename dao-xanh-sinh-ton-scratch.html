@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đảo Xanh Sinh Tồn — Kịch Bản, Demo &amp; Lệnh Scratch Tiểu Học</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #f0fdf4 0%, #eff6ff 100%);
+      color: #1e293b;
+    }
+
+    /* Scratch 3.0 Visual Block Styling */
+    .sc-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 600;
+      user-select: none;
+    }
+    .sc-block {
+      position: relative;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      color: #ffffff;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+      max-width: 100%;
+    }
+    .sc-hat {
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      padding-top: 9px;
+      margin-top: 4px;
+    }
+    .sc-c-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border-left: 12px solid var(--c-color, #FFAB19);
+      border-radius: 6px;
+      background: rgba(255, 171, 25, 0.08);
+      padding-bottom: 4px;
+      margin: 2px 0;
+      max-width: 100%;
+    }
+    .sc-c-header {
+      margin-left: -12px;
+      border-bottom-left-radius: 0;
+    }
+    .sc-c-body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      padding: 4px 6px 4px 8px;
+      width: 100%;
+    }
+    .sc-c-footer {
+      margin-left: -12px;
+      height: 14px;
+      min-width: 110px;
+      border-radius: 0 6px 6px 6px;
+      background: var(--c-color, #FFAB19);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+    }
+
+    /* Scratch Category Colors (Official Scratch 3.0) */
+    .sc-event    { background: #FFBF00; color: #3b2600; --c-color: #FFBF00; }
+    .sc-control  { background: #FFAB19; color: #ffffff; --c-color: #FFAB19; }
+    .sc-motion   { background: #4C97FF; color: #ffffff; }
+    .sc-looks    { background: #9966FF; color: #ffffff; }
+    .sc-sound    { background: #CF63CF; color: #ffffff; }
+    .sc-sensing  { background: #5CB1D6; color: #ffffff; }
+    .sc-operator { background: #59C059; color: #ffffff; }
+    .sc-variable { background: #FF8C1A; color: #ffffff; }
+
+    /* Inline pills inside Scratch blocks */
+    .sc-input {
+      display: inline-block;
+      background: #ffffff;
+      color: #1e293b;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
+    }
+    .sc-drop {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.16);
+      color: #ffffff;
+      padding: 1px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    .sc-event .sc-drop {
+      color: #3b2600;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .sc-hex {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.45);
+    }
+    .sc-oval {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.4);
+    }
+
+    /* D-Pad touch buttons */
+    .dpad-btn {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .dpad-btn:active, .dpad-btn.pressed {
+      transform: scale(0.93);
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    /* Canvas container responsive aspect ratio matching Scratch 4:3 */
+    .game-stage-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      max-height: 540px;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Header & Navigation -->
+  <header class="bg-white/90 backdrop-blur border-b border-emerald-100 sticky top-0 z-30 no-print">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-sm text-white text-xl font-extrabold" aria-hidden="true">
+          🏝️
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold text-slate-800 leading-tight">Đảo Xanh Sinh Tồn</h1>
+          <p class="text-xs text-slate-500 font-medium">Trò chơi sinh tồn &amp; Bài thực hành Scratch Tiểu học</p>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl" aria-label="Điều hướng chính">
+        <button id="tabBtnDemo" type="button" data-tab="demo" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition bg-emerald-600 text-white shadow-sm">
+          🎮 Chơi thử
+        </button>
+        <button id="tabBtnScript" type="button" data-tab="script" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition text-slate-600 hover:text-slate-900">
+          📖 Kịch bản
+        </button>
+        <button id="tabBtnScratch" type="button" data-tab="scratch" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition text-slate-600 hover:text-slate-900">
+          🧩 Lệnh Scratch
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5">
+    <!-- ==================== TAB 1: PLAYABLE DEMO ==================== -->
+    <section id="panel-demo" class="tab-panel space-y-4">
+      <!-- Top HUD bar -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-3 sm:gap-5">
+          <!-- Hearts -->
+          <div class="flex items-center gap-1.5 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-xl">
+            <span class="text-xs font-bold text-rose-700 uppercase tracking-wide">Tim:</span>
+            <span id="hudHearts" class="text-base sm:text-lg tracking-wider" aria-label="Số mạng sống">❤️❤️❤️</span>
+          </div>
+
+          <!-- Energy bar -->
+          <div class="flex items-center gap-2 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-xl min-w-[165px]">
+            <span class="text-xs font-bold text-amber-800 whitespace-nowrap">⚡ Năng lượng:</span>
+            <div class="w-20 sm:w-24 h-3 bg-amber-200/70 rounded-full overflow-hidden">
+              <div id="hudEnergyBar" class="h-full bg-emerald-500 transition-all duration-150" style="width: 100%"></div>
+            </div>
+            <span id="hudEnergyText" class="text-xs font-extrabold text-amber-900 w-8 text-right">100</span>
+          </div>
+
+          <!-- Timer -->
+          <div class="flex items-center gap-1.5 bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl">
+            <span class="text-xs font-bold text-sky-700">⏱️ Cứu hộ:</span>
+            <span id="hudTime" class="text-sm sm:text-base font-extrabold text-sky-900">60s</span>
+          </div>
+
+          <!-- Score -->
+          <div class="flex items-center gap-1.5 bg-violet-50 border border-violet-100 px-3 py-1.5 rounded-xl">
+            <span class="text-xs font-bold text-violet-700">⭐ Điểm:</span>
+            <span id="hudScore" class="text-sm sm:text-base font-extrabold text-violet-900">0</span>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="speedSelect" aria-label="Chọn mức độ" class="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+            <option value="easy">🐢 Mức Dễ (45 giây - Lớp 1-2)</option>
+            <option value="normal" selected>🐱 Mức Chuẩn (60 giây - Lớp 3-5)</option>
+          </select>
+          <button id="btnPause" type="button" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+            ⏸️ Tạm dừng
+          </button>
+          <button id="btnRestart" type="button" class="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition">
+            🔄 Chơi lại
+          </button>
+          <button id="btnMute" type="button" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition" aria-label="Bật hoặc tắt âm thanh">
+            🔊 Âm thanh
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Game Stage + Side Controls -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- Canvas wrapper -->
+        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-sm p-2 sm:p-3">
+          <div class="game-stage-wrap rounded-xl overflow-hidden bg-sky-400 select-none">
+            <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+
+            <!-- Start / Pause / Win / Lose Overlay -->
+            <div id="gameOverlay" class="absolute inset-0 bg-slate-900/55 backdrop-blur-[2px] flex items-center justify-center p-4 transition-opacity">
+              <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-5 sm:p-6 text-center space-y-4 border-4 border-emerald-400">
+                <div id="overlayIcon" class="text-5xl">🏝️🐱</div>
+                <h2 id="overlayTitle" class="text-xl sm:text-2xl font-extrabold text-slate-800">Đảo Xanh Sinh Tồn</h2>
+                <p id="overlayDesc" class="text-sm text-slate-600 leading-relaxed">
+                  Thuyền của <strong>Mèo Thám Hiểm</strong> bị sóng đánh dạt vào Đảo Xanh! Hãy giúp Mèo ăn <strong>Táo Đỏ 🍎</strong>, uống <strong>Nước Suối 💧</strong> để giữ Năng lượng và né <strong>Cua Đỏ 🦀</strong>, <strong>Dừa Rơi 🥥</strong> cho đến khi tàu cứu hộ tới nhé!
+                </p>
+                <div id="overlayStats" class="hidden grid grid-cols-2 gap-2 bg-slate-50 rounded-xl p-3 text-sm">
+                  <div>
+                    <div class="text-xs text-slate-500">Điểm số</div>
+                    <div id="finalScore" class="text-lg font-extrabold text-violet-700">0</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-slate-500">Vật phẩm đã nhặt</div>
+                    <div id="finalItems" class="text-lg font-extrabold text-emerald-700">0</div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2 pt-1">
+                  <button id="btnOverlayAction" type="button" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm sm:text-base shadow-md transition active:scale-95">
+                    ▶️ Bắt đầu chơi ngay!
+                  </button>
+                  <button id="btnGoScratch" type="button" class="hidden px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition">
+                    🧩 Xem lệnh Scratch
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase indicator strip under canvas -->
+          <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-slate-600">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-slate-700">Bối cảnh hiện tại:</span>
+              <span id="phaseBadge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold bg-sky-100 text-sky-800">☀️ Buổi Sáng (Dễ)</span>
+            </div>
+            <div class="text-slate-500">Dùng phím mũi tên <strong>↑ ↓ ← →</strong>, phím <strong>WASD</strong>, hoặc chạm trực tiếp lên đảo.</div>
+          </div>
+        </div>
+
+        <!-- Side Panel: Touch D-Pad + Quick Legend -->
+        <div class="lg:col-span-4 space-y-4">
+          <!-- On-screen D-pad -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+            <h3 class="text-sm font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+              <span>🕹️</span> Bàn phím cảm ứng (Nhấn giữ)
+            </h3>
+            <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto">
+              <div></div>
+              <button type="button" data-dir="up" class="dpad-btn h-14 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-extrabold text-xl shadow-sm flex items-center justify-center" aria-label="Đi lên">▲</button>
+              <div></div>
+              <button type="button" data-dir="left" class="dpad-btn h-14 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-extrabold text-xl shadow-sm flex items-center justify-center" aria-label="Sang trái">◀</button>
+              <div class="h-14 rounded-xl bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center text-lg" aria-hidden="true">🐱</div>
+              <button type="button" data-dir="right" class="dpad-btn h-14 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-extrabold text-xl shadow-sm flex items-center justify-center" aria-label="Sang phải">▶</button>
+              <div></div>
+              <button type="button" data-dir="down" class="dpad-btn h-14 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-extrabold text-xl shadow-sm flex items-center justify-center" aria-label="Đi xuống">▼</button>
+              <div></div>
+            </div>
+          </div>
+
+          <!-- Quick rules card -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-2.5">
+            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+              <span>📋</span> Luật sinh tồn nhanh
+            </h3>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+              <li class="flex items-start gap-2">
+                <span class="text-base leading-none">🍎</span>
+                <span><strong>Táo Đỏ:</strong> +15 Năng lượng, +10 Điểm.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-base leading-none">💧</span>
+                <span><strong>Giọt Nước:</strong> +20 Năng lượng, +10 Điểm.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-base leading-none">🦀</span>
+                <span><strong>Cua Đỏ:</strong> Bò ngang trên đảo. Chạm vào mất <strong>1 Tim</strong>.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-base leading-none">🥥</span>
+                <span><strong>Dừa Rơi:</strong> Xuất hiện bóng đen cảnh báo trước khi rơi. Chạm vào mất <strong>1 Tim</strong>.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-base leading-none">⛵</span>
+                <span><strong>Chiến thắng:</strong> Giữ Năng lượng &gt; 0 và Tim &gt; 0 đến khi đồng hồ về <strong>0 giây</strong>!</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: DETAILED SCENARIO ==================== -->
+    <section id="panel-script" class="tab-panel hidden space-y-5">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 mb-1">Kịch bản thiết kế trò chơi Scratch</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">Đảo Xanh Sinh Tồn (Chủ đề Sinh tồn &amp; Bảo vệ sức khỏe)</h2>
+          </div>
+          <button id="btnPrintScript" type="button" class="no-print px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+            🖨️ In phiếu kịch bản
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl p-4">
+            <h3 class="text-sm font-extrabold text-emerald-900 mb-1.5">1. Cốt truyện dễ hiểu</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Trong chuyến thám hiểm đại dương, chiếc thuyền nhỏ của <strong>Mèo Thám Hiểm</strong> bị sóng đánh dạt vào Đảo Xanh. Tàu cứu hộ sẽ đến đón sau <strong>60 giây</strong> (3 giai đoạn: Sáng – Chiều – Đêm). Mèo cần ăn táo, uống nước để không bị đói khát và né cua, dừa rơi để an toàn lên tàu về nhà.
+            </p>
+          </div>
+          <div class="bg-sky-50/70 border border-sky-100 rounded-xl p-4">
+            <h3 class="text-sm font-extrabold text-sky-900 mb-1.5">2. Đối tượng &amp; Cách điều khiển</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Dành cho học sinh <strong>Tiểu học (Lớp 3 – Lớp 5)</strong>. Điều khiển cực đơn giản chỉ bằng <strong>4 phím mũi tên (↑ ↓ ← →)</strong>, không cần nhớ tổ hợp phím. Học sinh dễ dàng chơi thử, hiểu luật trong 10 giây và tự lắp ghép lại trên Scratch 3.0.
+            </p>
+          </div>
+          <div class="bg-amber-50/70 border border-amber-100 rounded-xl p-4">
+            <h3 class="text-sm font-extrabold text-amber-900 mb-1.5">3. Mục tiêu kiến thức Scratch</h3>
+            <ul class="text-sm text-slate-700 space-y-1 list-disc list-inside">
+              <li>Điều khiển nhân vật bằng tọa độ <code>x, y</code>.</li>
+              <li>Tạo và cập nhật 4 <strong>Biến số</strong> (Tim, Năng lượng, Thời gian, Điểm).</li>
+              <li>Dùng vòng lặp <code>liên tục</code>, câu lệnh rẽ nhánh <code>nếu... thì</code> và <code>phát tin</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage (Phông nền) Breakdown -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+        <h3 class="text-lg font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+          <span>🖼️</span> Phần A: Phông nền (Stage / Backdrops)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="rounded-xl border border-sky-200 bg-sky-50/60 p-3.5">
+            <div class="text-xs font-extrabold text-sky-700 mb-1">1. Đảo Ban Ngày (60s – 41s)</div>
+            <p class="text-xs text-slate-600">Bãi cát vàng, thảm cỏ xanh, biển xanh nắng ấm. Học sinh làm quen cách di chuyển và ăn táo.</p>
+          </div>
+          <div class="rounded-xl border border-amber-200 bg-amber-50/60 p-3.5">
+            <div class="text-xs font-extrabold text-amber-800 mb-1">2. Đảo Hoàng Hôn (40s – 21s)</div>
+            <p class="text-xs text-slate-600">Ánh chiều vàng cam ấm áp. Năng lượng giảm nhanh hơn một chút, Cua Đỏ bò nhanh hơn.</p>
+          </div>
+          <div class="rounded-xl border border-indigo-200 bg-indigo-50/60 p-3.5">
+            <div class="text-xs font-extrabold text-indigo-800 mb-1">3. Đảo Ban Đêm (20s – 1s)</div>
+            <p class="text-xs text-slate-600">Bầu trời sao và đốm lửa trại lung linh. Quả Dừa bắt đầu rơi bất ngờ từ trên cây.</p>
+          </div>
+          <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3.5">
+            <div class="text-xs font-extrabold text-emerald-800 mb-1">4. Màn hình Thắng / Thua</div>
+            <p class="text-xs text-slate-600">Phông nền <em>Chiến thắng</em> (Tàu cứu hộ tới) và phông nền <em>Thua cuộc</em> (nhắc thử lại).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sprites Breakdown -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+        <h3 class="text-lg font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+          <span>🎭</span> Phần B: Danh sách 5 Nhân vật (Sprites)
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs uppercase">
+                <th class="py-3 px-3 rounded-tl-lg">Nhân vật</th>
+                <th class="py-3 px-3">Gợi ý chọn trong thư viện Scratch</th>
+                <th class="py-3 px-3">Vai trò &amp; Hành vi</th>
+                <th class="py-3 px-3 rounded-tr-lg">Tương tác biến số</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr>
+                <td class="py-3 px-3 font-bold text-slate-900 whitespace-nowrap">🐱 Mèo Thám Hiểm</td>
+                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Cat</span> hoặc <span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Bear</span></td>
+                <td class="py-3 px-3">Di chuyển 4 hướng theo phím mũi tên, quay mặt trái/phải, không đi ra khỏi màn hình.</td>
+                <td class="py-3 px-3">Kiểm tra điều kiện thua khi <code>Tim = 0</code> hoặc <code>Năng lượng &lt; 1</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-bold text-rose-700 whitespace-nowrap">🍎 Táo Đỏ</td>
+                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Apple</span></td>
+                <td class="py-3 px-3">Xuất hiện tại vị trí ngẫu nhiên trên đảo. Khi Mèo chạm vào thì phát tiếng <em>Pop</em>, ẩn đi 2 giây rồi mọc chỗ mới.</td>
+                <td class="py-3 px-3"><code>Năng lượng +15</code> (tối đa 100), <code>Điểm +10</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-bold text-sky-700 whitespace-nowrap">💧 Giọt Nước</td>
+                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Button2</span> (vẽ giọt nước xanh)</td>
+                <td class="py-3 px-3">Xuất hiện ngẫu nhiên, ít hơn Táo nhưng hồi nhiều Năng lượng hơn.</td>
+                <td class="py-3 px-3"><code>Năng lượng +20</code> (tối đa 100), <code>Điểm +10</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-bold text-orange-700 whitespace-nowrap">🦀 Cua Đỏ</td>
+                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Crab</span></td>
+                <td class="py-3 px-3">Di chuyển liên tục qua lại trên đảo, chạm cạnh thì bật lại. Khi chạm Mèo thì lùi ra và chờ 1 giây.</td>
+                <td class="py-3 px-3"><code>Tim -1</code>, phát âm thanh cảnh báo.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-bold text-amber-900 whitespace-nowrap">🥥 Quả Dừa</td>
+                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Basketball</span> / <span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-xs">Ball</span> (đổi màu nâu)</td>
+                <td class="py-3 px-3">Rơi từ mép trên (<code>y = 180</code>) xuống mép dưới (<code>y = -170</code>) tại vị trí <code>x</code> ngẫu nhiên.</td>
+                <td class="py-3 px-3">Nếu chạm Mèo: <code>Tim -1</code> và ẩn ngay.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Variables Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+        <h3 class="text-lg font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+          <span>📊</span> Phần C: Các Biến số cần tạo (Nhóm Các biến số — Màu Cam)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="rounded-xl border-2 border-orange-200 bg-orange-50/50 p-3.5">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-[#FF8C1A] text-white text-xs font-bold mb-1.5">Năng lượng</div>
+            <p class="text-xs text-slate-700">Bắt đầu bằng <strong>100</strong>. Giảm <strong>2</strong> sau mỗi giây. Ăn Táo/Nước để tăng lại.</p>
+          </div>
+          <div class="rounded-xl border-2 border-orange-200 bg-orange-50/50 p-3.5">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-[#FF8C1A] text-white text-xs font-bold mb-1.5">Tim</div>
+            <p class="text-xs text-slate-700">Bắt đầu bằng <strong>3</strong>. Bị trừ <strong>1</strong> khi chạm Cua Đỏ hoặc Quả Dừa.</p>
+          </div>
+          <div class="rounded-xl border-2 border-orange-200 bg-orange-50/50 p-3.5">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-[#FF8C1A] text-white text-xs font-bold mb-1.5">Thời gian</div>
+            <p class="text-xs text-slate-700">Bắt đầu bằng <strong>60</strong>. Đếm ngược mỗi giây. Về <strong>0</strong> là Chiến thắng!</p>
+          </div>
+          <div class="rounded-xl border-2 border-orange-200 bg-orange-50/50 p-3.5">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-[#FF8C1A] text-white text-xs font-bold mb-1.5">Điểm</div>
+            <p class="text-xs text-slate-700">Bắt đầu bằng <strong>0</strong>. Cộng <strong>10</strong> mỗi khi nhặt Táo hoặc Giọt Nước.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: SCRATCH BLOCKS GUIDE ==================== -->
+    <section id="panel-scratch" class="tab-panel hidden space-y-5">
+      <!-- Color legend for primary students -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">Nhóm lệnh Scratch 3.0 đề xuất</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Màu sắc mỗi khối lệnh khớp đúng với bảng màu trên phần mềm Scratch 3.0 để học sinh dễ tìm và kéo thả.</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs font-bold">
+          <span class="px-2.5 py-1 rounded-full bg-[#4C97FF] text-white">Chuyển động</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#9966FF] text-white">Hiển thị</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#CF63CF] text-white">Âm thanh</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#FFBF00] text-[#3b2600]">Sự kiện</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#FFAB19] text-white">Điều khiển</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#5CB1D6] text-white">Cảm biến</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#59C059] text-white">Các phép toán</span>
+          <span class="px-2.5 py-1 rounded-full bg-[#FF8C1A] text-white">Các biến số</span>
+        </div>
+      </div>
+
+      <!-- Sprite selector buttons -->
+      <div class="flex flex-wrap gap-2" role="tablist" aria-label="Chọn nhân vật để xem lệnh Scratch">
+        <button type="button" data-sprite="stage" class="sprite-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition bg-emerald-600 text-white border-emerald-600 shadow-sm">
+          🖼️ Phông nền (Stage)
+        </button>
+        <button type="button" data-sprite="cat" class="sprite-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300">
+          🐱 Mèo Thám Hiểm
+        </button>
+        <button type="button" data-sprite="apple" class="sprite-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300">
+          🍎 Táo Đỏ &amp; 💧 Nước
+        </button>
+        <button type="button" data-sprite="crab" class="sprite-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300">
+          🦀 Cua Đỏ
+        </button>
+        <button type="button" data-sprite="coconut" class="sprite-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition bg-white text-slate-700 border-slate-200 hover:border-emerald-300">
+          🥥 Quả Dừa Rơi
+        </button>
+      </div>
+
+      <!-- Sprite Code Container (Dynamically rendered by JS) -->
+      <div id="scratchBlocksContainer" class="space-y-4"></div>
+
+      <!-- Extension challenges for fast learners -->
+      <div class="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-2xl border border-amber-200 p-5">
+        <h3 class="text-base font-extrabold text-slate-800 mb-2 flex items-center gap-2">
+          <span>🌟</span> Thử thách sáng tạo dành cho học sinh làm xong sớm
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm text-slate-700">
+          <div class="bg-white/85 rounded-xl p-3 border border-amber-100">
+            <div class="font-bold text-emerald-800 mb-1">1. Thêm Trái Tim Vàng 💖</div>
+            <p>Cứ sau 20 giây sẽ xuất hiện 1 Trái Tim Vàng. Chạm vào sẽ được cộng thêm <strong>+1 Tim</strong> (tối đa 3 Tim).</p>
+          </div>
+          <div class="bg-white/85 rounded-xl p-3 border border-amber-100">
+            <div class="font-bold text-sky-800 mb-1">2. Thêm nhân vật Tàu Cứu Hộ ⛵</div>
+            <p>Khi nhận tin <code>Thắng cuộc</code>, Tàu Cứu Hộ sẽ <code>hiện</code> và <code>lướt trong 2 giây</code> vào giữa đảo đón Mèo.</p>
+          </div>
+          <div class="bg-white/85 rounded-xl p-3 border border-amber-100">
+            <div class="font-bold text-violet-800 mb-1">3. Tạo bản sao Cua Đỏ 🦀🦀</div>
+            <p>Khi <code>Thời gian &lt; 25</code>, dùng lệnh <code>tạo bản sao của bản thân tôi</code> để có 2 chú Cua cùng tuần tra!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /* =====================================================================
+       1. TAB & UI NAVIGATION
+       ===================================================================== */
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    function switchTab(tabName) {
+      tabBtns.forEach(btn => {
+        const active = btn.dataset.tab === tabName;
+        btn.classList.toggle('bg-emerald-600', active);
+        btn.classList.toggle('text-white', active);
+        btn.classList.toggle('shadow-sm', active);
+        btn.classList.toggle('text-slate-600', !active);
+      });
+      tabPanels.forEach(panel => {
+        panel.classList.toggle('hidden', panel.id !== 'panel-' + tabName);
+      });
+      if (tabName === 'demo') {
+        resizeCanvas();
+        drawGame();
+      } else if (game.state === 'playing') {
+        togglePause(true);
+      }
+    }
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    document.getElementById('btnGoScratch').addEventListener('click', () => switchTab('scratch'));
+    document.getElementById('btnPrintScript').addEventListener('click', () => window.print());
+
+    /* =====================================================================
+       2. WEB AUDIO SYNTHESIZER (No external sound files)
+       ===================================================================== */
+    const sound = {
+      ctx: null,
+      muted: false,
+      ensure() {
+        if (this.muted) return null;
+        if (!this.ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.ctx = new AC();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+        return this.ctx;
+      },
+      tone(freq, dur, type = 'sine', gainVal = 0.14, delay = 0) {
+        const ctx = this.ensure();
+        if (!ctx) return;
+        const t = ctx.currentTime + delay;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(gainVal, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + dur);
+      },
+      playApple() {
+        this.tone(523.25, 0.10, 'triangle', 0.16, 0);
+        this.tone(659.25, 0.12, 'triangle', 0.16, 0.07);
+      },
+      playWater() {
+        this.tone(440, 0.08, 'sine', 0.14, 0);
+        this.tone(660, 0.10, 'sine', 0.14, 0.06);
+        this.tone(880, 0.14, 'sine', 0.12, 0.12);
+      },
+      playHurt() {
+        this.tone(210, 0.16, 'sawtooth', 0.13, 0);
+        this.tone(145, 0.22, 'sawtooth', 0.13, 0.12);
+      },
+      playWin() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+          this.tone(f, 0.22, 'triangle', 0.16, i * 0.11);
+        });
+      },
+      playLose() {
+        [349.23, 311.13, 277.18, 220].forEach((f, i) => {
+          this.tone(f, 0.22, 'sine', 0.14, i * 0.13);
+        });
+      }
+    };
+
+    const btnMute = document.getElementById('btnMute');
+    btnMute.addEventListener('click', () => {
+      sound.muted = !sound.muted;
+      btnMute.textContent = sound.muted ? '🔇 Đã tắt' : '🔊 Âm thanh';
+    });
+
+    /* =====================================================================
+       3. PLAYABLE SURVIVAL GAME ENGINE (HTML5 Canvas)
+       ===================================================================== */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const LOGICAL_W = 800;
+    const LOGICAL_H = 600;
+
+    // Island safe playable ellipse center & radii
+    const ISLAND = { cx: 400, cy: 315, rx: 320, ry: 220 };
+
+    const hudHearts = document.getElementById('hudHearts');
+    const hudEnergyBar = document.getElementById('hudEnergyBar');
+    const hudEnergyText = document.getElementById('hudEnergyText');
+    const hudTime = document.getElementById('hudTime');
+    const hudScore = document.getElementById('hudScore');
+    const phaseBadge = document.getElementById('phaseBadge');
+    const speedSelect = document.getElementById('speedSelect');
+
+    const overlay = document.getElementById('gameOverlay');
+    const overlayIcon = document.getElementById('overlayIcon');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayDesc = document.getElementById('overlayDesc');
+    const overlayStats = document.getElementById('overlayStats');
+    const finalScore = document.getElementById('finalScore');
+    const finalItems = document.getElementById('finalItems');
+    const btnOverlayAction = document.getElementById('btnOverlayAction');
+    const btnGoScratch = document.getElementById('btnGoScratch');
+    const btnPause = document.getElementById('btnPause');
+    const btnRestart = document.getElementById('btnRestart');
+
+    const keys = { up: false, down: false, left: false, right: false };
+    let pointerTarget = null;
+
+    const game = {
+      state: 'start', // 'start' | 'playing' | 'paused' | 'won' | 'lost'
+      mode: 'normal', // 'easy' | 'normal'
+      totalTime: 60,
+      timeLeft: 60,
+      energy: 100,
+      hearts: 3,
+      score: 0,
+      collected: 0,
+      elapsed: 0,
+      rafId: null,
+      lastTs: 0,
+      player: { x: 400, y: 330, r: 24, speed: 250, facing: 1, walkPhase: 0, invuln: 0 },
+      apples: [],
+      waters: [],
+      crabs: [],
+      coconuts: [],
+      particles: [],
+      popups: [],
+      coconutTimer: 0,
+      boatX: 900,
+      flowers: [
+        { x: 250, y: 260, c: '#fef08a' }, { x: 540, y: 240, c: '#fbcfe8' },
+        { x: 310, y: 420, c: '#fde68a' }, { x: 520, y: 410, c: '#bae6fd' },
+        { x: 210, y: 340, c: '#fbcfe8' }, { x: 590, y: 330, c: '#fef08a' }
+      ]
+    };
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.setTransform(canvas.width / LOGICAL_W, 0, 0, canvas.height / LOGICAL_H, 0, 0);
+    }
+
+    function randomPointOnIsland(margin = 48) {
+      for (let i = 0; i < 30; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const rad = Math.sqrt(Math.random()) * 0.82;
+        const x = ISLAND.cx + Math.cos(angle) * (ISLAND.rx - margin) * rad;
+        const y = ISLAND.cy + Math.sin(angle) * (ISLAND.ry - margin) * rad;
+        if (Math.hypot(x - game.player.x, y - game.player.y) > 95) {
+          return { x, y };
+        }
+      }
+      return { x: ISLAND.cx + 120, y: ISLAND.cy };
+    }
+
+    function clampToIsland(x, y, pad = 28) {
+      const rx = ISLAND.rx - pad;
+      const ry = ISLAND.ry - pad;
+      const dx = (x - ISLAND.cx) / rx;
+      const dy = (y - ISLAND.cy) / ry;
+      const d = Math.hypot(dx, dy);
+      if (d > 1) {
+        return {
+          x: ISLAND.cx + (dx / d) * rx,
+          y: ISLAND.cy + (dy / d) * ry
+        };
+      }
+      return { x, y };
+    }
+
+    function resetGame() {
+      game.mode = speedSelect.value;
+      game.totalTime = game.mode === 'easy' ? 45 : 60;
+      game.timeLeft = game.totalTime;
+      game.energy = 100;
+      game.hearts = 3;
+      game.score = 0;
+      game.collected = 0;
+      game.elapsed = 0;
+      game.boatX = 900;
+      pointerTarget = null;
+
+      game.player = {
+        x: 400,
+        y: 330,
+        r: 24,
+        speed: game.mode === 'easy' ? 235 : 265,
+        facing: 1,
+        walkPhase: 0,
+        invuln: 0
+      };
+
+      game.apples = [
+        { ...randomPointOnIsland(), bob: 0 },
+        { ...randomPointOnIsland(), bob: 2 }
+      ];
+      game.waters = [
+        { ...randomPointOnIsland(), bob: 1 }
+      ];
+
+      const crabBaseSpeed = game.mode === 'easy' ? 105 : 135;
+      game.crabs = [
+        { x: 240, y: 250, vx: crabBaseSpeed, vy: crabBaseSpeed * 0.45, r: 20, leg: 0 },
+        { x: 560, y: 390, vx: -crabBaseSpeed * 0.9, vy: -crabBaseSpeed * 0.5, r: 20, leg: 1.5 }
+      ];
+      game.coconuts = [];
+      game.particles = [];
+      game.popups = [];
+      game.coconutTimer = 2.5;
+
+      updateHUD();
+    }
+
+    function startGame() {
+      sound.ensure();
+      resetGame();
+      game.state = 'playing';
+      overlay.classList.add('hidden');
+      btnPause.textContent = '⏸️ Tạm dừng';
+      startLoop();
+    }
+
+    function togglePause(forcePause = null) {
+      if (game.state !== 'playing' && game.state !== 'paused') return;
+      const shouldPause = forcePause !== null ? forcePause : (game.state === 'playing');
+      if (shouldPause) {
+        game.state = 'paused';
+        btnPause.textContent = '▶️ Tiếp tục';
+        showOverlay('⏸️', 'Đang tạm dừng', 'Nghỉ ngơi một chút nhé! Bấm Tiếp tục để quay lại Đảo Xanh.', '▶️ Tiếp tục chơi', false);
+      } else {
+        game.state = 'playing';
+        btnPause.textContent = '⏸️ Tạm dừng';
+        overlay.classList.add('hidden');
+        game.lastTs = performance.now();
+      }
+    }
+
+    function endGame(won, reason = '') {
+      game.state = won ? 'won' : 'lost';
+      pointerTarget = null;
+      keys.up = keys.down = keys.left = keys.right = false;
+      finalScore.textContent = game.score;
+      finalItems.textContent = game.collected;
+      if (won) {
+        sound.playWin();
+        showOverlay(
+          '⛵🎉',
+          'Chiến thắng! Tàu cứu hộ đã đến!',
+          'Xuất sắc! Bạn đã giúp Mèo Thám Hiểm sinh tồn an toàn trên Đảo Xanh. Giờ hãy mở mục Lệnh Scratch để tự lập trình lại nhé!',
+          '🔄 Chơi lại lần nữa',
+          true
+        );
+      } else {
+        sound.playLose();
+        showOverlay(
+          '💫😿',
+          'Ôi không! Hết sức mất rồi!',
+          reason + ' Đừng nản nhé, hãy ăn Táo, uống Nước đều đặn và tránh Cua Đỏ, Dừa Rơi!',
+          '🔄 Thử lại ngay',
+          true
+        );
+      }
+    }
+
+    function showOverlay(icon, title, desc, btnLabel, showStats) {
+      overlayIcon.textContent = icon;
+      overlayTitle.textContent = title;
+      overlayDesc.textContent = desc;
+      btnOverlayAction.textContent = btnLabel;
+      overlayStats.classList.toggle('hidden', !showStats);
+      btnGoScratch.classList.toggle('hidden', !showStats);
+      overlay.classList.remove('hidden');
+    }
+
+    function spawnParticles(x, y, color, count = 10) {
+      for (let i = 0; i < count; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const spd = 40 + Math.random() * 110;
+        game.particles.push({
+          x, y,
+          vx: Math.cos(a) * spd,
+          vy: Math.sin(a) * spd,
+          life: 0.45 + Math.random() * 0.25,
+          maxLife: 0.7,
+          color,
+          size: 3 + Math.random() * 4
+        });
+      }
+    }
+
+    function addPopup(x, y, text, color) {
+      game.popups.push({ x, y, text, color, life: 0.95 });
+    }
+
+    function getPhaseInfo() {
+      const ratio = game.timeLeft / game.totalTime;
+      if (ratio > 0.66) return { id: 'day', label: '☀️ Buổi Sáng (Dễ)', cls: 'bg-sky-100 text-sky-800', drain: 2.3, crabMult: 1.0 };
+      if (ratio > 0.33) return { id: 'sunset', label: '🌅 Hoàng Hôn (Trung bình)', cls: 'bg-amber-100 text-amber-800', drain: 2.8, crabMult: 1.18 };
+      return { id: 'night', label: '🌙 Ban Đêm (Dừa rơi!)', cls: 'bg-indigo-100 text-indigo-800', drain: 3.1, crabMult: 1.28 };
+    }
+
+    function updateHUD() {
+      hudHearts.textContent = game.hearts > 0 ? '❤️'.repeat(game.hearts) + '🤍'.repeat(3 - game.hearts) : '🤍🤍🤍';
+      const e = Math.max(0, Math.round(game.energy));
+      hudEnergyText.textContent = e;
+      hudEnergyBar.style.width = e + '%';
+      hudEnergyBar.className = 'h-full transition-all duration-150 ' + (e > 50 ? 'bg-emerald-500' : e > 25 ? 'bg-amber-500' : 'bg-rose-500');
+      hudTime.textContent = Math.max(0, Math.ceil(game.timeLeft)) + 's';
+      hudScore.textContent = game.score;
+
+      const phase = getPhaseInfo();
+      phaseBadge.textContent = phase.label;
+      phaseBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold ' + phase.cls;
+    }
+
+    function updateGame(dt) {
+      game.elapsed += dt;
+      if (game.state === 'won') {
+        game.boatX = Math.max(660, game.boatX - 130 * dt);
+        return;
+      }
+      if (game.state !== 'playing') return;
+
+      const phase = getPhaseInfo();
+
+      // Countdown & energy drain
+      game.timeLeft -= dt;
+      const drainScale = game.mode === 'easy' ? 0.82 : 1.0;
+      game.energy -= phase.drain * drainScale * dt;
+
+      if (game.timeLeft <= 0) {
+        game.timeLeft = 0;
+        updateHUD();
+        endGame(true);
+        return;
+      }
+      if (game.energy <= 0) {
+        game.energy = 0;
+        updateHUD();
+        endGame(false, 'Mèo đã cạn kiệt Năng lượng vì đói và khát.');
+        return;
+      }
+
+      // Player movement
+      let mx = 0, my = 0;
+      if (keys.left) mx -= 1;
+      if (keys.right) mx += 1;
+      if (keys.up) my -= 1;
+      if (keys.down) my += 1;
+
+      if (mx === 0 && my === 0 && pointerTarget) {
+        const dx = pointerTarget.x - game.player.x;
+        const dy = pointerTarget.y - game.player.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 8) {
+          mx = dx / dist;
+          my = dy / dist;
+        } else {
+          pointerTarget = null;
+        }
+      }
+
+      if (mx !== 0 || my !== 0) {
+        const mag = Math.hypot(mx, my);
+        mx /= mag;
+        my /= mag;
+        if (mx < -0.1) game.player.facing = -1;
+        if (mx > 0.1) game.player.facing = 1;
+        const next = clampToIsland(
+          game.player.x + mx * game.player.speed * dt,
+          game.player.y + my * game.player.speed * dt,
+          28
+        );
+        game.player.x = next.x;
+        game.player.y = next.y;
+        game.player.walkPhase += dt * 12;
+      }
+
+      if (game.player.invuln > 0) game.player.invuln = Math.max(0, game.player.invuln - dt);
+
+      // Apples collision
+      game.apples.forEach(a => {
+        a.bob += dt * 4;
+        if (Math.hypot(a.x - game.player.x, a.y - game.player.y) < game.player.r + 18) {
+          game.energy = Math.min(100, game.energy + 15);
+          game.score += 10;
+          game.collected += 1;
+          sound.playApple();
+          spawnParticles(a.x, a.y, '#ef4444', 10);
+          addPopup(a.x, a.y - 12, '+15 ⚡', '#16a34a');
+          const p = randomPointOnIsland();
+          a.x = p.x; a.y = p.y;
+        }
+      });
+
+      // Waters collision
+      game.waters.forEach(w => {
+        w.bob += dt * 4.5;
+        if (Math.hypot(w.x - game.player.x, w.y - game.player.y) < game.player.r + 18) {
+          game.energy = Math.min(100, game.energy + 20);
+          game.score += 10;
+          game.collected += 1;
+          sound.playWater();
+          spawnParticles(w.x, w.y, '#38bdf8', 12);
+          addPopup(w.x, w.y - 12, '+20 💧', '#0284c7');
+          const p = randomPointOnIsland();
+          w.x = p.x; w.y = p.y;
+        }
+      });
+
+      // Crabs movement & bounce
+      game.crabs.forEach(c => {
+        c.leg += dt * 14;
+        c.x += c.vx * phase.crabMult * dt;
+        c.y += c.vy * phase.crabMult * dt;
+
+        // Bounce off island ellipse boundary
+        const rx = ISLAND.rx - 40;
+        const ry = ISLAND.ry - 40;
+        const nx = (c.x - ISLAND.cx) / rx;
+        const ny = (c.y - ISLAND.cy) / ry;
+        if (nx * nx + ny * ny > 1) {
+          const clamped = clampToIsland(c.x, c.y, 42);
+          c.x = clamped.x;
+          c.y = clamped.y;
+          // Reflect velocity roughly inward
+          const len = Math.hypot(nx, ny) || 1;
+          const ux = nx / len, uy = ny / len;
+          const dot = c.vx * ux + c.vy * uy;
+          if (dot > 0) {
+            c.vx -= 2 * dot * ux;
+            c.vy -= 2 * dot * uy;
+          }
+        }
+
+        if (game.player.invuln <= 0 && Math.hypot(c.x - game.player.x, c.y - game.player.y) < game.player.r + c.r - 4) {
+          hitPlayer('Chạm phải Cua Đỏ!');
+        }
+      });
+
+      // Coconuts spawning (mostly in sunset & night, gentle in day)
+      game.coconutTimer -= dt;
+      if (game.coconutTimer <= 0) {
+        const interval = phase.id === 'night' ? (game.mode === 'easy' ? 2.4 : 1.7)
+                       : phase.id === 'sunset' ? 3.2 : 4.5;
+        game.coconutTimer = interval;
+        const target = randomPointOnIsland(55);
+        game.coconuts.push({
+          tx: target.x,
+          ty: target.y,
+          y: target.y - 240,
+          warnTime: 0.9,
+          falling: false,
+          r: 17,
+          hitDone: false
+        });
+      }
+
+      for (let i = game.coconuts.length - 1; i >= 0; i--) {
+        const co = game.coconuts[i];
+        if (!co.falling) {
+          co.warnTime -= dt;
+          if (co.warnTime <= 0) co.falling = true;
+        } else {
+          co.y += 420 * dt;
+          if (co.y >= co.ty) {
+            spawnParticles(co.tx, co.ty, '#92400e', 8);
+            if (!co.hitDone && game.player.invuln <= 0 && Math.hypot(co.tx - game.player.x, co.ty - game.player.y) < game.player.r + co.r + 6) {
+              hitPlayer('Bị Quả Dừa rơi trúng!');
+            }
+            game.coconuts.splice(i, 1);
+          }
+        }
+      }
+
+      // Particles & popups
+      for (let i = game.particles.length - 1; i >= 0; i--) {
+        const p = game.particles[i];
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= dt;
+        if (p.life <= 0) game.particles.splice(i, 1);
+      }
+      for (let i = game.popups.length - 1; i >= 0; i--) {
+        const p = game.popups[i];
+        p.y -= 36 * dt;
+        p.life -= dt;
+        if (p.life <= 0) game.popups.splice(i, 1);
+      }
+
+      updateHUD();
+    }
+
+    function hitPlayer(reason) {
+      game.hearts -= 1;
+      game.player.invuln = 1.6;
+      sound.playHurt();
+      spawnParticles(game.player.x, game.player.y, '#fb7185', 14);
+      addPopup(game.player.x, game.player.y - 22, '-1 ❤️', '#e11d48');
+      updateHUD();
+      if (game.hearts <= 0) {
+        endGame(false, reason + ' Mèo đã hết Tim.');
+      }
+    }
+
+    /* ---------- Drawing helpers ---------- */
+    function drawPalmTree(x, y, flip = 1) {
+      const sway = Math.sin(game.elapsed * 2 + x * 0.01) * 4;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(flip, 1);
+      // Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.14)';
+      ctx.beginPath();
+      ctx.ellipse(8, 6, 22, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Trunk
+      ctx.strokeStyle = '#92400e';
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0, 4);
+      ctx.quadraticCurveTo(10, -24, 16 + sway * 0.5, -52);
+      ctx.stroke();
+      // Leaves
+      const lx = 16 + sway * 0.5;
+      const ly = -52;
+      ctx.fillStyle = '#15803d';
+      [-2.4, -1.5, -0.5, 0.3, 1.1].forEach(ang => {
+        ctx.save();
+        ctx.translate(lx, ly);
+        ctx.rotate(ang + sway * 0.015);
+        ctx.beginPath();
+        ctx.ellipse(18, 0, 22, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+      // Coconuts under leaves
+      ctx.fillStyle = '#78350f';
+      ctx.beginPath();
+      ctx.arc(lx - 4, ly + 5, 5, 0, Math.PI * 2);
+      ctx.arc(lx + 5, ly + 6, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawCat(p) {
+      if (p.invuln > 0 && Math.floor(p.invuln * 14) % 2 === 0) return;
+      const bounce = Math.abs(Math.sin(p.walkPhase)) * 4;
+      ctx.save();
+      ctx.translate(p.x, p.y - bounce);
+      // Ground shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.18)';
+      ctx.beginPath();
+      ctx.ellipse(0, 20 + bounce, 18, 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.scale(p.facing, 1);
+
+      // Tail
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-14, 6);
+      ctx.quadraticCurveTo(-28, -2 + Math.sin(game.elapsed * 8) * 5, -24, -14);
+      ctx.stroke();
+
+      // Body
+      ctx.fillStyle = '#fb923c';
+      ctx.beginPath();
+      ctx.ellipse(0, 6, 16, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Belly
+      ctx.fillStyle = '#ffedd5';
+      ctx.beginPath();
+      ctx.ellipse(3, 8, 9, 9, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Head
+      ctx.fillStyle = '#fb923c';
+      ctx.beginPath();
+      ctx.arc(2, -10, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ears
+      ctx.beginPath();
+      ctx.moveTo(-10, -20); ctx.lineTo(-14, -31); ctx.lineTo(-2, -24); ctx.closePath();
+      ctx.moveTo(6, -24); ctx.lineTo(16, -31); ctx.lineTo(15, -19); ctx.closePath();
+      ctx.fill();
+
+      // Explorer hat
+      ctx.fillStyle = '#eab308';
+      ctx.beginPath();
+      ctx.ellipse(2, -24, 17, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(2, -25, 10, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = '#0ea5e9';
+      ctx.fillRect(-7, -26, 18, 3);
+
+      // Eyes & smile
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.arc(8, -12, 2.7, 0, Math.PI * 2);
+      ctx.arc(-2, -12, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      // Eye shine
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(9, -13, 1, 0, Math.PI * 2);
+      ctx.arc(-1, -13, 1, 0, Math.PI * 2);
+      ctx.fill();
+      // Nose
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(4, -7, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawApple(a) {
+      const yOff = Math.sin(a.bob) * 3;
+      ctx.save();
+      ctx.translate(a.x, a.y + yOff);
+      ctx.fillStyle = 'rgba(0,0,0,0.14)';
+      ctx.beginPath();
+      ctx.ellipse(0, 15 - yOff, 11, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(0, 2, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.beginPath();
+      ctx.ellipse(-4, -3, 3.5, 5, -0.4, 0, Math.PI * 2);
+      ctx.fill();
+      // Stem & leaf
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -10); ctx.lineTo(2, -17);
+      ctx.stroke();
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath();
+      ctx.ellipse(7, -14, 6, 3.5, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawWater(w) {
+      const yOff = Math.sin(w.bob) * 3;
+      ctx.save();
+      ctx.translate(w.x, w.y + yOff);
+      // Ripple
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(0, 14 - yOff, 12 + Math.sin(w.bob) * 2, 5, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#0ea5e9';
+      ctx.beginPath();
+      ctx.moveTo(0, -16);
+      ctx.bezierCurveTo(13, -1, 13, 12, 0, 12);
+      ctx.bezierCurveTo(-13, 12, -13, -1, 0, -16);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.beginPath();
+      ctx.ellipse(-4, 2, 2.5, 4.5, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawCrab(c) {
+      const wiggle = Math.sin(c.leg) * 3;
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.fillStyle = 'rgba(0,0,0,0.16)';
+      ctx.beginPath();
+      ctx.ellipse(0, 13, 17, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Legs
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = 3;
+      [-1, 1].forEach(side => {
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.moveTo(side * 12, i * 4 - 2);
+          ctx.lineTo(side * 22, i * 5 + (i % 2 === 0 ? wiggle : -wiggle));
+          ctx.stroke();
+        }
+      });
+      // Claws
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.arc(-18, -12 + wiggle * 0.5, 6.5, 0, Math.PI * 2);
+      ctx.arc(18, -12 - wiggle * 0.5, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Shell
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 17, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes on stalks
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-6, -12, 4, 0, Math.PI * 2);
+      ctx.arc(6, -12, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(-6, -12, 2, 0, Math.PI * 2);
+      ctx.arc(6, -12, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawCoconut(co) {
+      // Warning shadow on ground
+      const prog = co.falling ? 1 : (1 - co.warnTime / 0.9);
+      ctx.save();
+      ctx.fillStyle = `rgba(127, 29, 29, ${0.22 + prog * 0.35})`;
+      ctx.beginPath();
+      ctx.ellipse(co.tx, co.ty, 8 + prog * 14, 4 + prog * 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      if (!co.falling) {
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(co.tx, co.ty, 10 + prog * 14, 5 + prog * 6, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.arc(co.tx, co.y, co.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#451a03';
+        ctx.beginPath();
+        ctx.arc(co.tx - 4, co.y - 3, 2.5, 0, Math.PI * 2);
+        ctx.arc(co.tx + 4, co.y - 3, 2.5, 0, Math.PI * 2);
+        ctx.arc(co.tx, co.y + 3, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawRescueBoat(x, y) {
+      ctx.save();
+      ctx.translate(x, y + Math.sin(game.elapsed * 4) * 4);
+      // Hull
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(-45, 0); ctx.lineTo(45, 0); ctx.lineTo(32, 20); ctx.lineTo(-32, 20); ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(-36, 4, 72, 6);
+      // Sail
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.moveTo(-2, -45); ctx.lineTo(34, -4); ctx.lineTo(-2, -4); ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-2, 0); ctx.lineTo(-2, -48);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawGame() {
+      const phase = getPhaseInfo();
+
+      // Ocean background
+      const oceanGrad = ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
+      if (phase.id === 'night') {
+        oceanGrad.addColorStop(0, '#1e3a8a');
+        oceanGrad.addColorStop(1, '#1d4ed8');
+      } else if (phase.id === 'sunset') {
+        oceanGrad.addColorStop(0, '#0284c7');
+        oceanGrad.addColorStop(1, '#0ea5e9');
+      } else {
+        oceanGrad.addColorStop(0, '#0ea5e9');
+        oceanGrad.addColorStop(1, '#38bdf8');
+      }
+      ctx.fillStyle = oceanGrad;
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+      // Animated ocean waves
+      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      for (let i = 0; i < 8; i++) {
+        const wx = ((i * 115 + game.elapsed * 22) % (LOGICAL_W + 80)) - 40;
+        const wy = (i % 2 === 0 ? 42 : 558) + Math.sin(game.elapsed * 2 + i) * 5;
+        ctx.beginPath();
+        ctx.arc(wx, wy, 18, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+      }
+
+      // Beach foam
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath();
+      ctx.ellipse(ISLAND.cx, ISLAND.cy, ISLAND.rx + 18 + Math.sin(game.elapsed * 2.5) * 3, ISLAND.ry + 16 + Math.sin(game.elapsed * 2.5) * 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sand island
+      ctx.fillStyle = '#fde68a';
+      ctx.beginPath();
+      ctx.ellipse(ISLAND.cx, ISLAND.cy, ISLAND.rx, ISLAND.ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner green grass
+      ctx.fillStyle = '#4ade80';
+      ctx.beginPath();
+      ctx.ellipse(ISLAND.cx, ISLAND.cy, ISLAND.rx - 36, ISLAND.ry - 32, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Decorative flowers
+      game.flowers.forEach(f => {
+        ctx.fillStyle = f.c;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Campfire at top center of island (glows at night)
+      ctx.save();
+      ctx.translate(400, 155);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(-14, 4, 28, 6);
+      if (phase.id === 'night') {
+        const glow = ctx.createRadialGradient(0, 0, 4, 0, 0, 55);
+        glow.addColorStop(0, 'rgba(251, 191, 36, 0.55)');
+        glow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(0, 0, 55, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#f97316';
+      ctx.beginPath();
+      ctx.moveTo(-9, 6); ctx.quadraticCurveTo(0, -18 - Math.sin(game.elapsed * 14) * 4, 9, 6);
+      ctx.fill();
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.moveTo(-5, 6); ctx.quadraticCurveTo(0, -10, 5, 6);
+      ctx.fill();
+      ctx.restore();
+
+      // Palm trees around edge
+      drawPalmTree(155, 225, 1);
+      drawPalmTree(645, 225, -1);
+      drawPalmTree(165, 420, 1);
+      drawPalmTree(635, 420, -1);
+
+      // Items & entities
+      game.apples.forEach(drawApple);
+      game.waters.forEach(drawWater);
+      game.crabs.forEach(drawCrab);
+      drawCat(game.player);
+      game.coconuts.forEach(drawCoconut);
+
+      // Rescue boat on win
+      if (game.state === 'won') {
+        drawRescueBoat(game.boatX, 315);
+      }
+
+      // Particles
+      game.particles.forEach(p => {
+        ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // Floating popups
+      ctx.font = '800 16px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      game.popups.forEach(p => {
+        ctx.globalAlpha = Math.min(1, p.life * 1.4);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(p.text, p.x + 1, p.y + 1);
+        ctx.fillStyle = p.color;
+        ctx.fillText(p.text, p.x, p.y);
+      });
+      ctx.globalAlpha = 1;
+
+      // Subtle Sunset / Night atmosphere tint
+      if (phase.id === 'sunset') {
+        ctx.fillStyle = 'rgba(249, 115, 22, 0.12)';
+        ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      } else if (phase.id === 'night') {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.28)';
+        ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      }
+    }
+
+    function startLoop() {
+      if (game.rafId) cancelAnimationFrame(game.rafId);
+      game.lastTs = performance.now();
+      function tick(ts) {
+        const dt = Math.min(0.05, (ts - game.lastTs) / 1000);
+        game.lastTs = ts;
+        updateGame(dt);
+        drawGame();
+        game.rafId = requestAnimationFrame(tick);
+      }
+      game.rafId = requestAnimationFrame(tick);
+    }
+
+    // Input listeners
+    window.addEventListener('keydown', e => {
+      if (game.state !== 'playing') return;
+      const map = {
+        ArrowUp: 'up', KeyW: 'up',
+        ArrowDown: 'down', KeyS: 'down',
+        ArrowLeft: 'left', KeyA: 'left',
+        ArrowRight: 'right', KeyD: 'right'
+      };
+      if (map[e.code]) {
+        e.preventDefault();
+        keys[map[e.code]] = true;
+        pointerTarget = null;
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      const map = {
+        ArrowUp: 'up', KeyW: 'up',
+        ArrowDown: 'down', KeyS: 'down',
+        ArrowLeft: 'left', KeyA: 'left',
+        ArrowRight: 'right', KeyD: 'right'
+      };
+      if (map[e.code]) keys[map[e.code]] = false;
+    });
+
+    // On-screen D-pad
+    document.querySelectorAll('.dpad-btn').forEach(btn => {
+      const dir = btn.dataset.dir;
+      const onDown = e => {
+        e.preventDefault();
+        if (game.state !== 'playing') return;
+        keys[dir] = true;
+        pointerTarget = null;
+        btn.classList.add('pressed');
+      };
+      const onUp = () => {
+        keys[dir] = false;
+        btn.classList.remove('pressed');
+      };
+      btn.addEventListener('pointerdown', onDown);
+      btn.addEventListener('pointerup', onUp);
+      btn.addEventListener('pointerleave', onUp);
+      btn.addEventListener('pointercancel', onUp);
+    });
+
+    // Tap/click on canvas to move cat smoothly
+    canvas.addEventListener('pointerdown', e => {
+      if (game.state !== 'playing') return;
+      const rect = canvas.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * LOGICAL_W;
+      const y = ((e.clientY - rect.top) / rect.height) * LOGICAL_H;
+      pointerTarget = clampToIsland(x, y, 28);
+    });
+
+    btnOverlayAction.addEventListener('click', () => {
+      if (game.state === 'paused') {
+        togglePause(false);
+      } else {
+        startGame();
+      }
+    });
+    btnPause.addEventListener('click', () => togglePause());
+    btnRestart.addEventListener('click', () => startGame());
+    speedSelect.addEventListener('change', () => {
+      if (game.state === 'start' || game.state === 'won' || game.state === 'lost') {
+        resetGame();
+        drawGame();
+      } else {
+        startGame();
+      }
+    });
+
+    /* =====================================================================
+       4. SCRATCH 3.0 COLOR-CODED BLOCKS DATA & RENDERER
+       ===================================================================== */
+    const scratchScripts = {
+      stage: {
+        title: '🖼️ Phông nền (Stage) — Quản lý Thời gian, Năng lượng & Đổi cảnh Ngày/Đêm',
+        tip: 'Mẹo cho học sinh: Bấm vào ô Phông nền (góc dưới cùng bên phải trong Scratch) trước khi kéo các khối lệnh này.',
+        scripts: [
+          {
+            name: '1. Cài đặt ban đầu & Đếm ngược thời gian cứu hộ',
+            desc: 'Khi bấm cờ xanh, đặt lại toàn bộ biến số, đếm ngược mỗi giây và tự động đổi phông nền Sáng → Chiều → Đêm.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-block sc-looks">đổi phông nền thành <span class="sc-drop">Đảo Ban Ngày ▾</span></div>
+                <div class="sc-block sc-variable">đặt <span class="sc-drop">Thời gian ▾</span> thành <span class="sc-input">60</span></div>
+                <div class="sc-block sc-variable">đặt <span class="sc-drop">Năng lượng ▾</span> thành <span class="sc-input">100</span></div>
+                <div class="sc-block sc-variable">đặt <span class="sc-drop">Tim ▾</span> thành <span class="sc-input">3</span></div>
+                <div class="sc-block sc-variable">đặt <span class="sc-drop">Điểm ▾</span> thành <span class="sc-input">0</span></div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-block sc-control">đợi <span class="sc-input">1</span> giây</div>
+                    <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Thời gian ▾</span> một lượng <span class="sc-input">-1</span></div>
+                    <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Năng lượng ▾</span> một lượng <span class="sc-input">-2</span></div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Thời gian</span> = <span class="sc-input">40</span></span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-looks">đổi phông nền thành <span class="sc-drop">Đảo Hoàng Hôn ▾</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Thời gian</span> = <span class="sc-input">20</span></span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-looks">đổi phông nền thành <span class="sc-drop">Đảo Ban Đêm ▾</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Thời gian</span> = <span class="sc-input">0</span></span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-event">phát tin <span class="sc-drop">Thắng cuộc ▾</span></div>
+                        <div class="sc-block sc-looks">đổi phông nền thành <span class="sc-drop">Chiến thắng ▾</span></div>
+                        <div class="sc-block sc-control">dừng lại <span class="sc-drop">tất cả ▾</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+      cat: {
+        title: '🐱 Nhân vật Mèo Thám Hiểm — Di chuyển 4 hướng & Kiểm tra Thua cuộc',
+        tip: 'Mẹo cho học sinh: Nhớ dùng lệnh "đặt kiểu xoay trái-phải" để khi Mèo quay sang trái không bị lộn ngược đầu!',
+        scripts: [
+          {
+            name: '1. Điều khiển Mèo bằng 4 phím mũi tên mượt mà',
+            desc: 'Dùng vòng lặp liên tục kiểm tra từng phím mũi tên để thay đổi tọa độ x (trái/phải) và y (lên/xuống).',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-block sc-motion">đi tới điểm x: <span class="sc-input">0</span> y: <span class="sc-input">0</span></div>
+                <div class="sc-block sc-looks">đặt kích thước thành <span class="sc-input">60</span> %</div>
+                <div class="sc-block sc-motion">đặt kiểu xoay <span class="sc-drop">trái-phải ▾</span></div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">phím <span class="sc-drop">mũi tên phải ▾</span> được bấm?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-motion">đặt hướng bằng <span class="sc-input">90</span></div>
+                        <div class="sc-block sc-motion">thay đổi x một lượng <span class="sc-input">6</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">phím <span class="sc-drop">mũi tên trái ▾</span> được bấm?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-motion">đặt hướng bằng <span class="sc-input">-90</span></div>
+                        <div class="sc-block sc-motion">thay đổi x một lượng <span class="sc-input">-6</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">phím <span class="sc-drop">mũi tên lên ▾</span> được bấm?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-motion">thay đổi y một lượng <span class="sc-input">6</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">phím <span class="sc-drop">mũi tên xuống ▾</span> được bấm?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-motion">thay đổi y một lượng <span class="sc-input">-6</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          },
+          {
+            name: '2. Kiểm tra điều kiện Thua cuộc (Hết Tim hoặc Hết Năng lượng)',
+            desc: 'Tách thành khối lệnh song song thứ 2 để chương trình gọn gàng, dễ kiểm lỗi.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-operator"><span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Tim</span> &lt; <span class="sc-input">1</span></span> hoặc <span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Năng lượng</span> &lt; <span class="sc-input">1</span></span></span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-looks">nói <span class="sc-input">Ôi, hết sức rồi! Thử lại nhé!</span> trong <span class="sc-input">2</span> giây</div>
+                        <div class="sc-block sc-looks">đổi phông nền thành <span class="sc-drop">Thua cuộc ▾</span></div>
+                        <div class="sc-block sc-control">dừng lại <span class="sc-drop">tất cả ▾</span></div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+      apple: {
+        title: '🍎 Táo Đỏ & 💧 Giọt Nước — Vật phẩm hồi Năng lượng và cộng Điểm',
+        tip: 'Mẹo cho học sinh: Lập trình xong Táo Đỏ, chỉ cần bấm chuột phải chọn "Nhân bản" rồi đổi trang phục thành Giọt Nước và sửa +15 thành +20!',
+        scripts: [
+          {
+            name: '1. Xuất hiện ngẫu nhiên & Hồi Năng lượng khi Mèo chạm vào',
+            desc: 'Khi Mèo ăn Táo, phát tiếng Pop, cộng Năng lượng (không vượt quá 100), cộng Điểm rồi mọc lại ở vị trí mới.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-block sc-looks">hiện</div>
+                <div class="sc-block sc-motion">đi tới <span class="sc-drop">vị trí ngẫu nhiên ▾</span></div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">đang chạm <span class="sc-drop">Mèo Thám Hiểm ▾</span>?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-sound">bắt đầu âm thanh <span class="sc-drop">Pop ▾</span></div>
+                        <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Năng lượng ▾</span> một lượng <span class="sc-input">15</span></div>
+                        <div class="sc-c-wrap">
+                          <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-operator"><span class="sc-oval sc-variable">Năng lượng</span> &gt; <span class="sc-input">100</span></span> thì</div>
+                          <div class="sc-c-body">
+                            <div class="sc-block sc-variable">đặt <span class="sc-drop">Năng lượng ▾</span> thành <span class="sc-input">100</span></div>
+                          </div>
+                          <div class="sc-c-footer"></div>
+                        </div>
+                        <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Điểm ▾</span> một lượng <span class="sc-input">10</span></div>
+                        <div class="sc-block sc-looks">ẩn</div>
+                        <div class="sc-block sc-control">đợi <span class="sc-input">2</span> giây</div>
+                        <div class="sc-block sc-motion">đi tới <span class="sc-drop">vị trí ngẫu nhiên ▾</span></div>
+                        <div class="sc-block sc-looks">hiện</div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+      crab: {
+        title: '🦀 Nhân vật Cua Đỏ — Tuần tra trên đảo & Trừ Tim khi va chạm',
+        tip: 'Mẹo cho học sinh: Lệnh "đợi 1.5 giây" sau khi trừ Tim rất quan trọng để Mèo kịp chạy thoát, tránh bị trừ hết 3 Tim cùng lúc.',
+        scripts: [
+          {
+            name: '1. Cua bò tự động và bật lại khi chạm cạnh',
+            desc: 'Đặt hướng đi chéo (45 độ) để Cua bò khắp hòn đảo sinh động hơn.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-block sc-motion">đi tới điểm x: <span class="sc-input">-180</span> y: <span class="sc-input">100</span></div>
+                <div class="sc-block sc-motion">đặt hướng bằng <span class="sc-input">45</span></div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-block sc-motion">di chuyển <span class="sc-input">4</span> bước</div>
+                    <div class="sc-block sc-motion">bật lại nếu chạm cạnh</div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          },
+          {
+            name: '2. Kiểm tra va chạm với Mèo Thám Hiểm',
+            desc: 'Khi chạm Mèo, phát tiếng cảnh báo, trừ 1 Tim rồi đợi 1.5 giây.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">đang chạm <span class="sc-drop">Mèo Thám Hiểm ▾</span>?</span> thì</div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-sound">bắt đầu âm thanh <span class="sc-drop">Boing ▾</span></div>
+                        <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Tim ▾</span> một lượng <span class="sc-input">-1</span></div>
+                        <div class="sc-block sc-control">đợi <span class="sc-input">1.5</span> giây</div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          }
+        ]
+      },
+      coconut: {
+        title: '🥥 Nhân vật Quả Dừa Rơi — Chướng ngại vật rơi từ trên cao',
+        tip: 'Mẹo cho học sinh: Quả Dừa xuất hiện ngẫu nhiên ở mép trên (y = 180) và rơi xuống bằng lệnh "thay đổi y một lượng -6".',
+        scripts: [
+          {
+            name: '1. Rơi từ mép trên xuống & Kiểm tra trúng Mèo',
+            desc: 'Đợi 3 giây đầu cho học sinh làm quen, sau đó lặp lại thả dừa rơi tại tọa độ x ngẫu nhiên.',
+            html: `
+              <div class="sc-stack">
+                <div class="sc-block sc-event sc-hat">khi bấm vào ⚑ (lá cờ xanh)</div>
+                <div class="sc-block sc-looks">ẩn</div>
+                <div class="sc-block sc-control">đợi <span class="sc-input">3</span> giây</div>
+                <div class="sc-c-wrap">
+                  <div class="sc-block sc-control sc-c-header">liên tục</div>
+                  <div class="sc-c-body">
+                    <div class="sc-block sc-motion">đi tới điểm x: <span class="sc-oval sc-operator">lấy ngẫu nhiên từ <span class="sc-input">-200</span> đến <span class="sc-input">200</span></span> y: <span class="sc-input">180</span></div>
+                    <div class="sc-block sc-looks">hiện</div>
+                    <div class="sc-c-wrap">
+                      <div class="sc-block sc-control sc-c-header">lặp lại cho đến khi <span class="sc-hex sc-operator"><span class="sc-oval sc-motion">tọa độ y</span> &lt; <span class="sc-input">-160</span></span></div>
+                      <div class="sc-c-body">
+                        <div class="sc-block sc-motion">thay đổi y một lượng <span class="sc-input">-6</span></div>
+                        <div class="sc-c-wrap">
+                          <div class="sc-block sc-control sc-c-header">nếu <span class="sc-hex sc-sensing">đang chạm <span class="sc-drop">Mèo Thám Hiểm ▾</span>?</span> thì</div>
+                          <div class="sc-c-body">
+                            <div class="sc-block sc-sound">bắt đầu âm thanh <span class="sc-drop">Bonk ▾</span></div>
+                            <div class="sc-block sc-variable">thay đổi <span class="sc-drop">Tim ▾</span> một lượng <span class="sc-input">-1</span></div>
+                            <div class="sc-block sc-looks">ẩn</div>
+                            <div class="sc-block sc-motion">đặt y bằng <span class="sc-input">-170</span></div>
+                          </div>
+                          <div class="sc-c-footer"></div>
+                        </div>
+                      </div>
+                      <div class="sc-c-footer"></div>
+                    </div>
+                    <div class="sc-block sc-looks">ẩn</div>
+                    <div class="sc-block sc-control">đợi <span class="sc-oval sc-operator">lấy ngẫu nhiên từ <span class="sc-input">1</span> đến <span class="sc-input">3</span></span> giây</div>
+                  </div>
+                  <div class="sc-c-footer"></div>
+                </div>
+              </div>
+            `
+          }
+        ]
+      }
+    };
+
+    const spriteBtns = document.querySelectorAll('.sprite-btn');
+    const scratchBlocksContainer = document.getElementById('scratchBlocksContainer');
+
+    function renderScratchSprite(spriteKey) {
+      spriteBtns.forEach(btn => {
+        const active = btn.dataset.sprite === spriteKey;
+        btn.classList.toggle('bg-emerald-600', active);
+        btn.classList.toggle('text-white', active);
+        btn.classList.toggle('border-emerald-600', active);
+        btn.classList.toggle('shadow-sm', active);
+        btn.classList.toggle('bg-white', !active);
+        btn.classList.toggle('text-slate-700', !active);
+        btn.classList.toggle('border-slate-200', !active);
+      });
+
+      const data = scratchScripts[spriteKey];
+      if (!data) return;
+
+      const cardsHtml = data.scripts.map(sc => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-3">
+          <div>
+            <h4 class="text-sm sm:text-base font-extrabold text-slate-800">${sc.name}</h4>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">${sc.desc}</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 sm:p-4 overflow-x-auto">
+            ${sc.html}
+          </div>
+        </div>
+      `).join('');
+
+      scratchBlocksContainer.innerHTML = `
+        <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4">
+          <h3 class="text-base sm:text-lg font-extrabold text-emerald-950">${data.title}</h3>
+          <p class="text-xs sm:text-sm text-emerald-800 mt-1">💡 ${data.tip}</p>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          ${cardsHtml}
+        </div>
+      `;
+    }
+
+    spriteBtns.forEach(btn => {
+      btn.addEventListener('click', () => renderScratchSprite(btn.dataset.sprite));
+    });
+
+    /* =====================================================================
+       5. INITIALIZATION
+       ===================================================================== */
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      drawGame();
+    });
+
+    window.addEventListener('load', () => {
+      resetGame();
+      resizeCanvas();
+      drawGame();
+      renderScratchSprite('stage');
+    });
+  </script>
+</body>
+</html>
