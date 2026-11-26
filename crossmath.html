@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cross Math</title>
+<title>Cross Math – Toán nhẩm ô chữ</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef3fb;--card:#fff;--ink:#14213d;--mut:#5b6b85;--line:#d9e2f1;--pri:#2563eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -273,8 +273,8 @@ function play(l,s){
 }
 const again=()=>{FX.click();play(S.lv,S.st)};
 const nextEmpty=cur=>{const b=G.blanks,i=cur?b.indexOf(cur):-1;for(let k=1;k<=b.length;k++){const x=b[(i+k)%b.length];if(x.val===null)return x}return null};
-let TM=null,last=0;
-const startT=()=>{stopT();last=Date.now();G.ms=0;TM=setInterval(()=>{const n=Date.now();if(!G.paused&&!G.won&&!G.over){G.ms+=n-last;G.t=G.ms/1000|0;$('tm').textContent=fmt(G.t)}last=n},250)},
+let TM=null,TL=0;
+const startT=()=>{stopT();TL=Date.now();G.ms=0;TM=setInterval(()=>{const n=Date.now();if(!G.paused&&!G.won&&!G.over){G.ms+=n-TL;G.t=G.ms/1000|0;$('tm').textContent=fmt(G.t)}TL=n},250)},
 stopT=()=>{clearInterval(TM);TM=null};
 function pause(){if(G.won||G.over)return;FX.click();G.paused=!G.paused;$('pov').hidden=!G.paused;$('pi').innerHTML=ic(G.paused?'play':'pause')}
 const lives=()=>{$('hr').innerHTML=Array.from({length:MAX},(_,i)=>ic('heart',i<MAX-G.miss?'f':'e')).join('')},
@@ -345,7 +345,7 @@ function validate(){
 }
 function win(){
  if(G.over||G.won||G.blanks.some(x=>x.val===null)||!G.eqs.every(q=>evalTok(tok(q))))return;
- G.ms+=Date.now()-last;G.t=G.ms/1000|0;G.won=1;stopT();FX.win();
+ G.ms+=Date.now()-TL;G.t=G.ms/1000|0;G.won=1;stopT();FX.win();
  const k=S.lv+'-'+S.st,b=S.done[k]===undefined?G.t:Math.min(S.done[k],G.t);S.done[k]=b;save();
  const last=S.st===10,fin=last&&S.lv===5,nx=fin?'Về trang chủ':last?`Sang Cấp ${S.lv+1}`:`Bài ${S.st+1}`;
  setTimeout(()=>modal(`<div style="text-align:center;font-size:52px;color:#f59e0b">${ic('star','f')}</div><h3 style="justify-content:center">Hoàn thành!</h3><p style="text-align:center">Cấp ${S.lv} · Bài ${S.st}${fin?'. Bạn đã giải hết mọi cấp độ!':last?`. Đã mở khóa Cấp ${S.lv+1}`:`. Đã mở khóa Bài ${S.st+1}`}</p><div class="row"><div class="bx">Thời gian<b>${fmt(G.t)}</b></div><div class="bx">Kỷ lục<b>${fmt(b)}</b></div></div><div class="row"><button class="btn" onclick="stages()">${ic('grid')} Bài tập</button><button class="btn p" onclick="nextSt()">${nx}</button></div>`),320);
