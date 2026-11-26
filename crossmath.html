@@ -22,61 +22,59 @@ button:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
 .top{display:flex;align-items:center;justify-content:space-between}
 .ttl{text-align:center;line-height:1.1}.ttl h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.08em}
 #hS{display:flex;gap:2px;justify-content:center;align-items:center;color:#f59e0b;font-size:12px;min-height:16px}
-.ib,.chip,.pill,.lv,.tray,.mc{background:var(--card);border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
-.ib{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:18px}
-.ib:active,.tb:active,.pill:active,.btn:active,.lv:active{transform:translateY(2px)}
+.ib,.chip,.pill,.lv,.tray,.mc{background:var(--card);border:1px solid var(--line)}
+.ib{width:46px;height:46px;border-radius:6px;display:grid;place-items:center;font-size:18px}
+.ib:active,.tb:active,.pill:active,.btn:active,.lv:active{opacity:.7}
 main{flex:1;display:flex;flex-direction:column;gap:10px}
-.pill,.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 14px;font-weight:800}
-.lv{border-radius:20px;padding:12px;display:flex;gap:12px;align-items:center;text-align:left;width:100%}
+.pill,.chip{display:inline-flex;align-items:center;gap:6px;border-radius:6px;padding:6px 14px;font-weight:800}
+.lv{border-radius:6px;padding:12px;display:flex;gap:12px;align-items:center;text-align:left;width:100%}
 .lv.k{opacity:.6}
-.lb{width:50px;height:50px;border-radius:14px;background:var(--c);border-bottom:5px solid #0004;color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800}
+.lb{width:50px;height:50px;border-radius:0;background:var(--c);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800}
 .lv small{color:var(--mut);font-size:13px}.st{color:#f59e0b;font-size:12px}
 .bar{display:block;height:7px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--c)}
 .stat{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.hr{color:#f43f5e;gap:3px}
-.bw{position:relative;flex:1;min-height:270px;display:grid;place-items:center;background:#1f3a5f;border-radius:22px;padding:12px;overflow:auto}
-#grid{display:grid;gap:5px}
-.c{display:grid;place-items:center;border-radius:10px;font-weight:800;border-bottom:4px solid;color:#3b2a00;transition:transform .12s}
-.c.num{background:#ffd166;border-color:#d9a21b}
-.c.op{background:#ef476f;border-color:#b82a4d;color:#fff}
-.c.eq{background:#06b6a4;border-color:#047a6e;color:#fff}
-.c.b{background:#2c4f7c;border:2px dashed #7aa2d6;color:#fff;cursor:pointer}
-.c.b.v{background:#fff;border:2px solid #fff;border-bottom:4px solid #b8c4dc;color:#14213d}
-.c.sel{outline:3px solid #ffd166;outline-offset:2px;transform:scale(1.07);z-index:2}
-.c.ok{background:#4ade80!important;border-color:#16a34a!important;color:#052e16}
-.c.bad{background:#fb7185!important;border-color:#be123c!important;color:#4c0519;animation:sk .35s}
-.c.lk{box-shadow:inset 0 0 0 3px #ffd166}
+.hr{color:#f43f5e;gap:3px}#pi{display:flex}
+.bw{position:relative;flex:1;min-height:270px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);padding:10px;overflow:auto}
+#grid{display:grid;gap:0;padding:0 1px 1px 0}
+.c{display:grid;place-items:center;border:1px solid #000;margin:0 -1px -1px 0;font-weight:800;color:#000}
+.c.num,.c.op,.c.eq{background:#ffe066}
+.c.b{background:#fff;color:#1d4ed8;cursor:pointer}
+.c.b.v{color:#1d4ed8}
+.c.sel{background:#bfdbfe!important;z-index:2}
+.c.bad{background:#ef4444!important;color:#fff!important;animation:sk .35s}
+.c.lk{background:#eff6ff}
 .c.glow{animation:gl .9s}
 @keyframes sk{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-@keyframes gl{from{box-shadow:0 0 0 0 #ffd166}to{box-shadow:0 0 0 14px #ffd16600}}
-#pov{position:absolute;inset:0;background:#0f172af0;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;font-weight:800;font-size:20px;z-index:5}
-.tray{border-radius:22px;padding:12px}
+@keyframes gl{from{background:#93c5fd}}
+#pov{position:absolute;inset:0;background:#0f172af0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;font-weight:800;font-size:20px;z-index:5}
+.tray{border-radius:6px;padding:12px}
 .hn{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:8px}.hn b{color:var(--ink)}
+.lg{display:flex;justify-content:center;gap:16px;font-size:13px;color:var(--mut)}.lg span{display:flex;align-items:center;gap:5px}.lg i{width:16px;height:16px;border-radius:5px;border:2px solid var(--line)}
 #bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px}
-.t{min-width:46px;height:48px;padding:0 8px;border-radius:12px;font-weight:800;font-size:20px;background:#fff;color:#14213d;border-bottom:5px solid #b8c4dc;touch-action:none}
-.t.op{background:#ef476f;color:#fff;border-color:#b82a4d}
+.t{min-width:46px;height:46px;padding:0 8px;border:1px solid #000;border-radius:0;font-weight:800;font-size:20px;background:#fff;color:#1d4ed8;touch-action:none}
+.t.op{font-size:26px}
 .t.u{opacity:.2;pointer-events:none}
 .t.ghost{position:fixed;pointer-events:none;z-index:99;transform:translate(-50%,-130%) scale(1.15)}
 .tools{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;gap:4px}
-.tb{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:800;color:var(--mut);padding:6px 10px;border-radius:14px;position:relative}
+.tb{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:800;color:var(--mut);padding:6px 10px;border-radius:6px;position:relative}
 .tb .ic{width:24px;height:24px}
-.tb.main{background:#ffb703;color:#3b2a00;border-bottom:5px solid #c98600;padding:8px 18px}
+.tb.main{color:var(--ink);border:1px solid var(--ink);padding:8px 18px}
 .bd{position:absolute;top:-8px;right:-6px;min-width:22px;height:22px;border-radius:99px;background:var(--pri);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 5px;border:2px solid var(--card)}
 #md{position:fixed;inset:0;background:#0b1220b3;display:grid;place-items:center;padding:16px;z-index:50}
-.mc{border-radius:24px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow:auto;animation:pop .2s}
+.mc{border-radius:8px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow:auto;animation:pop .2s}
 @keyframes pop{from{transform:scale(.92);opacity:0}}
 .mc h3{margin:0 0 4px;font-size:22px;font-weight:800;display:flex;gap:8px;align-items:center}
 .mc p{color:var(--mut);margin:6px 0;font-size:15px;line-height:1.35}
 .row{display:flex;gap:10px;margin-top:14px}
-.btn{flex:1;padding:11px 16px;border-radius:14px;font-weight:800;background:var(--line);border-bottom:4px solid #0003}
+.btn{flex:1;padding:11px 16px;border-radius:6px;font-weight:800;background:var(--line)}
 .btn.p{background:var(--pri);color:#fff}
 .sg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
-.sg button{aspect-ratio:1;border-radius:14px;background:var(--line);font-size:18px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:4px solid #0003}
-.sg .d{background:#4ade80;color:#052e16}.sg .n{background:#ffd166;color:#3b2a00}.sg small{font-size:10px}
+.sg button{aspect-ratio:1;border-radius:0;background:var(--line);font-size:18px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sg .d{background:#ffe066;color:#000}.sg .n{background:#fff;color:#1d4ed8;border:1px solid #000}.sg small{font-size:10px}
 .steps{display:flex;gap:6px;margin:12px 0}.steps i{flex:1;height:8px;border-radius:9px}
-.qq{background:var(--bg);border-radius:18px;text-align:center;font-size:32px;font-weight:800;padding:16px;margin-bottom:12px}
+.qq{background:var(--bg);border-radius:6px;text-align:center;font-size:32px;font-weight:800;padding:16px;margin-bottom:12px}
 .og{display:grid;grid-template-columns:1fr 1fr;gap:10px}.og .btn{font-size:24px;flex:none}
-.bx{flex:1;background:var(--bg);border-radius:16px;padding:10px;text-align:center;font-size:13px;color:var(--mut)}
+.bx{flex:1;background:var(--bg);border-radius:6px;padding:10px;text-align:center;font-size:13px;color:var(--mut)}
 .bx b{display:block;font-size:24px;color:var(--ink)}
 #toast{position:fixed;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:8px 16px;border-radius:99px;font-weight:800;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -117,7 +115,7 @@ main{flex:1;display:flex;flex-direction:column;gap:10px}
   <div id="pov" hidden><svg class="ic" style="width:48px;height:48px"><use href="#i-pause"/></svg>Đang tạm dừng<button class="btn p" style="flex:none" onclick="pause()">Tiếp tục</button></div>
  </div>
  <section class="tray">
-  <div class="hn"><span>Chạm ô trống rồi chạm thẻ, hoặc kéo thả</span><b id="left"></b></div>
+  
   <div id="bank"></div>
   <div class="tools">
    <button class="tb" onclick="stages()"><svg class="ic"><use href="#i-grid"/></svg>Bài tập</button>
@@ -136,10 +134,10 @@ shuf=a=>{for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}r
 ic=(n,x='')=>`<svg class="ic ${x}"><use href="#i-${n}"/></svg>`,
 fmt=s=>String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 const LV=[
-{n:1,s:1,vi:'Dễ',d:'Số hạng và kết quả đều có 2 chữ số',N:7,eq:4,hide:0,strict:1,c:'#06b6a4'},
-{n:2,s:2,vi:'Trung bình',d:'Lưới 7 phép tính giao nhau',N:9,eq:7,hide:.1,strict:1,c:'#3b82f6'},
+{n:1,s:1,vi:'Dễ',d:'Số hạng và kết quả đều có 2 chữ số',N:9,eq:6,hide:0,strict:1,c:'#06b6a4'},
+{n:2,s:2,vi:'Trung bình',d:'Lưới 7 phép tính giao nhau',N:11,eq:8,hide:.1,strict:1,c:'#3b82f6'},
 {n:3,s:3,vi:'Khó',d:'Mạng lưới 10 phép tính đa nhánh',N:11,eq:10,hide:.2,strict:1,c:'#d97706'},
-{n:4,s:4,vi:'Nâng cao',d:'Thêm × ÷, kết quả 3 chữ số, tìm dấu',N:11,eq:13,hide:.28,strict:0,c:'#ea580c'},
+{n:4,s:4,vi:'Nâng cao',d:'Thêm × và :, kết quả 3 chữ số, tìm dấu',N:11,eq:13,hide:.28,strict:0,c:'#ea580c'},
 {n:5,s:5,vi:'Chuyên gia',d:'Siêu lưới và phép tính nối dài',N:13,eq:16,hide:.35,strict:0,c:'#e11d48'}];
 const KEY='crossmath_v5',MAX=3;let S={hints:3,done:{},lv:1,st:1},G={};
 try{const p=JSON.parse(localStorage.getItem(KEY));if(p)S={...S,hints:p.hints??3,done:p.done||{}}}catch(e){}
@@ -155,10 +153,10 @@ let tt;const toast=m=>{const e=$('toast');e.textContent=m;e.style.opacity=1;clea
 
 /* ---- Sinh phương trình: rejection sampling, đảm bảo đúng luật chữ số ---- */
 function genEq(lv,fa,fc){
- const st=LV[lv-1].strict,ops=st?['+','-']:['+','-','×','÷'],
+ const st=LV[lv-1].strict,ops=st?['+','-']:['+','-','×',':'],
  oka=n=>Number.isInteger(n)&&n>=(st?10:2)&&n<=(st?99:999),okc=n=>Number.isInteger(n)&&n>=10&&n<=(st?99:999);
  for(let i=0;i<300;i++){
-  const op=pick(ops),m=op==='×'||op==='÷';let a=fa,b,c=fc;
+  const op=pick(ops),m=op==='×'||op===':';let a=fa,b,c=fc;
   if(a!=null&&c!=null)b=op==='+'?c-a:op==='-'?a-c:op==='×'?c/a:a/c;
   else{
    b=st?ri(10,99):m?ri(2,12):ri(2,150);
@@ -174,10 +172,21 @@ function genEq(lv,fa,fc){
 function evalTok(t){
  const sg=[[]];t.forEach(x=>x==='='?sg.push([]):sg[sg.length-1].push(x));
  const v=sg.map(s=>{let acc=+s[0];for(let i=1;i<s.length;i+=2){const n=+s[i+1],o=s[i];
-  if(o==='+')acc+=n;else if(o==='-')acc-=n;else if(o==='×')acc*=n;else if(o==='÷'){if(!n||acc%n)return NaN;acc/=n}else return NaN}return acc});
+  if(o==='+')acc+=n;else if(o==='-')acc-=n;else if(o==='×')acc*=n;else if(o===':'){if(!n||acc%n)return NaN;acc/=n}else return NaN}return acc});
  return v.every(x=>x===v[0]);
 }
-function build(lv){
+/* Rà soát đề: mọi phương trình đúng ở đáp án, đúng luật chữ số, đúng dạng, không có chuỗi ô dính nhau ngoài ý muốn; sai thì sinh đề khác */
+function verify(p,lv){
+ const st=LV[lv-1].strict,g=p.grid,ks=new Set(p.eqs.map(q=>q.cells[0]+'>'+q.cells[q.cells.length-1]));
+ if(p.blanks.length<5||p.bank.length!==p.blanks.length)return false;
+ if(lv<=2&&!p.eqs.every(q=>q.cells.filter(([r,c])=>g[r][c].blank).length<=1))return false;
+ if(!p.eqs.every(q=>/^nonen(onen)?$/.test(q.cells.map(([r,c])=>g[r][c].type[0]).join(''))&&evalTok(q.cells.map(([r,c])=>g[r][c].value))))return false;
+ if(!g.flat().every(x=>!x||x.type!=='num'||(Number.isInteger(+x.value)&&+x.value>=(st?10:2)&&+x.value<=(st?99:999))))return false;
+ const run=(A,B,t)=>{for(let a=0;a<A;a++){let s=-1;for(let b=0;b<=B;b++){const x=b<B&&(t?g[b][a]:g[a][b]);if(x){if(s<0)s=b}else{if(s>=0&&b-s>1&&!ks.has((t?[s,a]:[a,s])+'>'+(t?[b-1,a]:[a,b-1])))return false;s=-1}}}return true};
+ return run(p.rows,p.cols,0)&&run(p.cols,p.rows,1);
+}
+function build(lv){for(let i=0;i<80;i++){const p=buildOnce(lv);if(verify(p,lv))return p}return buildOnce(lv)}
+function buildOnce(lv){
  const L=LV[lv-1],N=L.N,cells=Array.from({length:N},()=>Array(N).fill(null)),eqs=[],D=[[1,0],[-1,0],[0,1],[0,-1]],
  V=e=>[['num',e.a],['op',e.op],['num',e.b],['eq','='],['num',e.c]],inb=(r,c)=>r>=0&&c>=0&&r<N&&c<N,
  mk=(r,c,t,v,h)=>({r,c,type:t,value:String(v),blank:false,val:null,bid:null,st:'',lock:false,used:{[h?'h':'v']:1}});
@@ -211,11 +220,16 @@ function build(lv){
  const grid=Array.from({length:r1-r0+1},(_,r)=>Array.from({length:c1-c0+1},(_,c)=>{const x=cells[r+r0][c+c0];if(x){x.r=r;x.c=c}return x}));
  eqs.forEach(q=>q.cells=q.cells.map(([r,c])=>[r-r0,c-c0]));
  eqs.forEach(q=>{
-  const cs=q.cells.map(([r,c])=>grid[r][c]),nums=cs.filter(x=>x.type==='num'),ops=cs.filter(x=>x.type==='op'),k=()=>cs.filter(x=>x.blank).length;
-  if(!k())pick(nums).blank=true;
-  if(k()===1&&nums.length>=3&&Math.random()<.5)pick(nums.filter(x=>!x.blank)).blank=true;
-  if(k()<=2&&Math.random()<L.hide)pick(ops).blank=true;
+  const cs=q.cells.map(([r,c])=>grid[r][c]),nums=cs.filter(x=>x.type==='num'),ops=cs.filter(x=>x.type==='op'),k=()=>cs.filter(x=>x.blank).length,cnt=e=>e.cells.filter(([r,c])=>grid[r][c].blank).length,owners=x=>eqs.filter(e=>e.cells.some(([r,c])=>grid[r][c]===x));
+  if(!k()){if(L.n>1&&Math.random()<.1+L.n*.05)pick(ops).blank=true;else{const ok=nums.filter(x=>owners(x).every(e=>cnt(e)===0));const u=ok.filter(x=>owners(x).length===1);pick(u.length?u:ok.length?ok:nums).blank=true}}
+  if(L.n>=3&&k()===1&&Math.random()<.2+L.n*.08){const ok=nums.filter(x=>!x.blank&&owners(x).every(e=>cnt(e)<2));if(ok.length)pick(ok).blank=true}
+  if(L.n>=4&&k()<=1&&Math.random()<.25)pick(ops).blank=true;
  });
+ const os=grid.flat().filter(x=>x&&x.type==='op');
+ if(!os.some(x=>x.blank)){const own=x=>eqs.filter(e=>e.cells.some(([r,c])=>grid[r][c]===x)).length,
+  cand=eqs.filter(q=>q.cells.some(([r,c])=>grid[r][c].blank&&own(grid[r][c])===1)),q=pick(cand.length?cand:eqs),cs=q.cells.map(([r,c])=>grid[r][c]);
+  if(cand.length)cs.find(x=>x.blank&&own(x)===1).blank=false;
+  pick(cs.filter(x=>x.type==='op')).blank=true}
  const bl=[];grid.forEach(r=>r.forEach(x=>x&&x.blank&&bl.push(x)));
  return{rows:grid.length,cols:grid[0].length,grid,eqs,blanks:bl,bank:shuf(bl.map((x,i)=>({id:i,value:x.value,type:x.type,used:false})))};
 }
@@ -236,7 +250,7 @@ function stages(){
   return o?`<button class="${d?'d':'n'}" onclick="play(${l.n},${s})">${d?ic('check'):s}<small>${d?fmt(S.done[l.n+'-'+s]):'Chơi'}</small></button>`:`<button style="opacity:.5" onclick="toast('Hãy hoàn thành Bài ${s-1} trước')">${ic('lock')}<small>Bài ${s}</small></button>`}).join('')+
  `</div><div class="row"><button class="btn" onclick="closeM()">Đóng</button></div>`);
 }
-const help=()=>modal(`<h3>${ic('help')} Luật chơi</h3><p>1. Điền số và dấu từ khay vào ô trống để mọi phép tính, ngang và dọc, đều đúng.</p><p>2. Mỗi bài có 3 lượt sai (3 trái tim). Hết lượt phải làm lại bài.</p><p>3. Cấp 1–3: số hạng và kết quả đều có 2 chữ số. Cấp 4–5: có thêm × ÷, kết quả 3 chữ số và phép tính nối dài.</p><p>4. Giải xong bài trước mới mở bài sau; xong 10 bài mở cấp kế tiếp.</p><p>5. Có sẵn 3 gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm 1 gợi ý. Ô được gợi ý sẽ bị khóa.</p><div class="row"><button class="btn p" onclick="closeM()">Đã hiểu</button></div>`);
+const help=()=>modal(`<h3>${ic('help')} Luật chơi</h3><p>1. Điền số và dấu từ khay vào ô trống để mọi phép tính, ngang và dọc, đều đúng. Ô trống có thể là số hoặc dấu + − × :.</p><p>2. Mỗi bài có 3 lượt sai (3 trái tim). Hết lượt phải làm lại bài.</p><p>3. Cấp 1–3: số hạng và kết quả đều có 2 chữ số. Cấp 4–5: có thêm × và : (chia), kết quả 3 chữ số và phép tính nối dài.</p><p>4. Giải xong bài trước mới mở bài sau; xong 10 bài mở cấp kế tiếp.</p><p>5. Có sẵn 3 gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm 1 gợi ý. Ô được gợi ý sẽ bị khóa.</p><div class="row"><button class="btn p" onclick="closeM()">Đã hiểu</button></div>`);
 const resetAsk=()=>modal(`<h3>Đặt lại tiến độ?</h3><p>Toàn bộ bài đã giải sẽ bị xóa và bạn quay về Cấp 1, Bài 1.</p><div class="row"><button class="btn" onclick="closeM()">Hủy</button><button class="btn p" onclick="S.done={};S.hints=3;save();home()">Đặt lại</button></div>`);
 
 /* ---- Vào bài ---- */
@@ -245,7 +259,7 @@ function play(l,s){
  G={...build(l),solved:new Set(),wrong:new Set(),miss:0,t:0,paused:0,won:0,over:0,sel:null,timer:null};
  G.sel=nextEmpty(null);
  $('home').hidden=true;$('game').hidden=false;$('bB').style.visibility='visible';$('pov').hidden=true;$('pi').innerHTML=ic('pause');
- $('hT').textContent='Cấp '+l.n;$('hS').innerHTML=ic('star','f').repeat(L.s)+`<span style="color:var(--mut);margin-left:4px">${L.vi}</span>`;
+ $('hT').textContent='Cấp '+l;$('hS').innerHTML=ic('star','f').repeat(L.s)+`<span style="color:var(--mut);margin-left:4px">${L.vi}</span>`;
  $('sb').textContent=`Bài ${s}/10`;$('tm').textContent='00:00';
  hintUI();lives();board();bankR();startT();
 }
@@ -259,12 +273,12 @@ hintUI=()=>{$('hb').textContent=S.hints>0?S.hints:'+'};
 
 /* ---- Vẽ bảng & khay thẻ ---- */
 function board(glow){
- const g=$('grid'),w=$('bw').clientWidth-26,h=Math.max(260,innerHeight-400),
- px=Math.max(30,Math.min(54,((w-(G.cols-1)*5)/G.cols)|0,((h-(G.rows-1)*5)/G.rows)|0));
+ const g=$('grid'),w=$('bw').clientWidth-22,h=Math.max(260,innerHeight-350),
+ px=Math.max(30,Math.min(56,(w/G.cols)|0,(h/G.rows)|0));
  g.style.gridTemplateColumns=`repeat(${G.cols},${px}px)`;g.innerHTML='';
  G.grid.forEach(row=>row.forEach(x=>{
   const d=document.createElement('div'),t=x?(x.blank?x.val:x.value)||'':'';
-  d.style.cssText=`width:${px}px;height:${px}px;font-size:${px*(t.length>2?.34:.46)}px`;
+  d.style.cssText=`width:${px+1}px;height:${px+1}px;font-size:${px*(t.length>2?.34:x&&x.type==='op'?.62:.46)}px`;
   if(x){d.className='c '+x.type;d.textContent=t;
    if(x.blank){d.classList.add('b');d.dataset.k=x.r+','+x.c;
     if(x.val!==null){d.classList.add('v');if(x.st)d.classList.add(x.st);if(x.lock)d.classList.add('lk')}
@@ -275,7 +289,7 @@ function board(glow){
 function bankR(){
  const b=$('bank');b.innerHTML='';let n=0;
  G.bank.forEach(it=>{if(!it.used)n++;const e=document.createElement('button');e.className='t '+it.type+(it.used?' u':'');e.textContent=it.value;e.onpointerdown=ev=>drag(ev,it,e);b.appendChild(e)});
- $('left').textContent=`Còn ${n} thẻ`;
+ 
 }
 /* Kéo thả bằng pointer events: chạy cả chuột lẫn cảm ứng; chạm nhanh = điền vào ô đang chọn */
 function drag(ev,it,el){
@@ -308,16 +322,16 @@ function place(it){
 }
 function clr(){if(busy())return;FX.click();G.blanks.forEach(x=>{if(x.val!==null&&!x.lock)release(x)});refresh()}
 function validate(){
- G.blanks.forEach(x=>x.st='');let fresh=0,bad=false;
+ G.blanks.forEach(x=>x.st='');let fresh=0,bad=false,bt='';
  G.eqs.forEach(q=>{
   const t=tok(q);if(t.includes(null))return;
   const cs=q.cells.map(([r,c])=>G.grid[r][c]).filter(x=>x.blank);
-  if(evalTok(t)){cs.forEach(x=>x.st='ok');if(!G.solved.has(q.id)){G.solved.add(q.id);fresh++}}
-  else{cs.forEach(x=>{if(x.st!=='ok')x.st='bad'});const sg=q.id+':'+t.join('|');if(!G.wrong.has(sg)){G.wrong.add(sg);bad=true}}
+  if(evalTok(t)){cs.forEach(x=>{if(x.st!=='bad')x.st='ok'});if(!G.solved.has(q.id)){G.solved.add(q.id);fresh++}}
+  else{cs.forEach(x=>x.st='bad');const sg=q.id+':'+t.join('|');if(!G.wrong.has(sg)){G.wrong.add(sg);bad=true;bt=t.join(' ')}}
  });
  if(bad){G.miss++;lives();FX.bad();
   if(G.miss>=MAX){G.over=1;stopT();setTimeout(()=>modal(`<div style="text-align:center"><div style="font-size:52px;color:#f43f5e">${ic('heart','e')}</div><h3 style="justify-content:center">Hết lượt thử</h3><p>Bạn đã sai 3 lần ở bài này. Tính nhẩm kỹ hơn rồi thử lại nhé.</p></div><div class="row"><button class="btn" onclick="home()">Trang chủ</button><button class="btn p" onclick="again()">Làm lại bài này</button></div>`),350)}
-  else toast(`Phép tính chưa đúng. Còn ${MAX-G.miss} lượt`)}
+  else toast(`${bt} chưa đúng. Còn ${MAX-G.miss} lượt`)}
  else if(fresh)FX.ok();
 }
 function win(){
