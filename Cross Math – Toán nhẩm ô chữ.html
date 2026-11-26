@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cross Math – Toán nhẩm ô chữ</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3fb;--card:#fff;--ink:#14213d;--mut:#5b6b85;--line:#d9e2f1;--pri:#2563eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1626;--card:#16233a;--ink:#e8eefb;--mut:#93a4c2;--line:#2a3a58}}
+:root[data-theme="dark"]{--bg:#0d1626;--card:#16233a;--ink:#e8eefb;--mut:#93a4c2;--line:#2a3a58}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;margin:0}
+body{font-family:'Baloo 2',system-ui,sans-serif;font-weight:600;color:var(--ink);background:var(--bg)}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none}
+button:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+[hidden]{display:none!important}
+.ic{width:1.3em;height:1.3em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.f{fill:currentColor}.e{opacity:.3}
+#app{min-height:100%;max-width:640px;margin:auto;display:flex;flex-direction:column;padding:10px 12px;gap:10px}
+.top{display:flex;align-items:center;justify-content:space-between}
+.ttl{text-align:center;line-height:1.1}.ttl h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.08em}
+#hS{display:flex;gap:2px;justify-content:center;align-items:center;color:#f59e0b;font-size:12px;min-height:16px}
+.ib,.chip,.pill,.lv,.tray,.mc{background:var(--card);border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.ib{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:18px}
+.ib:active,.tb:active,.pill:active,.btn:active,.lv:active{transform:translateY(2px)}
+main{flex:1;display:flex;flex-direction:column;gap:10px}
+.pill,.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 14px;font-weight:800}
+.lv{border-radius:20px;padding:12px;display:flex;gap:12px;align-items:center;text-align:left;width:100%}
+.lv.k{opacity:.6}
+.lb{width:50px;height:50px;border-radius:14px;background:var(--c);border-bottom:5px solid #0004;color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800}
+.lv small{color:var(--mut);font-size:13px}.st{color:#f59e0b;font-size:12px}
+.bar{display:block;height:7px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--c)}
+.stat{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hr{color:#f43f5e;gap:3px}
+.bw{position:relative;flex:1;min-height:270px;display:grid;place-items:center;background:#1f3a5f;border-radius:22px;padding:12px;overflow:auto}
+#grid{display:grid;gap:5px}
+.c{display:grid;place-items:center;border-radius:10px;font-weight:800;border-bottom:4px solid;color:#3b2a00;transition:transform .12s}
+.c.num{background:#ffd166;border-color:#d9a21b}
+.c.op{background:#ef476f;border-color:#b82a4d;color:#fff}
+.c.eq{background:#06b6a4;border-color:#047a6e;color:#fff}
+.c.b{background:#2c4f7c;border:2px dashed #7aa2d6;color:#fff;cursor:pointer}
+.c.b.v{background:#fff;border:2px solid #fff;border-bottom:4px solid #b8c4dc;color:#14213d}
+.c.sel{outline:3px solid #ffd166;outline-offset:2px;transform:scale(1.07);z-index:2}
+.c.ok{background:#4ade80!important;border-color:#16a34a!important;color:#052e16}
+.c.bad{background:#fb7185!important;border-color:#be123c!important;color:#4c0519;animation:sk .35s}
+.c.lk{box-shadow:inset 0 0 0 3px #ffd166}
+.c.glow{animation:gl .9s}
+@keyframes sk{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes gl{from{box-shadow:0 0 0 0 #ffd166}to{box-shadow:0 0 0 14px #ffd16600}}
+#pov{position:absolute;inset:0;background:#0f172af0;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;font-weight:800;font-size:20px;z-index:5}
+.tray{border-radius:22px;padding:12px}
+.hn{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:8px}.hn b{color:var(--ink)}
+#bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px}
+.t{min-width:46px;height:48px;padding:0 8px;border-radius:12px;font-weight:800;font-size:20px;background:#fff;color:#14213d;border-bottom:5px solid #b8c4dc;touch-action:none}
+.t.op{background:#ef476f;color:#fff;border-color:#b82a4d}
+.t.u{opacity:.2;pointer-events:none}
+.t.ghost{position:fixed;pointer-events:none;z-index:99;transform:translate(-50%,-130%) scale(1.15)}
+.tools{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;gap:4px}
+.tb{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:800;color:var(--mut);padding:6px 10px;border-radius:14px;position:relative}
+.tb .ic{width:24px;height:24px}
+.tb.main{background:#ffb703;color:#3b2a00;border-bottom:5px solid #c98600;padding:8px 18px}
+.bd{position:absolute;top:-8px;right:-6px;min-width:22px;height:22px;border-radius:99px;background:var(--pri);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 5px;border:2px solid var(--card)}
+#md{position:fixed;inset:0;background:#0b1220b3;display:grid;place-items:center;padding:16px;z-index:50}
+.mc{border-radius:24px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow:auto;animation:pop .2s}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.mc h3{margin:0 0 4px;font-size:22px;font-weight:800;display:flex;gap:8px;align-items:center}
+.mc p{color:var(--mut);margin:6px 0;font-size:15px;line-height:1.35}
+.row{display:flex;gap:10px;margin-top:14px}
+.btn{flex:1;padding:11px 16px;border-radius:14px;font-weight:800;background:var(--line);border-bottom:4px solid #0003}
+.btn.p{background:var(--pri);color:#fff}
+.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+.sg button{aspect-ratio:1;border-radius:14px;background:var(--line);font-size:18px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:4px solid #0003}
+.sg .d{background:#4ade80;color:#052e16}.sg .n{background:#ffd166;color:#3b2a00}.sg small{font-size:10px}
+.steps{display:flex;gap:6px;margin:12px 0}.steps i{flex:1;height:8px;border-radius:9px}
+.qq{background:var(--bg);border-radius:18px;text-align:center;font-size:32px;font-weight:800;padding:16px;margin-bottom:12px}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:10px}.og .btn{font-size:24px;flex:none}
+.bx{flex:1;background:var(--bg);border-radius:16px;padding:10px;text-align:center;font-size:13px;color:var(--mut)}
+.bx b{display:block;font-size:24px;color:var(--ink)}
+#toast{position:fixed;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:8px 16px;border-radius:99px;font-weight:800;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M15 14c.2-1 .7-1.7 1.5-2.5A6 6 0 1 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/></symbol>
+<symbol id="i-eraser" viewBox="0 0 24 24"><path d="m7 21-4.3-4.3a2.4 2.4 0 0 1 0-3.4l9.6-9.6a2.4 2.4 0 0 1 3.4 0l5.6 5.6a2.4 2.4 0 0 1 0 3.4L13 21M22 21H7M5 11l9 9"/></symbol>
+<symbol id="i-redo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21l-7.5-7.5A5.5 5.5 0 0 1 12 5.5a5.5 5.5 0 0 1 7.5 8z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3-6.2 3.3L7 14.2 2 9.3l6.9-1z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</defs></svg>
+<div id="app">
+<header class="top">
+ <button class="ib" id="bB" onclick="home()" aria-label="Về trang chủ"><svg class="ic"><use href="#i-back"/></svg></button>
+ <div class="ttl"><h1 id="hT">CROSS MATH</h1><div id="hS"></div></div>
+ <button class="ib" onclick="help()" aria-label="Luật chơi"><svg class="ic"><use href="#i-help"/></svg></button>
+</header>
+<main id="home"></main>
+<main id="game" hidden>
+ <div class="stat">
+  <span class="chip" id="sb"></span>
+  <span class="chip hr" id="hr" aria-label="Lượt thử còn lại"></span>
+  <button class="chip" onclick="pause()" aria-label="Tạm dừng"><svg class="ic"><use href="#i-clock"/></svg><b id="tm">00:00</b><span id="pi"></span></button>
+ </div>
+ <div class="bw" id="bw"><div id="grid"></div>
+  <div id="pov" hidden><svg class="ic" style="width:48px;height:48px"><use href="#i-pause"/></svg>Đang tạm dừng<button class="btn p" style="flex:none" onclick="pause()">Tiếp tục</button></div>
+ </div>
+ <section class="tray">
+  <div class="hn"><span>Chạm ô trống rồi chạm thẻ, hoặc kéo thả</span><b id="left"></b></div>
+  <div id="bank"></div>
+  <div class="tools">
+   <button class="tb" onclick="stages()"><svg class="ic"><use href="#i-grid"/></svg>Bài tập</button>
+   <button class="tb" onclick="again()"><svg class="ic"><use href="#i-redo"/></svg>Làm lại</button>
+   <button class="tb" onclick="clr()"><svg class="ic"><use href="#i-eraser"/></svg>Xóa hết</button>
+   <button class="tb main" onclick="hint()"><svg class="ic"><use href="#i-bulb"/></svg>Gợi ý<span class="bd" id="hb">3</span></button>
+  </div>
+ </section>
+</main>
+<div id="md" hidden><div class="mc" id="mc"></div></div>
+<div id="toast"></div>
+</div>
+<script>
+const $=i=>document.getElementById(i),ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,pick=a=>a[ri(0,a.length-1)],
+shuf=a=>{for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}return a},
+ic=(n,x='')=>`<svg class="ic ${x}"><use href="#i-${n}"/></svg>`,
+fmt=s=>String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const LV=[
+{n:1,s:1,vi:'Dễ',d:'Số hạng và kết quả đều có 2 chữ số',N:7,eq:4,hide:0,strict:1,c:'#06b6a4'},
+{n:2,s:2,vi:'Trung bình',d:'Lưới 7 phép tính giao nhau',N:9,eq:7,hide:.1,strict:1,c:'#3b82f6'},
+{n:3,s:3,vi:'Khó',d:'Mạng lưới 10 phép tính đa nhánh',N:11,eq:10,hide:.2,strict:1,c:'#d97706'},
+{n:4,s:4,vi:'Nâng cao',d:'Thêm × ÷, kết quả 3 chữ số, tìm dấu',N:11,eq:13,hide:.28,strict:0,c:'#ea580c'},
+{n:5,s:5,vi:'Chuyên gia',d:'Siêu lưới và phép tính nối dài',N:13,eq:16,hide:.35,strict:0,c:'#e11d48'}];
+const KEY='crossmath_v5',MAX=3;let S={hints:3,done:{},lv:1,st:1},G={};
+try{const p=JSON.parse(localStorage.getItem(KEY));if(p)S={...S,hints:p.hints??3,done:p.done||{}}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({hints:S.hints,done:S.done}))}catch(e){}};
+const dn=(l,s)=>S.done[l+'-'+s]!==undefined,
+lvOpen=l=>l===1||[1,2,3,4,5,6,7,8,9,10].every(s=>dn(l-1,s)),
+stOpen=(l,s)=>lvOpen(l)&&(s===1||dn(l,s-1));
+let AC;const tone=(f,ty,d,dl=0,g=.1)=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.state==='suspended'&&AC.resume();const o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime+dl;o.type=ty;o.frequency.value=f;v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(v);v.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}};
+const FX={click:()=>tone(520,'sine',.06),place:()=>tone(640,'triangle',.09),ok:()=>{tone(587,'sine',.12);tone(880,'sine',.2,.09)},bad:()=>{tone(220,'sawtooth',.15);tone(180,'sawtooth',.18,.1)},win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,'triangle',.22,i*.1,.14))};
+const modal=h=>{$('mc').innerHTML=h;$('md').hidden=false},closeM=()=>{$('md').hidden=true};
+$('md').onclick=e=>{if(e.target.id==='md')closeM()};
+let tt;const toast=m=>{const e=$('toast');e.textContent=m;e.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>e.style.opacity=0,2400)};
+
+/* ---- Sinh phương trình: rejection sampling, đảm bảo đúng luật chữ số ---- */
+function genEq(lv,fa,fc){
+ const st=LV[lv-1].strict,ops=st?['+','-']:['+','-','×','÷'],
+ oka=n=>Number.isInteger(n)&&n>=(st?10:2)&&n<=(st?99:999),okc=n=>Number.isInteger(n)&&n>=10&&n<=(st?99:999);
+ for(let i=0;i<300;i++){
+  const op=pick(ops),m=op==='×'||op==='÷';let a=fa,b,c=fc;
+  if(a!=null&&c!=null)b=op==='+'?c-a:op==='-'?a-c:op==='×'?c/a:a/c;
+  else{
+   b=st?ri(10,99):m?ri(2,12):ri(2,150);
+   if(a!=null)c=op==='+'?a+b:op==='-'?a-b:op==='×'?a*b:a/b;
+   else if(c!=null)a=op==='+'?c-b:op==='-'?c+b:op==='×'?c/b:c*b;
+   else{a=st?ri(10,99):m?ri(2,60):ri(10,500);c=op==='+'?a+b:op==='-'?a-b:op==='×'?a*b:a/b}
+  }
+  if(oka(a)&&oka(b)&&okc(c))return{a,op,b,c};
+ }
+ return null;
+}
+/* Chấm cả chuỗi A op B = C op D = E: tách theo từng dấu "=" và so sánh mọi vế */
+function evalTok(t){
+ const sg=[[]];t.forEach(x=>x==='='?sg.push([]):sg[sg.length-1].push(x));
+ const v=sg.map(s=>{let acc=+s[0];for(let i=1;i<s.length;i+=2){const n=+s[i+1],o=s[i];
+  if(o==='+')acc+=n;else if(o==='-')acc-=n;else if(o==='×')acc*=n;else if(o==='÷'){if(!n||acc%n)return NaN;acc/=n}else return NaN}return acc});
+ return v.every(x=>x===v[0]);
+}
+function build(lv){
+ const L=LV[lv-1],N=L.N,cells=Array.from({length:N},()=>Array(N).fill(null)),eqs=[],D=[[1,0],[-1,0],[0,1],[0,-1]],
+ V=e=>[['num',e.a],['op',e.op],['num',e.b],['eq','='],['num',e.c]],inb=(r,c)=>r>=0&&c>=0&&r<N&&c<N,
+ mk=(r,c,t,v,h)=>({r,c,type:t,value:String(v),blank:false,val:null,bid:null,st:'',lock:false,used:{[h?'h':'v']:1}});
+ const can=(co,vs,h)=>{
+  const [r0,c0]=co[0],[r1,c1]=co[4];
+  for(const [r,c] of h?[[r0,c0-1],[r1,c1+1]]:[[r0-1,c0],[r1+1,c1]])if(inb(r,c)&&cells[r][c])return false;
+  return co.every(([r,c],i)=>{const x=cells[r][c];
+   if(x)return x.type==='num'&&vs[i][0]==='num'&&x.value===String(vs[i][1])&&!x.used[h?'h':'v'];
+   return D.every(([a,b])=>!inb(r+a,c+b)||!cells[r+a][c+b]||co.some(([p,q])=>p===r+a&&q===c+b))});
+ };
+ const put=(co,vs,h)=>{co.forEach(([r,c],i)=>{const x=cells[r][c];if(x)x.used[h?'h':'v']=1;else cells[r][c]=mk(r,c,vs[i][0],vs[i][1],h)});eqs.push({id:eqs.length,cells:co})};
+ let m=N>>1;if(m%2)m--;const s=Math.max(0,m-2);
+ put([0,1,2,3,4].map(i=>[s,s+i]),V(genEq(lv)),1);
+ const grow=()=>{const an=[];cells.forEach(row=>row.forEach(x=>x&&x.type==='num'&&an.push(x)));
+  for(const a of shuf(an))for(const h of shuf([1,0]))for(const role of shuf([0,4])){
+   const co=[0,1,2,3,4].map(i=>h?[a.r,a.c-role+i]:[a.r-role+i,a.c]);
+   if(co.some(([r,c])=>!inb(r,c)))continue;
+   const [or,oc]=co[4-role],o=cells[or][oc];if(o&&o.type!=='num')continue;
+   const ov=o?+o.value:null,e=role?genEq(lv,ov,+a.value):genEq(lv,+a.value,ov);
+   if(!e)continue;const vs=V(e);if(can(co,vs,h)){put(co,vs,h);return true}}
+  return false};
+ for(let t=0;eqs.length<L.eq&&t<400&&grow();t++);
+ if(lv>=4)eqs.slice().forEach(q=>{ /* nối dài: A op B = C op2 D = E */
+  const [r,c]=q.cells[4];if(Math.random()>.45||q.cells[0][0]!==r||c+4>=N)return;
+  const old=+cells[r][c].value,op=pick(['+','-']),d=ri(10,999),b=op==='+'?d-old:old-d;if(b<1)return;
+  const co=[1,2,3,4].map(i=>[r,c+i]),vs=[['op',op],['num',b],['eq','='],['num',d]];
+  if(co.some(([x,y])=>cells[x][y]||D.some(([a,k])=>{const n=cells[x+a]?.[y+k];return n&&!(x+a===r&&y+k===c)})))return;
+  co.forEach(([x,y],i)=>{cells[x][y]=mk(x,y,vs[i][0],vs[i][1],1);q.cells.push([x,y])})});
+ let r0=N,r1=0,c0=N,c1=0;
+ cells.forEach((row,r)=>row.forEach((x,c)=>{if(x){r0=Math.min(r0,r);r1=Math.max(r1,r);c0=Math.min(c0,c);c1=Math.max(c1,c)}}));
+ const grid=Array.from({length:r1-r0+1},(_,r)=>Array.from({length:c1-c0+1},(_,c)=>{const x=cells[r+r0][c+c0];if(x){x.r=r;x.c=c}return x}));
+ eqs.forEach(q=>q.cells=q.cells.map(([r,c])=>[r-r0,c-c0]));
+ eqs.forEach(q=>{
+  const cs=q.cells.map(([r,c])=>grid[r][c]),nums=cs.filter(x=>x.type==='num'),ops=cs.filter(x=>x.type==='op'),k=()=>cs.filter(x=>x.blank).length;
+  if(!k())pick(nums).blank=true;
+  if(k()===1&&nums.length>=3&&Math.random()<.5)pick(nums.filter(x=>!x.blank)).blank=true;
+  if(k()<=2&&Math.random()<L.hide)pick(ops).blank=true;
+ });
+ const bl=[];grid.forEach(r=>r.forEach(x=>x&&x.blank&&bl.push(x)));
+ return{rows:grid.length,cols:grid[0].length,grid,eqs,blanks:bl,bank:shuf(bl.map((x,i)=>({id:i,value:x.value,type:x.type,used:false})))};
+}
+
+/* ---- Màn hình chính & chọn bài ---- */
+function home(){
+ stopT();closeM();$('home').hidden=false;$('game').hidden=true;$('bB').style.visibility='hidden';$('hT').textContent='CROSS MATH';$('hS').innerHTML='';
+ $('home').innerHTML=`<div><button class="pill" onclick="quiz()" aria-label="Nhận thêm gợi ý">${ic('bulb')} Gợi ý: <b>${S.hints}</b> ${ic('plus')}</button></div>`+
+ LV.map(l=>{const o=lvOpen(l.n),d=[1,2,3,4,5,6,7,8,9,10].filter(s=>dn(l.n,s)).length;
+  return `<button class="lv ${o?'':'k'}" style="--c:${l.c}" onclick="${o?`pickLv(${l.n})`:`toast('Hoàn thành 10 bài Cấp ${l.n-1} để mở khóa')`}"><span class="lb">${o?l.n:ic('lock')}</span><span style="flex:1"><b>${l.vi}</b> <span class="st">${ic('star','f').repeat(l.s)}</span><br><small>${o?l.d:'Đang khóa'}</small><span class="bar"><i style="width:${d*10}%"></i></span></span><b>${d}/10</b></button>`}).join('')+
+ `<button class="pill" style="align-self:center;box-shadow:none;border-color:transparent;background:none;color:var(--mut);font-size:13px" onclick="resetAsk()">${ic('redo')} Đặt lại tiến độ</button>`;
+}
+const pickLv=n=>{S.lv=n;stages()};
+function stages(){
+ const l=LV[S.lv-1];
+ modal(`<h3>Cấp ${l.n} · ${l.vi}</h3><p>Hoàn thành lần lượt từ bài 1 đến bài 10</p><div class="sg">`+
+ [1,2,3,4,5,6,7,8,9,10].map(s=>{const o=stOpen(l.n,s),d=dn(l.n,s);
+  return o?`<button class="${d?'d':'n'}" onclick="play(${l.n},${s})">${d?ic('check'):s}<small>${d?fmt(S.done[l.n+'-'+s]):'Chơi'}</small></button>`:`<button style="opacity:.5" onclick="toast('Hãy hoàn thành Bài ${s-1} trước')">${ic('lock')}<small>Bài ${s}</small></button>`}).join('')+
+ `</div><div class="row"><button class="btn" onclick="closeM()">Đóng</button></div>`);
+}
+const help=()=>modal(`<h3>${ic('help')} Luật chơi</h3><p>1. Điền số và dấu từ khay vào ô trống để mọi phép tính, ngang và dọc, đều đúng.</p><p>2. Mỗi bài có 3 lượt sai (3 trái tim). Hết lượt phải làm lại bài.</p><p>3. Cấp 1–3: số hạng và kết quả đều có 2 chữ số. Cấp 4–5: có thêm × ÷, kết quả 3 chữ số và phép tính nối dài.</p><p>4. Giải xong bài trước mới mở bài sau; xong 10 bài mở cấp kế tiếp.</p><p>5. Có sẵn 3 gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm 1 gợi ý. Ô được gợi ý sẽ bị khóa.</p><div class="row"><button class="btn p" onclick="closeM()">Đã hiểu</button></div>`);
+const resetAsk=()=>modal(`<h3>Đặt lại tiến độ?</h3><p>Toàn bộ bài đã giải sẽ bị xóa và bạn quay về Cấp 1, Bài 1.</p><div class="row"><button class="btn" onclick="closeM()">Hủy</button><button class="btn p" onclick="S.done={};S.hints=3;save();home()">Đặt lại</button></div>`);
+
+/* ---- Vào bài ---- */
+function play(l,s){
+ if(!stOpen(l,s))return;closeM();S.lv=l;S.st=s;const L=LV[l-1];
+ G={...build(l),solved:new Set(),wrong:new Set(),miss:0,t:0,paused:0,won:0,over:0,sel:null,timer:null};
+ G.sel=nextEmpty(null);
+ $('home').hidden=true;$('game').hidden=false;$('bB').style.visibility='visible';$('pov').hidden=true;$('pi').innerHTML=ic('pause');
+ $('hT').textContent='Cấp '+l.n;$('hS').innerHTML=ic('star','f').repeat(L.s)+`<span style="color:var(--mut);margin-left:4px">${L.vi}</span>`;
+ $('sb').textContent=`Bài ${s}/10`;$('tm').textContent='00:00';
+ hintUI();lives();board();bankR();startT();
+}
+const again=()=>{FX.click();play(S.lv,S.st)};
+const nextEmpty=cur=>{const b=G.blanks,i=cur?b.indexOf(cur):-1;for(let k=1;k<=b.length;k++){const x=b[(i+k)%b.length];if(x.val===null)return x}return null};
+const startT=()=>{stopT();G.timer=setInterval(()=>{if(!G.paused&&!G.won&&!G.over){G.t++;$('tm').textContent=fmt(G.t)}},1000)},
+stopT=()=>{if(G.timer){clearInterval(G.timer);G.timer=null}};
+function pause(){if(G.won||G.over)return;FX.click();G.paused=!G.paused;$('pov').hidden=!G.paused;$('pi').innerHTML=ic(G.paused?'play':'pause')}
+const lives=()=>{$('hr').innerHTML=Array.from({length:MAX},(_,i)=>ic('heart',i<MAX-G.miss?'f':'e')).join('')},
+hintUI=()=>{$('hb').textContent=S.hints>0?S.hints:'+'};
+
+/* ---- Vẽ bảng & khay thẻ ---- */
+function board(glow){
+ const g=$('grid'),w=$('bw').clientWidth-26,h=Math.max(260,innerHeight-400),
+ px=Math.max(30,Math.min(54,((w-(G.cols-1)*5)/G.cols)|0,((h-(G.rows-1)*5)/G.rows)|0));
+ g.style.gridTemplateColumns=`repeat(${G.cols},${px}px)`;g.innerHTML='';
+ G.grid.forEach(row=>row.forEach(x=>{
+  const d=document.createElement('div'),t=x?(x.blank?x.val:x.value)||'':'';
+  d.style.cssText=`width:${px}px;height:${px}px;font-size:${px*(t.length>2?.34:.46)}px`;
+  if(x){d.className='c '+x.type;d.textContent=t;
+   if(x.blank){d.classList.add('b');d.dataset.k=x.r+','+x.c;
+    if(x.val!==null){d.classList.add('v');if(x.st)d.classList.add(x.st);if(x.lock)d.classList.add('lk')}
+    if(G.sel===x)d.classList.add('sel');if(glow===x)d.classList.add('glow');
+    d.onclick=()=>tap(x)}}
+  g.appendChild(d)}));
+}
+function bankR(){
+ const b=$('bank');b.innerHTML='';let n=0;
+ G.bank.forEach(it=>{if(!it.used)n++;const e=document.createElement('button');e.className='t '+it.type+(it.used?' u':'');e.textContent=it.value;e.onpointerdown=ev=>drag(ev,it,e);b.appendChild(e)});
+ $('left').textContent=`Còn ${n} thẻ`;
+}
+/* Kéo thả bằng pointer events: chạy cả chuột lẫn cảm ứng; chạm nhanh = điền vào ô đang chọn */
+function drag(ev,it,el){
+ if(G.paused||G.won||G.over)return;
+ const x0=ev.clientX,y0=ev.clientY;let gh=null;
+ const mv=e=>{if(!gh&&Math.hypot(e.clientX-x0,e.clientY-y0)>8){gh=el.cloneNode(true);gh.classList.add('ghost');document.body.appendChild(gh)}
+  if(gh){gh.style.left=e.clientX+'px';gh.style.top=e.clientY+'px'}};
+ const up=e=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);
+  if(gh){gh.remove();const t=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-k]');
+   if(t){const [r,c]=t.dataset.k.split(',');G.sel=G.grid[r][c];place(it)}}else place(it)};
+ addEventListener('pointermove',mv);addEventListener('pointerup',up);
+}
+
+/* ---- Điền ô, kiểm tra, tính lượt sai ---- */
+const refresh=()=>{validate();board();bankR()},
+tok=q=>q.cells.map(([r,c])=>{const x=G.grid[r][c];return x.blank?x.val:x.value}),
+busy=()=>G.paused||G.won||G.over;
+function release(x){const b=G.bank.find(i=>i.id===x.bid);if(b)b.used=false;x.val=null;x.bid=null;x.st=''}
+function tap(x){
+ if(busy()||x.lock)return;FX.click();
+ if(G.sel===x&&x.val!==null){release(x);refresh();return}
+ G.sel=x;board();
+}
+function place(it){
+ if(busy()||it.used)return;
+ if(!G.sel){toast('Chạm chọn một ô trống trước');return}
+ const x=G.sel;if(x.lock){toast('Ô này đã được gợi ý');return}
+ if(x.val!==null)release(x);
+ x.val=it.value;x.bid=it.id;it.used=true;FX.place();G.sel=nextEmpty(x);refresh();win();
+}
+function clr(){if(busy())return;FX.click();G.blanks.forEach(x=>{if(x.val!==null&&!x.lock)release(x)});refresh()}
+function validate(){
+ G.blanks.forEach(x=>x.st='');let fresh=0,bad=false;
+ G.eqs.forEach(q=>{
+  const t=tok(q);if(t.includes(null))return;
+  const cs=q.cells.map(([r,c])=>G.grid[r][c]).filter(x=>x.blank);
+  if(evalTok(t)){cs.forEach(x=>x.st='ok');if(!G.solved.has(q.id)){G.solved.add(q.id);fresh++}}
+  else{cs.forEach(x=>{if(x.st!=='ok')x.st='bad'});const sg=q.id+':'+t.join('|');if(!G.wrong.has(sg)){G.wrong.add(sg);bad=true}}
+ });
+ if(bad){G.miss++;lives();FX.bad();
+  if(G.miss>=MAX){G.over=1;stopT();setTimeout(()=>modal(`<div style="text-align:center"><div style="font-size:52px;color:#f43f5e">${ic('heart','e')}</div><h3 style="justify-content:center">Hết lượt thử</h3><p>Bạn đã sai 3 lần ở bài này. Tính nhẩm kỹ hơn rồi thử lại nhé.</p></div><div class="row"><button class="btn" onclick="home()">Trang chủ</button><button class="btn p" onclick="again()">Làm lại bài này</button></div>`),350)}
+  else toast(`Phép tính chưa đúng. Còn ${MAX-G.miss} lượt`)}
+ else if(fresh)FX.ok();
+}
+function win(){
+ if(G.over||G.won||G.blanks.some(x=>x.val===null)||!G.eqs.every(q=>evalTok(tok(q))))return;
+ G.won=1;stopT();FX.win();
+ const k=S.lv+'-'+S.st,b=S.done[k]===undefined?G.t:Math.min(S.done[k],G.t);S.done[k]=b;save();
+ const last=S.st===10,fin=last&&S.lv===5,nx=fin?'Về trang chủ':last?`Sang Cấp ${S.lv+1}`:`Bài ${S.st+1}`;
+ setTimeout(()=>modal(`<div style="text-align:center;font-size:52px;color:#f59e0b">${ic('star','f')}</div><h3 style="justify-content:center">Hoàn thành!</h3><p style="text-align:center">Cấp ${S.lv} · Bài ${S.st}${fin?'. Bạn đã giải hết mọi cấp độ!':last?`. Đã mở khóa Cấp ${S.lv+1}`:`. Đã mở khóa Bài ${S.st+1}`}</p><div class="row"><div class="bx">Thời gian<b>${fmt(G.t)}</b></div><div class="bx">Kỷ lục<b>${fmt(b)}</b></div></div><div class="row"><button class="btn" onclick="stages()">${ic('grid')} Bài tập</button><button class="btn p" onclick="nextSt()">${nx}</button></div>`),320);
+}
+function nextSt(){closeM();if(S.st<10)play(S.lv,S.st+1);else if(S.lv<5&&lvOpen(S.lv+1))play(S.lv+1,1);else home()}
+
+/* ---- Gợi ý & Combo 3 câu ---- */
+function hint(){
+ if(busy())return;
+ if(S.hints<=0){FX.bad();quiz();toast('Hết gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm');return}
+ const s=G.sel,x=s&&!s.lock&&s.val!==s.value?s:pick(G.blanks.filter(y=>y.val!==y.value));if(!x)return;
+ if(x.val!==null)release(x);
+ const it=G.bank.find(b=>b.value===x.value&&!b.used)||G.bank.find(b=>b.value===x.value&&!G.blanks.some(y=>y.bid===b.id&&y.lock));if(!it)return;
+ const o=G.blanks.find(y=>y.bid===it.id);if(o)release(o);
+ x.val=it.value;x.bid=it.id;it.used=true;x.lock=true;S.hints--;save();hintUI();FX.ok();
+ G.sel=nextEmpty(x);validate();board(x);bankR();win();
+}
+let Q={n:0,a:0};
+function quiz(){Q.n=0;qr()}
+function qr(){
+ const L=LV[S.lv-1],e=genEq(S.lv),h=ri(0,2),ans=[e.a,e.b,e.c][h],
+ txt=h===0?`? ${e.op} ${e.b} = ${e.c}`:h===1?`${e.a} ${e.op} ? = ${e.c}`:`${e.a} ${e.op} ${e.b} = ?`;
+ Q.a=ans;const o=new Set([ans]);
+ while(o.size<4){const v=ans+ri(-15,15);if(v>=1&&(!L.strict||v>=10&&v<=99))o.add(v)}
+ modal(`<h3>${ic('zap')} Combo 3 câu</h3><p>Đúng liên tiếp 3 câu để nhận thêm 1 gợi ý</p><div class="steps">${[0,1,2].map(i=>`<i style="background:${i<Q.n?'#22c55e':i===Q.n?'#f59e0b':'var(--line)'}"></i>`).join('')}</div><div class="qq">${txt}</div><div class="og">${shuf([...o]).map(v=>`<button class="btn" onclick="qa(${v})">${v}</button>`).join('')}</div><div class="row"><button class="btn" onclick="closeM()">Đóng</button></div>`);
+}
+function qa(v){
+ if(v===Q.a){Q.n++;
+  if(Q.n>=3){S.hints++;save();closeM();FX.win();toast('Bạn nhận được +1 gợi ý');if(!$('home').hidden)home();else hintUI()}
+  else{FX.ok();qr()}}
+ else{FX.bad();Q.n=0;toast('Sai rồi. Làm lại từ câu 1');qr()}
+}
+addEventListener('resize',()=>{if(!$('game').hidden)board()});
+home();
+</script>
+</body>
+</html>
