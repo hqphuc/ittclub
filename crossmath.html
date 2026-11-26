@@ -20,7 +20,14 @@ button:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
 .f{fill:currentColor}.e{opacity:.3}
 #app{min-height:100%;max-width:640px;margin:auto;display:flex;flex-direction:column;padding:10px 12px;gap:10px}
 .top{display:flex;align-items:center;justify-content:space-between}
-.ttl{text-align:center;line-height:1.1}.ttl h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.08em}
+.ttl{text-align:center;line-height:1.1}
+.logo{display:flex;flex-direction:column;align-items:center;margin:2px 0 10px;--s:min(15vw,76px)}
+.lr{display:flex}
+.lr i{width:var(--s);height:var(--s);border:1px solid #000;margin:0 -1px -1px 0;background:#ffe066;color:#000;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:calc(var(--s)*.58)}
+.lr i.w{background:#fff;color:#1d4ed8}
+.lr i.e{background:none;border-color:transparent}
+.by{display:flex;margin-top:14px}
+.by b{width:24px;height:24px;border:1px solid var(--ink);margin-right:-1px;display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--ink)}.ttl h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.08em}
 #hS{display:flex;gap:2px;justify-content:center;align-items:center;color:#f59e0b;font-size:12px;min-height:16px}
 .ib,.chip,.pill,.lv,.tray,.mc{background:var(--card);border:1px solid var(--line)}
 .ib{width:46px;height:46px;border-radius:6px;display:grid;place-items:center;font-size:18px}
@@ -101,7 +108,7 @@ main{flex:1;display:flex;flex-direction:column;gap:10px}
 <div id="app">
 <header class="top">
  <button class="ib" id="bB" onclick="home()" aria-label="Về trang chủ"><svg class="ic"><use href="#i-back"/></svg></button>
- <div class="ttl"><h1 id="hT">CROSS MATH</h1><br><i>creat by HQPHUC</i><div id="hS"></div></div>
+ <div class="ttl"><h1 id="hT">CROSS MATH</h1><div id="hS"></div></div>
  <button class="ib" onclick="help()" aria-label="Luật chơi"><svg class="ic"><use href="#i-help"/></svg></button>
 </header>
 <main id="home"></main>
@@ -235,9 +242,10 @@ function buildOnce(lv){
 }
 
 /* ---- Màn hình chính & chọn bài ---- */
+const LOGO=`<div class="logo"><div class="lr">${[...'CROSS'].map(c=>`<i>${c}</i>`).join('')}</div><div class="lr"><i class="e"></i>${[...'MATH'].map(c=>`<i class="w">${c}</i>`).join('')}</div><div class="by">${[...'HQPHUC'].map(c=>`<b>${c}</b>`).join('')}</div></div>`;
 function home(){
- stopT();closeM();$('home').hidden=false;$('game').hidden=true;$('bB').style.visibility='hidden';$('hT').textContent='CROSS MATH';$('hS').innerHTML='';
- $('home').innerHTML=`<div><button class="pill" onclick="quiz()" aria-label="Nhận thêm gợi ý">${ic('bulb')} Gợi ý: <b>${S.hints}</b> ${ic('plus')}</button></div>`+
+ stopT();closeM();$('home').hidden=false;$('game').hidden=true;$('bB').style.visibility='hidden';$('hT').textContent='';$('hS').innerHTML='';
+ $('home').innerHTML=LOGO+`<div><button class="pill" onclick="quiz()" aria-label="Nhận thêm gợi ý">${ic('bulb')} Gợi ý: <b>${S.hints}</b> ${ic('plus')}</button></div>`+
  LV.map(l=>{const o=lvOpen(l.n),d=[1,2,3,4,5,6,7,8,9,10].filter(s=>dn(l.n,s)).length;
   return `<button class="lv ${o?'':'k'}" style="--c:${l.c}" onclick="${o?`pickLv(${l.n})`:`toast('Hoàn thành 10 bài Cấp ${l.n-1} để mở khóa')`}"><span class="lb">${o?l.n:ic('lock')}</span><span style="flex:1"><b>${l.vi}</b> <span class="st">${ic('star','f').repeat(l.s)}</span><br><small>${o?l.d:'Đang khóa'}</small><span class="bar"><i style="width:${d*10}%"></i></span></span><b>${d}/10</b></button>`}).join('')+
  `<button class="pill" style="align-self:center;box-shadow:none;border-color:transparent;background:none;color:var(--mut);font-size:13px" onclick="resetAsk()">${ic('redo')} Đặt lại tiến độ</button>`;
@@ -265,8 +273,9 @@ function play(l,s){
 }
 const again=()=>{FX.click();play(S.lv,S.st)};
 const nextEmpty=cur=>{const b=G.blanks,i=cur?b.indexOf(cur):-1;for(let k=1;k<=b.length;k++){const x=b[(i+k)%b.length];if(x.val===null)return x}return null};
-const startT=()=>{stopT();G.timer=setInterval(()=>{if(!G.paused&&!G.won&&!G.over){G.t++;$('tm').textContent=fmt(G.t)}},1000)},
-stopT=()=>{if(G.timer){clearInterval(G.timer);G.timer=null}};
+let TM=null,last=0;
+const startT=()=>{stopT();last=Date.now();G.ms=0;TM=setInterval(()=>{const n=Date.now();if(!G.paused&&!G.won&&!G.over){G.ms+=n-last;G.t=G.ms/1000|0;$('tm').textContent=fmt(G.t)}last=n},250)},
+stopT=()=>{clearInterval(TM);TM=null};
 function pause(){if(G.won||G.over)return;FX.click();G.paused=!G.paused;$('pov').hidden=!G.paused;$('pi').innerHTML=ic(G.paused?'play':'pause')}
 const lives=()=>{$('hr').innerHTML=Array.from({length:MAX},(_,i)=>ic('heart',i<MAX-G.miss?'f':'e')).join('')},
 hintUI=()=>{$('hb').textContent=S.hints>0?S.hints:'+'};
@@ -336,7 +345,7 @@ function validate(){
 }
 function win(){
  if(G.over||G.won||G.blanks.some(x=>x.val===null)||!G.eqs.every(q=>evalTok(tok(q))))return;
- G.won=1;stopT();FX.win();
+ G.ms+=Date.now()-last;G.t=G.ms/1000|0;G.won=1;stopT();FX.win();
  const k=S.lv+'-'+S.st,b=S.done[k]===undefined?G.t:Math.min(S.done[k],G.t);S.done[k]=b;save();
  const last=S.st===10,fin=last&&S.lv===5,nx=fin?'Về trang chủ':last?`Sang Cấp ${S.lv+1}`:`Bài ${S.st+1}`;
  setTimeout(()=>modal(`<div style="text-align:center;font-size:52px;color:#f59e0b">${ic('star','f')}</div><h3 style="justify-content:center">Hoàn thành!</h3><p style="text-align:center">Cấp ${S.lv} · Bài ${S.st}${fin?'. Bạn đã giải hết mọi cấp độ!':last?`. Đã mở khóa Cấp ${S.lv+1}`:`. Đã mở khóa Bài ${S.st+1}`}</p><div class="row"><div class="bx">Thời gian<b>${fmt(G.t)}</b></div><div class="bx">Kỷ lục<b>${fmt(b)}</b></div></div><div class="row"><button class="btn" onclick="stages()">${ic('grid')} Bài tập</button><button class="btn p" onclick="nextSt()">${nx}</button></div>`),320);
