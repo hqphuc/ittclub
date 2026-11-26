@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Toán Nhẩm Ô Chữ - Crossmath Master</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+
+    :root {
+      --bg-app: #eff2f5;
+      --bg-board: #e2e6ec;
+      --tile-fixed: #dcd2b4;
+      --tile-fixed-border: #b8ad8e;
+      --tile-empty: #f8fafc;
+      --tile-empty-border: #cbd5e1;
+      --tile-selected: #fef08a;
+      --tile-selected-border: #eab308;
+      --tile-filled: #ffffff;
+      --tile-correct: #bbf7d0;
+      --tile-correct-border: #22c55e;
+      --tile-wrong: #fecaca;
+      --tile-wrong-border: #ef4444;
+      --bank-tile: #cbd5e1;
+      --bank-tile-border: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-app);
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar for board on small screens */
+    .board-wrapper::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .board-wrapper::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .cell-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      border-radius: 6px;
+      transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .cell-fixed {
+      background-color: var(--tile-fixed);
+      border: 2px solid var(--tile-fixed-border);
+      color: #292524;
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .cell-empty {
+      background-color: var(--tile-empty);
+      border: 2px solid var(--tile-empty-border);
+      cursor: pointer;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .cell-empty:hover {
+      border-color: #64748b;
+    }
+
+    .cell-selected {
+      background-color: var(--tile-selected) !important;
+      border: 2.5px solid var(--tile-selected-border) !important;
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.35);
+    }
+
+    .cell-filled {
+      background-color: var(--tile-filled);
+      border: 2px solid #64748b;
+      color: #0f172a;
+      cursor: pointer;
+      box-shadow: 0 2px 0 #94a3b8;
+    }
+
+    .cell-correct {
+      background-color: var(--tile-correct) !important;
+      border: 2px solid var(--tile-correct-border) !important;
+      color: #14532d !important;
+    }
+
+    .cell-wrong {
+      background-color: var(--tile-wrong) !important;
+      border: 2px solid var(--tile-wrong-border) !important;
+      color: #7f1d1d !important;
+      animation: shake 0.35s ease-in-out;
+    }
+
+    .cell-hint-glow {
+      animation: pulseGlow 0.9s ease-out;
+    }
+
+    .bank-card {
+      background-color: #d8dee6;
+      border: 2px solid #9aa5b4;
+      border-bottom-width: 4px;
+      color: #1e293b;
+      font-weight: 800;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .bank-card:hover:not(.used) {
+      transform: translateY(-2px);
+      background-color: #cbd5e1;
+      border-color: #475569;
+    }
+
+    .bank-card:active:not(.used) {
+      transform: translateY(1px);
+      border-bottom-width: 2px;
+    }
+
+    .bank-card.used {
+      opacity: 0.25;
+      pointer-events: none;
+      transform: scale(0.92);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.8); transform: scale(1.15); }
+      100% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); transform: scale(1); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-pop {
+      animation: popIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= HEADER BAR ================= -->
+  <header class="w-full max-w-3xl mx-auto px-3 pt-3 pb-2 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <button id="btn-back" onclick="goHome()" title="Chọn cấp độ"
+        class="w-10 h-10 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center shadow-sm transition active:scale-95">
+        <i class="fa-solid fa-arrow-left text-base"></i>
+      </button>
+      <button id="btn-restart" onclick="restartStage()" title="Làm lại bài này"
+        class="w-10 h-10 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center shadow-sm transition active:scale-95 hidden">
+        <i class="fa-solid fa-rotate-right text-base"></i>
+      </button>
+    </div>
+
+    <div class="text-center">
+      <h1 id="header-title" class="text-xl sm:text-2xl font-black tracking-wide text-slate-800 uppercase">
+        TOÁN NHẨM Ô CHỮ
+      </h1>
+      <div id="header-stars" class="flex items-center justify-center gap-1 text-amber-400 text-xs mt-0.5"></div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="btn-stages" onclick="openStageModal()" title="Danh sách 10 bài"
+        class="w-10 h-10 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center shadow-sm transition active:scale-95 hidden">
+        <i class="fa-solid fa-grip text-base"></i>
+      </button>
+      <button onclick="openHelpModal()" title="Hướng dẫn chơi"
+        class="w-10 h-10 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center shadow-sm transition active:scale-95">
+        <i class="fa-solid fa-info text-base"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MÀN HÌNH CHỌN CẤP ĐỘ (HOME) ================= -->
+  <main id="screen-home" class="flex-1 w-full max-w-2xl mx-auto px-4 py-4 flex flex-col justify-between">
+    <div>
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 mb-5 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tiến độ học tập</p>
+          <p class="text-lg sm:text-xl font-extrabold text-slate-800 mt-0.5">
+            Đã hoàn thành: <span id="total-completed" class="text-emerald-600">0</span> / 50 bài
+          </p>
+        </div>
+        <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3.5 py-2 rounded-xl">
+          <i class="fa-solid fa-lightbulb text-amber-500 text-xl"></i>
+          <div>
+            <div class="text-[11px] font-bold text-amber-700 uppercase">Gợi ý hiện có</div>
+            <div id="home-hints-count" class="text-base font-black text-amber-600 leading-none">3</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-sm font-extrabold uppercase tracking-wider text-slate-500 mb-3 px-1">
+        Chọn cấp độ thử thách
+      </h2>
+
+      <div id="levels-container" class="space-y-3">
+        <!-- Render 5 levels via JS -->
+      </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-400 py-4">
+      Rèn luyện tư duy tính nhẩm & suy luận logic mỗi ngày
+    </footer>
+  </main>
+
+  <!-- ================= MÀN HÌNH CHƠI GAME ================= -->
+  <main id="screen-game" class="hidden flex-1 w-full max-w-3xl mx-auto px-2 sm:px-4 pb-4 flex flex-col justify-between">
+    
+    <!-- Thanh trạng thái: Bài số + Combo + Đồng hồ -->
+    <div class="flex items-center justify-between px-2 py-1.5 mb-1">
+      <div class="flex items-center gap-2">
+        <span id="stage-badge" class="bg-slate-800 text-white text-xs sm:text-sm font-extrabold px-3 py-1 rounded-full shadow-sm">
+          Bài 1 / 10
+        </span>
+        <button onclick="clearAllUserInputs()" title="Xóa hết ô đã điền"
+          class="text-xs font-bold text-slate-500 hover:text-rose-600 bg-white border border-slate-200 px-2.5 py-1 rounded-full transition">
+          <i class="fa-solid fa-eraser mr-1"></i>Xóa hết
+        </button>
+      </div>
+
+      <!-- Thanh tiến trình Combo 3 câu hỏi -->
+      <div class="flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-full shadow-xs"
+           title="Hoàn thành đúng liên tiếp 3 phép tính để nhận thêm +1 Gợi ý">
+        <i class="fa-solid fa-fire text-orange-500 text-xs"></i>
+        <span class="text-[11px] font-extrabold text-slate-600 hidden sm:inline">Combo:</span>
+        <div id="combo-dots" class="flex items-center gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
+        </div>
+        <span id="combo-text" class="text-[11px] font-black text-orange-600 ml-0.5">0/3</span>
+      </div>
+
+      <!-- Đồng hồ tính thời gian -->
+      <button onclick="togglePause()" id="timer-btn"
+        class="flex items-center gap-1.5 font-mono text-base sm:text-lg font-extrabold text-slate-700 hover:text-slate-900 bg-white/80 px-2.5 py-0.5 rounded-lg border border-slate-200/80 transition">
+        <span id="timer-display">00:00</span>
+        <i id="pause-icon" class="fa-solid fa-pause text-xs text-slate-500"></i>
+      </button>
+    </div>
+
+    <!-- Khu vực Bảng Ô Chữ (Crossmath Grid) -->
+    <div class="relative flex-1 flex items-center justify-center my-1 min-h-[280px]">
+      <div id="board-wrapper" class="board-wrapper w-full h-full flex items-center justify-center overflow-auto p-2 bg-[#e4e8ee] rounded-2xl border border-slate-300/70 shadow-inner">
+        <div id="crossmath-grid" class="grid gap-1 sm:gap-1.5 transition-all"></div>
+      </div>
+
+      <!-- Màn che khi Tạm dừng -->
+      <div id="pause-overlay" class="hidden absolute inset-0 bg-slate-800/90 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center text-white z-20">
+        <i class="fa-solid fa-circle-pause text-5xl text-amber-400 mb-3"></i>
+        <p class="text-xl font-black mb-1">Đang tạm dừng</p>
+        <p class="text-sm text-slate-300 mb-4">Thời gian đã được giữ nguyên</p>
+        <button onclick="togglePause()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold px-6 py-2.5 rounded-full shadow-lg transition active:scale-95">
+          <i class="fa-solid fa-play mr-2"></i>Tiếp tục giải toán
+        </button>
+      </div>
+    </div>
+
+    <!-- Khu vực Khay Thẻ Số / Dấu & Nút Gợi Ý -->
+    <div class="mt-2 bg-white/90 border border-slate-200 rounded-2xl p-3 shadow-sm relative">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold text-slate-500">
+          <i class="fa-regular fa-hand-pointer mr-1 text-slate-400"></i>
+          Chọn ô trống trên bảng rồi bấm thẻ bên dưới (hoặc kéo thả)
+        </span>
+        <span id="remaining-tiles-text" class="text-xs font-extrabold text-slate-600">Còn: 0 thẻ</span>
+      </div>
+
+      <div class="flex items-end gap-2">
+        <!-- Danh sách thẻ số & phép tính -->
+        <div id="number-bank" class="flex-1 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-h-[54px]">
+          <!-- Render bank tiles via JS -->
+        </div>
+
+        <!-- Nút Gợi ý (Bóng đèn góc dưới phải giống ảnh mẫu) -->
+        <button id="btn-hint" onclick="useHint()"
+          class="relative shrink-0 w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-slate-200 hover:bg-amber-100 border-2 border-slate-300 hover:border-amber-400 flex items-center justify-center shadow-md transition active:scale-90 group">
+          <i class="fa-solid fa-lightbulb text-2xl text-slate-700 group-hover:text-amber-500 transition-colors"></i>
+          <span id="hint-badge"
+            class="absolute -top-1 -right-1 min-w-[24px] h-6 px-1.5 rounded-full bg-blue-600 text-white text-xs font-black flex items-center justify-center border-2 border-white shadow">
+            3
+          </span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= MODAL CHỌN BÀI (1 - 10) ================= -->
+  <div id="modal-stages" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl animate-pop">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 id="modal-stage-title" class="text-lg font-black text-slate-800">Cấp độ 1</h3>
+          <p class="text-xs text-slate-500 font-semibold">Chọn bài tập từ 1 đến 10</p>
+        </div>
+        <button onclick="closeStageModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="stages-grid" class="grid grid-cols-5 gap-2.5 my-4">
+        <!-- 10 buttons rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL HƯỚNG DẪN ================= -->
+  <div id="modal-help" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl animate-pop">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-black text-slate-800">
+          <i class="fa-solid fa-circle-info text-blue-600 mr-1.5"></i>Hướng dẫn giải toán nhẩm
+        </h3>
+        <button onclick="closeHelpModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-sm text-slate-600 leading-relaxed">
+        <div class="flex items-start gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+          <p>Điền tất cả các thẻ số (và dấu phép tính ở cấp độ cao) vào ô trống sao cho mọi phép tính theo <strong>hàng ngang (trái sang phải)</strong> và <strong>cột dọc (trên xuống dưới)</strong> đều đúng.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <p><strong>Thứ tự tính:</strong> Trong các phép tính liên tiếp cùng một hàng/cột, thực hiện lần lượt từ <strong>trái sang phải</strong> hoặc từ <strong>trên xuống dưới</strong> (ví dụ: <code>8 - 7 + 6 = 7</code>).</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <p><strong>Nút Gợi ý (<i class="fa-solid fa-lightbulb text-amber-500"></i>):</strong> Ban đầu bạn có sẵn <strong>3 gợi ý</strong>. Mỗi khi bạn hoàn thành đúng liên tiếp <strong>3 phép tính (Combo 3/3)</strong> mà không mắc lỗi, bạn sẽ được thưởng thêm <strong>+1 Gợi ý</strong>!</p>
+        </div>
+      </div>
+      <button onclick="closeHelpModal()" class="w-full mt-5 bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-2.5 rounded-xl transition">
+        Đã hiểu, bắt đầu thôi!
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL HOÀN THÀNH BÀI ================= -->
+  <div id="modal-win" class="hidden fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl animate-pop">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-3xl shadow-inner">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+      <h3 class="text-2xl font-black text-slate-800">Xuất sắc!</h3>
+      <p id="win-subtitle" class="text-sm font-bold text-slate-500 mt-1">Bạn đã hoàn thành Cấp độ 1 - Bài 1</p>
+
+      <div class="grid grid-cols-2 gap-3 my-5">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3">
+          <div class="text-[11px] font-bold text-slate-400 uppercase">Thời gian</div>
+          <div id="win-time" class="text-xl font-black text-slate-800 font-mono mt-0.5">00:45</div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3">
+          <div class="text-[11px] font-bold text-amber-600 uppercase">Kỷ lục bài này</div>
+          <div id="win-best" class="text-xl font-black text-amber-700 font-mono mt-0.5">00:45</div>
+        </div>
+      </div>
+
+      <div class="flex gap-2.5">
+        <button onclick="openStageModalFromWin()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3 rounded-xl transition">
+          Chọn bài
+        </button>
+        <button id="btn-next-stage" onclick="nextStage()" class="flex-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 px-5 rounded-xl shadow-md transition active:scale-95">
+          Bài tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST THÔNG BÁO ================= -->
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs sm:text-sm font-extrabold px-4 py-2 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50">
+    Thông báo
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. CẤU HÌNH 5 CẤP ĐỘ & TRẠNG THÁI ỨNG DỤNG
+       ========================================================================= */
+    const LEVELS_CONFIG = [
+      {
+        id: 1,
+        stars: 1,
+        name: "Cấp độ 1",
+        viLabel: "Dễ",
+        enLabel: "Easy",
+        desc: "Phép cộng, trừ cơ bản trong phạm vi 20",
+        gridSize: 5,
+        targetEquations: 4,
+        ops: ['+', '-'],
+        maxNum: 15,
+        hideOpChance: 0,
+        color: "emerald"
+      },
+      {
+        id: 2,
+        stars: 2,
+        name: "Cấp độ 2",
+        viLabel: "Trung bình",
+        enLabel: "Medium",
+        desc: "Phép cộng, trừ mở rộng trong phạm vi 40",
+        gridSize: 7,
+        targetEquations: 7,
+        ops: ['+', '-'],
+        maxNum: 30,
+        hideOpChance: 0,
+        color: "sky"
+      },
+      {
+        id: 3,
+        stars: 3,
+        name: "Cấp độ 3",
+        viLabel: "Khó",
+        enLabel: "Hard",
+        desc: "Kết hợp cả 4 phép tính: Cộng, Trừ, Nhân, Chia",
+        gridSize: 9,
+        targetEquations: 10,
+        ops: ['+', '-', '×', '÷'],
+        maxNum: 35,
+        hideOpChance: 0.1,
+        color: "amber"
+      },
+      {
+        id: 4,
+        stars: 4,
+        name: "Cấp độ 4",
+        viLabel: "Nâng cao",
+        enLabel: "Advanced",
+        desc: "Mạng lưới dày đặc & thử thách tìm dấu phép tính",
+        gridSize: 11,
+        targetEquations: 13,
+        ops: ['+', '-', '×', '÷'],
+        maxNum: 45,
+        hideOpChance: 0.25,
+        color: "orange"
+      },
+      {
+        id: 5,
+        stars: 5,
+        name: "Cấp độ 5",
+        viLabel: "Chuyên gia",
+        enLabel: "Expert",
+        desc: "Siêu lưới ô chữ & chuỗi tính nhẩm liên hoàn 3 số",
+        gridSize: 13,
+        targetEquations: 17,
+        ops: ['+', '-', '×', '÷'],
+        maxNum: 60,
+        hideOpChance: 0.3,
+        color: "rose"
+      }
+    ];
+
+    const STORAGE_KEY = "crossmath_edu_v1";
+
+    let appState = {
+      hints: 3,
+      combo: 0, // 0 -> 3 (đạt 3 sẽ cộng +1 gợi ý và reset về 0)
+      completed: {}, // { "1-1": 42 (giây tốt nhất) }
+      currentLevel: 1,
+      currentStage: 1
+    };
+
+    // Trạng thái ván chơi hiện tại
+    let game = {
+      rows: 0,
+      cols: 0,
+      grid: [], // 2D array: null hoặc { r, c, type: 'num'|'op'|'eq', value: string, isBlank: bool, userVal: string|null, bankId: number|null, status: 'normal'|'correct'|'wrong' }
+      equations: [], // Danh sách các phương trình để kiểm tra đúng/sai & tính combo
+      solvedEqIds: new Set(),
+      bank: [], // [{ id, value, usedByCellKey }]
+      selectedCellKey: null, // "r,c"
+      timerSeconds: 0,
+      timerInterval: null,
+      isPaused: false,
+      isWon: false
+    };
+
+    /* =========================================================================
+       2. ÂM THANH TỔNG HỢP (WEB AUDIO API)
+       ========================================================================= */
+    const AudioFX = (() => {
+      let ctx = null;
+      function getCtx() {
+        if (!ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) ctx = new AudioContext();
+        }
+        return ctx;
+      }
+      function playTone(freq, type, duration, delay = 0, gainVal = 0.12) {
+        const c = getCtx();
+        if (!c) return;
+        if (c.state === 'suspended') c.resume();
+        const osc = c.createOscillator();
+        const gain = c.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, c.currentTime + delay);
+        gain.gain.setValueAtTime(gainVal, c.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(c.currentTime + delay);
+        osc.stop(c.currentTime + delay + duration);
+      }
+      return {
+        click: () => playTone(520, 'sine', 0.06, 0, 0.08),
+        place: () => playTone(640, 'triangle', 0.09, 0, 0.1),
+        correct: () => {
+          playTone(587.33, 'sine', 0.12, 0, 0.12);
+          playTone(880, 'sine', 0.2, 0.09, 0.12);
+        },
+        comboBonus: () => {
+          playTone(523.25, 'triangle', 0.1, 0, 0.14);
+          playTone(659.25, 'triangle', 0.1, 0.08, 0.14);
+          playTone(783.99, 'triangle', 0.1, 0.16, 0.14);
+          playTone(1046.5, 'triangle', 0.25, 0.24, 0.16);
+        },
+        wrong: () => {
+          playTone(220, 'sawtooth', 0.15, 0, 0.09);
+          playTone(180, 'sawtooth', 0.18, 0.1, 0.09);
+        },
+        hint: () => {
+          playTone(740, 'sine', 0.12, 0, 0.12);
+          playTone(987.77, 'sine', 0.22, 0.08, 0.12);
+        },
+        win: () => {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => {
+            playTone(f, 'triangle', 0.22, idx * 0.1, 0.15);
+          });
+        }
+      };
+    })();
+
+    /* =========================================================================
+       3. LƯU TRỮ DỮ LIỆU & TIỆN ÍCH
+       ========================================================================= */
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {}
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          hints: appState.hints,
+          combo: appState.combo,
+          completed: appState.completed
+        }));
+      } catch (e) {}
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    let toastTimeout = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.remove('opacity-0');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => el.classList.add('opacity-0'), 2200);
+    }
+
+    /* =========================================================================
+       4. BỘ SINH ĐỀ TOÁN NHẨM Ô CHỮ (DETERMINISTIC SEEDED GENERATOR)
+       ========================================================================= */
+    function createSeededRandom(seed) {
+      let s = seed % 2147483647;
+      if (s <= 0) s += 2147483646;
+      return function() {
+        s = (s * 16807) % 2147483647;
+        return (s - 1) / 2147483646;
+      };
+    }
+
+    function generateEquationValues(rng, cfg, fixedA = null, fixedC = null) {
+      const ops = cfg.ops;
+      // Thử tối đa 40 lần để sinh bộ số đẹp (số nguyên dương, chia hết, không quá lớn)
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const op = ops[Math.floor(rng() * ops.length)];
+        let a = fixedA, b = null, c = fixedC;
+
+        if (a !== null && c !== null) {
+          if (op === '+') {
+            b = c - a;
+            if (b >= 1 && b <= cfg.maxNum) return { a, op, b, c };
+          } else if (op === '-') {
+            b = a - c;
+            if (b >= 1 && b <= cfg.maxNum) return { a, op, b, c };
+          } else if (op === '×') {
+            if (a > 0 && c % a === 0) {
+              b = c / a;
+              if (b >= 2 && b <= 12) return { a, op, b, c };
+            }
+          } else if (op === '÷') {
+            if (c > 0 && a % c === 0) {
+              b = a / c;
+              if (b >= 2 && b <= 12) return { a, op, b, c };
+            }
+          }
+        } else if (a !== null) {
+          if (op === '+') {
+            b = 1 + Math.floor(rng() * Math.min(20, cfg.maxNum));
+            c = a + b;
+            if (c <= cfg.maxNum * 1.5) return { a, op, b, c };
+          } else if (op === '-') {
+            if (a > 2) {
+              b = 1 + Math.floor(rng() * (a - 1));
+              c = a - b;
+              if (c >= 1) return { a, op, b, c };
+            }
+          } else if (op === '×') {
+            if (a >= 2 && a <= 12) {
+              b = 2 + Math.floor(rng() * 8);
+              c = a * b;
+              if (c <= 99) return { a, op, b, c };
+            }
+          } else if (op === '÷') {
+            const divisors = [];
+            for (let d = 2; d <= 12; d++) {
+              if (a % d === 0 && a / d >= 1) divisors.push(d);
+            }
+            if (divisors.length > 0) {
+              b = divisors[Math.floor(rng() * divisors.length)];
+              c = a / b;
+              return { a, op, b, c };
+            }
+          }
+        } else if (c !== null) {
+          if (op === '+') {
+            if (c > 2) {
+              a = 1 + Math.floor(rng() * (c - 1));
+              b = c - a;
+              return { a, op, b, c };
+            }
+          } else if (op === '-') {
+            b = 1 + Math.floor(rng() * 15);
+            a = c + b;
+            if (a <= cfg.maxNum * 1.5) return { a, op, b, c };
+          } else if (op === '×') {
+            const divisors = [];
+            for (let d = 2; d <= 12; d++) {
+              if (c % d === 0 && c / d >= 2 && c / d <= 12) divisors.push(d);
+            }
+            if (divisors.length > 0) {
+              a = divisors[Math.floor(rng() * divisors.length)];
+              b = c / a;
+              return { a, op, b, c };
+            }
+          } else if (op === '÷') {
+            if (c >= 1 && c <= 12) {
+              b = 2 + Math.floor(rng() * 8);
+              a = c * b;
+              if (a <= 99) return { a, op, b, c };
+            }
+          }
+        } else {
+          // Cả a và c đều tự do
+          if (op === '+') {
+            a = 2 + Math.floor(rng() * (cfg.maxNum - 2));
+            b = 1 + Math.floor(rng() * (cfg.maxNum - 1));
+            c = a + b;
+            return { a, op, b, c };
+          } else if (op === '-') {
+            c = 1 + Math.floor(rng() * (cfg.maxNum - 2));
+            b = 1 + Math.floor(rng() * (cfg.maxNum - 2));
+            a = c + b;
+            return { a, op, b, c };
+          } else if (op === '×') {
+            a = 2 + Math.floor(rng() * 8);
+            b = 2 + Math.floor(rng() * 8);
+            c = a * b;
+            return { a, op, b, c };
+          } else if (op === '÷') {
+            c = 2 + Math.floor(rng() * 8);
+            b = 2 + Math.floor(rng() * 8);
+            a = c * b;
+            return { a, op, b, c };
+          }
+        }
+      }
+      return null;
+    }
+
+    function buildCrossmathPuzzle(levelId, stageNum) {
+      const cfg = LEVELS_CONFIG.find(l => l.id === levelId);
+      const N = cfg.gridSize;
+      // Thử vài seed biến thể nếu mật độ phương trình chưa đạt chuẩn
+      for (let variant = 0; variant < 15; variant++) {
+        const seed = levelId * 10000 + stageNum * 137 + variant * 29;
+        const rng = createSeededRandom(seed);
+
+        const cells = Array.from({ length: N }, () => Array(N).fill(null));
+        const equations = [];
+
+        function canPlace(coords, values) {
+          for (let i = 0; i < coords.length; i++) {
+            const [r, c] = coords[i];
+            if (r < 0 || r >= N || c < 0 || c >= N) return false;
+            const existing = cells[r][c];
+            if (existing !== null) {
+              // Chỉ cho phép giao nhau tại ô số (tọa độ r chẵn, c chẵn) và phải trùng giá trị
+              if (existing.type !== 'num' || values[i].type !== 'num') return false;
+              if (existing.value !== values[i].value) return false;
+            } else {
+              // Tránh 2 ô kề cạnh nhau tạo thành chuỗi vô nghĩa nếu không cùng phương trình
+              const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+              for (const [dr, dc] of dirs) {
+                const nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < N && nc >= 0 && nc < N && cells[nr][nc] !== null) {
+                  // Cho phép nếu ô lân cận thuộc chính phương trình đang đặt
+                  const isPartOfCurrent = coords.some(([cr, cc]) => cr === nr && cc === nc);
+                  if (!isPartOfCurrent) return false;
+                }
+              }
+            }
+          }
+          return true;
+        }
+
+        function placeEquation(coords, values) {
+          const eqCells = [];
+          for (let i = 0; i < coords.length; i++) {
+            const [r, c] = coords[i];
+            if (!cells[r][c]) {
+              cells[r][c] = {
+                r, c,
+                type: values[i].type,
+                value: String(values[i].value),
+                isBlank: false,
+                userVal: null,
+                bankId: null,
+                status: 'normal'
+              };
+            }
+            eqCells.push([r, c]);
+          }
+          equations.push({
+            id: equations.length,
+            cells: eqCells // [posA, posOp, posB, posEq, posC] hoặc chuỗi 7 ô
+          });
+        }
+
+        // Đặt phương trình hạt giống đầu tiên ở gần góc trên trái
+        const firstEq = generateEquationValues(rng, cfg);
+        if (!firstEq) continue;
+        placeEquation(
+          [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]],
+          [
+            { type: 'num', value: firstEq.a },
+            { type: 'op', value: firstEq.op },
+            { type: 'num', value: firstEq.b },
+            { type: 'eq', value: '=' },
+            { type: 'num', value: firstEq.c }
+          ]
+        );
+
+        // Phát triển mạng lưới phương trình đan chéo
+        let tries = 0;
+        while (equations.length < cfg.targetEquations && tries < 600) {
+          tries++;
+          // Lấy danh sách các ô số hiện có trên bàn cờ (tọa độ chẵn)
+          const numAnchors = [];
+          for (let r = 0; r < N; r += 2) {
+            for (let c = 0; c < N; c += 2) {
+              if (cells[r][c] && cells[r][c].type === 'num') {
+                numAnchors.push([r, c, Number(cells[r][c].value)]);
+              }
+            }
+          }
+          if (numAnchors.length === 0) break;
+
+          const [ar, ac, aVal] = numAnchors[Math.floor(rng() * numAnchors.length)];
+          const isHoriz = rng() < 0.5;
+          // Vị trí của điểm neo trong phương trình mới: 0 (số đầu A) hoặc 4 (kết quả C)
+          const anchorRole = rng() < 0.6 ? 0 : 4;
+
+          let coords = null;
+          let eqData = null;
+
+          if (isHoriz) {
+            const startC = anchorRole === 0 ? ac : ac - 4;
+            coords = [[ar, startC], [ar, startC+1], [ar, startC+2], [ar, startC+3], [ar, startC+4]];
+            if (startC < 0 || startC + 4 >= N) continue;
+            const otherVal = anchorRole === 0
+              ? (cells[ar][startC+4] ? Number(cells[ar][startC+4].value) : null)
+              : (cells[ar][startC] ? Number(cells[ar][startC].value) : null);
+            eqData = anchorRole === 0
+              ? generateEquationValues(rng, cfg, aVal, otherVal)
+              : generateEquationValues(rng, cfg, otherVal, aVal);
+          } else {
+            const startR = anchorRole === 0 ? ar : ar - 4;
+            coords = [[startR, ac], [startR+1, ac], [startR+2, ac], [startR+3, ac], [startR+4, ac]];
+            if (startR < 0 || startR + 4 >= N) continue;
+            const otherVal = anchorRole === 0
+              ? (cells[startR+4][ac] ? Number(cells[startR+4][ac].value) : null)
+              : (cells[startR][ac] ? Number(cells[startR][ac].value) : null);
+            eqData = anchorRole === 0
+              ? generateEquationValues(rng, cfg, aVal, otherVal)
+              : generateEquationValues(rng, cfg, otherVal, aVal);
+          }
+
+          if (!eqData) continue;
+
+          const vals = [
+            { type: 'num', value: eqData.a },
+            { type: 'op', value: eqData.op },
+            { type: 'num', value: eqData.b },
+            { type: 'eq', value: '=' },
+            { type: 'num', value: eqData.c }
+          ];
+
+          if (canPlace(coords, vals)) {
+            placeEquation(coords, vals);
+          }
+        }
+
+        // Ở Cấp độ 4 & 5: Nâng cấp thêm các chuỗi phương trình 3 toán hạng (A op1 B op2 C = D) nếu còn khoảng trống
+        if (levelId >= 4) {
+          for (let extTry = 0; extTry < 120; extTry++) {
+            const eq = equations[Math.floor(rng() * equations.length)];
+            const [r0, c0] = eq.cells[0];
+            const [r4, c4] = eq.cells[4];
+            const isHoriz = r0 === r4;
+            const op2 = rng() < 0.5 ? '+' : '-';
+            const valB2 = 1 + Math.floor(rng() * 12);
+            const oldC = Number(cells[r4][c4].value);
+            const newD = op2 === '+' ? oldC + valB2 : oldC - valB2;
+            if (newD < 1 || newD > 99) continue;
+
+            if (isHoriz && c4 + 4 < N) {
+              const extraCoords = [[r4, c4+1], [r4, c4+2], [r4, c4+3], [r4, c4+4]];
+              const extraVals = [
+                { type: 'op', value: op2 },
+                { type: 'num', value: valB2 },
+                { type: 'eq', value: '=' },
+                { type: 'num', value: newD }
+              ];
+              // Kiểm tra các ô mở rộng có trống hoàn toàn và không dính ô lạ không
+              let ok = true;
+              for (let i = 0; i < extraCoords.length; i++) {
+                const [er, ec] = extraCoords[i];
+                if (cells[er][ec] !== null) { ok = false; break; }
+                const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+                for (const [dr, dc] of dirs) {
+                  const nr = er + dr, nc = ec + dc;
+                  if (nr >= 0 && nr < N && nc >= 0 && nc < N && cells[nr][nc] !== null) {
+                    if (!(nr === r4 && nc === c4)) { ok = false; break; }
+                  }
+                }
+              }
+              if (ok) {
+                for (let i = 0; i < extraCoords.length; i++) {
+                  const [er, ec] = extraCoords[i];
+                  cells[er][ec] = {
+                    r: er, c: ec,
+                    type: extraVals[i].type,
+                    value: String(extraVals[i].value),
+                    isBlank: false,
+                    userVal: null,
+                    bankId: null,
+                    status: 'normal'
+                  };
+                  eq.cells.push([er, ec]);
+                }
+              }
+            }
+          }
+        }
+
+        if (equations.length < Math.max(3, Math.floor(cfg.targetEquations * 0.65))) continue;
+
+        // Cắt bớt hàng/cột rìa trống để bảng luôn cân đối chính giữa
+        let minR = N, maxR = 0, minC = N, maxC = 0;
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            if (cells[r][c]) {
+              minR = Math.min(minR, r);
+              maxR = Math.max(maxR, r);
+              minC = Math.min(minC, c);
+              maxC = Math.max(maxC, c);
+            }
+          }
+        }
+
+        const trimRows = maxR - minR + 1;
+        const trimCols = maxC - minC + 1;
+        const trimmedGrid = Array.from({ length: trimRows }, (_, r) =>
+          Array.from({ length: trimCols }, (_, c) => {
+            const cell = cells[r + minR][c + minC];
+            if (cell) {
+              cell.r = r;
+              cell.c = c;
+            }
+            return cell;
+          })
+        );
+
+        equations.forEach(eq => {
+          eq.cells = eq.cells.map(([r, c]) => [r - minR, c - minC]);
+        });
+
+        // Ẩn các ô để tạo câu đố (bảo đảm mỗi phương trình có ít nhất 1 ô trống và không quá nhiều ô trống gây mơ hồ)
+        const blankCells = [];
+        equations.forEach(eq => {
+          const numPositions = eq.cells.filter(([r, c]) => trimmedGrid[r][c].type === 'num');
+          const opPositions = eq.cells.filter(([r, c]) => trimmedGrid[r][c].type === 'op');
+
+          // Đếm xem phương trình này đã có ô trống nào từ giao điểm chưa
+          let existingBlanks = eq.cells.filter(([r, c]) => trimmedGrid[r][c].isBlank).length;
+
+          if (existingBlanks === 0) {
+            // Ưu tiên ẩn 1 hoặc 2 số
+            const pick = numPositions[Math.floor(rng() * numPositions.length)];
+            trimmedGrid[pick[0]][pick[1]].isBlank = true;
+            existingBlanks++;
+          }
+
+          // Ở cấp độ cao, có thể ẩn thêm 1 số nữa hoặc 1 dấu phép tính
+          if (existingBlanks === 1 && numPositions.length >= 3 && rng() < 0.55) {
+            const candidates = numPositions.filter(([r, c]) => !trimmedGrid[r][c].isBlank);
+            if (candidates.length > 0) {
+              const pick2 = candidates[Math.floor(rng() * candidates.length)];
+              trimmedGrid[pick2[0]][pick2[1]].isBlank = true;
+              existingBlanks++;
+            }
+          }
+
+          if (cfg.hideOpChance > 0 && opPositions.length > 0 && existingBlanks <= 2 && rng() < cfg.hideOpChance) {
+            const opPick = opPositions[Math.floor(rng() * opPositions.length)];
+            trimmedGrid[opPick[0]][opPick[1]].isBlank = true;
+          }
+        });
+
+        // Thu thập tất cả các ô bị ẩn để đưa vào khay thẻ bên dưới
+        for (let r = 0; r < trimRows; r++) {
+          for (let c = 0; c < trimCols; c++) {
+            const cell = trimmedGrid[r][c];
+            if (cell && cell.isBlank) {
+              blankCells.push(cell);
+            }
+          }
+        }
+
+        // Xáo trộn khay thẻ (đưa dấu phép tính lên đầu hoặc xáo trộn tự nhiên)
+        const bank = blankCells.map((cell, idx) => ({
+          id: idx,
+          value: cell.value,
+          type: cell.type,
+          usedByCellKey: null
+        }));
+
+        for (let i = bank.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [bank[i], bank[j]] = [bank[j], bank[i]];
+        }
+
+        return {
+          rows: trimRows,
+          cols: trimCols,
+          grid: trimmedGrid,
+          equations,
+          bank
+        };
+      }
+      return null;
+    }
+
+    /* =========================================================================
+       5. ĐIỀU HƯỚNG MÀN HÌNH & RENDER GIAO DIỆN HOME
+       ========================================================================= */
+    function renderHome() {
+      document.getElementById('screen-home').classList.remove('hidden');
+      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('btn-restart').classList.add('hidden');
+      document.getElementById('btn-stages').classList.add('hidden');
+      document.getElementById('header-title').textContent = "TOÁN NHẨM Ô CHỮ";
+      document.getElementById('header-stars').innerHTML = "";
+
+      const completedCount = Object.keys(appState.completed).length;
+      document.getElementById('total-completed').textContent = completedCount;
+      document.getElementById('home-hints-count').textContent = appState.hints;
+
+      const container = document.getElementById('levels-container');
+      container.innerHTML = "";
+
+      const colorMap = {
+        emerald: { bg: "bg-emerald-50", border: "border-emerald-200", badge: "bg-emerald-600", bar: "bg-emerald-500", text: "text-emerald-700" },
+        sky:     { bg: "bg-sky-50", border: "border-sky-200", badge: "bg-sky-600", bar: "bg-sky-500", text: "text-sky-700" },
+        amber:   { bg: "bg-amber-50", border: "border-amber-200", badge: "bg-amber-500", bar: "bg-amber-500", text: "text-amber-700" },
+        orange:  { bg: "bg-orange-50", border: "border-orange-200", badge: "bg-orange-600", bar: "bg-orange-500", text: "text-orange-700" },
+        rose:    { bg: "bg-rose-50", border: "border-rose-200", badge: "bg-rose-600", bar: "bg-rose-500", text: "text-rose-700" }
+      };
+
+      LEVELS_CONFIG.forEach(lvl => {
+        let doneInLevel = 0;
+        for (let s = 1; s <= 10; s++) {
+          if (appState.completed[`${lvl.id}-${s}`] !== undefined) doneInLevel++;
+        }
+        const pct = (doneInLevel / 10) * 100;
+        const c = colorMap[lvl.color];
+
+        let starsHtml = "";
+        for (let i = 0; i < lvl.stars; i++) {
+          starsHtml += `<i class="fa-solid fa-star text-amber-400"></i>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `bg-white hover:${c.bg} border-2 border-slate-200 hover:${c.border} rounded-2xl p-4 shadow-xs transition cursor-pointer active:scale-[0.99]`;
+        card.onclick = () => {
+          AudioFX.click();
+          appState.currentLevel = lvl.id;
+          openStageModal();
+        };
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl ${c.badge} text-white font-black text-xl flex items-center justify-center shadow-sm">
+                ${lvl.id}
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-black text-base sm:text-lg text-slate-800">${lvl.name}</span>
+                  <span class="text-xs font-extrabold px-2 py-0.5 rounded-full ${c.bg} ${c.text} border ${c.border}">
+                    ${lvl.viLabel} / ${lvl.enLabel}
+                  </span>
+                </div>
+                <div class="flex items-center gap-1 text-xs mt-1">${starsHtml}</div>
+                <p class="text-xs text-slate-500 mt-1">${lvl.desc}</p>
+              </div>
+            </div>
+            <div class="text-right shrink-0 ml-2">
+              <div class="text-sm font-black ${c.text}">${doneInLevel}/10</div>
+              <div class="text-[11px] font-bold text-slate-400">Hoàn thành</div>
+            </div>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mt-3">
+            <div class="h-full ${c.bar} rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function goHome() {
+      AudioFX.click();
+      stopTimer();
+      renderHome();
+    }
+
+    /* =========================================================================
+       6. MODAL CHỌN BÀI 1 - 10
+       ========================================================================= */
+    function openStageModal() {
+      const lvl = LEVELS_CONFIG.find(l => l.id === appState.currentLevel);
+      document.getElementById('modal-stage-title').textContent = `${lvl.name} (${lvl.viLabel} / ${lvl.enLabel})`;
+      const grid = document.getElementById('stages-grid');
+      grid.innerHTML = "";
+
+      for (let s = 1; s <= 10; s++) {
+        const key = `${lvl.id}-${s}`;
+        const bestSec = appState.completed[key];
+        const isDone = bestSec !== undefined;
+
+        const btn = document.createElement('button');
+        btn.className = isDone
+          ? "flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-emerald-50 border-2 border-emerald-400 text-emerald-800 font-black shadow-xs hover:bg-emerald-100 transition"
+          : "flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-slate-50 border-2 border-slate-200 text-slate-700 font-black hover:border-slate-400 hover:bg-slate-100 transition";
+
+        btn.innerHTML = `
+          <span class="text-base leading-none">${s}</span>
+          <span class="text-[10px] font-mono mt-1 ${isDone ? 'text-emerald-600' : 'text-slate-400'}">
+            ${isDone ? formatTime(bestSec) : '--:--'}
+          </span>
+        `;
+        btn.onclick = () => {
+          AudioFX.click();
+          closeStageModal();
+          startStage(lvl.id, s);
+        };
+        grid.appendChild(btn);
+      }
+
+      document.getElementById('modal-stages').classList.remove('hidden');
+    }
+
+    function closeStageModal() {
+      document.getElementById('modal-stages').classList.add('hidden');
+    }
+
+    function openStageModalFromWin() {
+      document.getElementById('modal-win').classList.add('hidden');
+      openStageModal();
+    }
+
+    function openHelpModal() {
+      AudioFX.click();
+      document.getElementById('modal-help').classList.remove('hidden');
+    }
+
+    function closeHelpModal() {
+      AudioFX.click();
+      document.getElementById('modal-help').classList.add('hidden');
+    }
+
+    /* =========================================================================
+       7. KHỞI TẠO & RENDER VÁN CHƠI (GAMEPLAY)
+       ========================================================================= */
+    function startStage(levelId, stageNum) {
+      appState.currentLevel = levelId;
+      appState.currentStage = stageNum;
+
+      const lvl = LEVELS_CONFIG.find(l => l.id === levelId);
+      const puzzle = buildCrossmathPuzzle(levelId, stageNum);
+
+      game.rows = puzzle.rows;
+      game.cols = puzzle.cols;
+      game.grid = puzzle.grid;
+      game.equations = puzzle.equations;
+      game.solvedEqIds = new Set();
+      game.bank = puzzle.bank;
+      game.timerSeconds = 0;
+      game.isPaused = false;
+      game.isWon = false;
+
+      // Tự động chọn ô trống đầu tiên
+      game.selectedCellKey = null;
+      outer: for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          if (game.grid[r][c] && game.grid[r][c].isBlank) {
+            game.selectedCellKey = `${r},${c}`;
+            break outer;
+          }
+        }
+      }
+
+      // Cập nhật Header
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('screen-game').classList.remove('hidden');
+      document.getElementById('btn-restart').classList.remove('hidden');
+      document.getElementById('btn-stages').classList.remove('hidden');
+      document.getElementById('pause-overlay').classList.add('hidden');
+      document.getElementById('modal-win').classList.add('hidden');
+
+      document.getElementById('header-title').textContent = `${lvl.name}`;
+      let starsHtml = "";
+      for (let i = 0; i < lvl.stars; i++) starsHtml += `<i class="fa-solid fa-star"></i>`;
+      starsHtml += `<span class="text-slate-500 font-bold ml-1">${lvl.viLabel}</span>`;
+      document.getElementById('header-stars').innerHTML = starsHtml;
+
+      document.getElementById('stage-badge').textContent = `Bài ${stageNum} / 10`;
+
+      updateHintAndComboUI();
+      renderBoard();
+      renderBank();
+      startTimer();
+    }
+
+    function restartStage() {
+      AudioFX.click();
+      startStage(appState.currentLevel, appState.currentStage);
+    }
+
+    function nextStage() {
+      AudioFX.click();
+      document.getElementById('modal-win').classList.add('hidden');
+      if (appState.currentStage < 10) {
+        startStage(appState.currentLevel, appState.currentStage + 1);
+      } else if (appState.currentLevel < 5) {
+        startStage(appState.currentLevel + 1, 1);
+      } else {
+        goHome();
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      document.getElementById('timer-display').textContent = formatTime(game.timerSeconds);
+      document.getElementById('pause-icon').className = "fa-solid fa-pause text-xs text-slate-500";
+      game.timerInterval = setInterval(() => {
+        if (!game.isPaused && !game.isWon) {
+          game.timerSeconds++;
+          document.getElementById('timer-display').textContent = formatTime(game.timerSeconds);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (game.timerInterval) {
+        clearInterval(game.timerInterval);
+        game.timerInterval = null;
+      }
+    }
+
+    function togglePause() {
+      if (game.isWon) return;
+      AudioFX.click();
+      game.isPaused = !game.isPaused;
+      const overlay = document.getElementById('pause-overlay');
+      const icon = document.getElementById('pause-icon');
+      if (game.isPaused) {
+        overlay.classList.remove('hidden');
+        icon.className = "fa-solid fa-play text-xs text-amber-600";
+      } else {
+        overlay.classList.add('hidden');
+        icon.className = "fa-solid fa-pause text-xs text-slate-500";
+      }
+    }
+
+    function computeCellSize() {
+      const wrapper = document.getElementById('board-wrapper');
+      const maxW = Math.min(wrapper.clientWidth - 20, 680);
+      const maxH = Math.max(260, window.innerHeight - 310);
+      const sizeByCol = Math.floor((maxW - (game.cols - 1) * 5) / game.cols);
+      const sizeByRow = Math.floor((maxH - (game.rows - 1) * 5) / game.rows);
+      return Math.max(28, Math.min(46, sizeByCol, sizeByRow));
+    }
+
+    function renderBoard(highlightCellKey = null) {
+      const gridEl = document.getElementById('crossmath-grid');
+      const cellPx = computeCellSize();
+      const fontSize = cellPx <= 32 ? 'text-xs' : cellPx <= 38 ? 'text-sm' : 'text-base sm:text-lg';
+
+      gridEl.style.gridTemplateColumns = `repeat(${game.cols}, ${cellPx}px)`;
+      gridEl.innerHTML = "";
+
+      for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          const div = document.createElement('div');
+          div.style.width = `${cellPx}px`;
+          div.style.height = `${cellPx}px`;
+
+          if (!cell) {
+            gridEl.appendChild(div);
+            continue;
+          }
+
+          const key = `${r},${c}`;
+          div.className = `cell-box ${fontSize}`;
+
+          if (!cell.isBlank) {
+            div.classList.add('cell-fixed');
+            div.textContent = cell.value;
+          } else {
+            if (cell.userVal !== null) {
+              div.classList.add('cell-filled');
+              div.textContent = cell.userVal;
+              if (cell.status === 'correct') div.classList.add('cell-correct');
+              if (cell.status === 'wrong') div.classList.add('cell-wrong');
+            } else {
+              div.classList.add('cell-empty');
+            }
+
+            if (game.selectedCellKey === key) {
+              div.classList.add('cell-selected');
+            }
+            if (highlightCellKey === key) {
+              div.classList.add('cell-hint-glow');
+            }
+
+            // Click ô trống: chọn ô, hoặc nếu đang có số thì trả thẻ về khay
+            div.onclick = () => handleCellClick(r, c);
+
+            // Hỗ trợ kéo thả (Drag & Drop)
+            div.ondragover = (e) => e.preventDefault();
+            div.ondrop = (e) => {
+              e.preventDefault();
+              const bankId = Number(e.dataTransfer.getData('text/plain'));
+              if (!isNaN(bankId)) {
+                game.selectedCellKey = key;
+                placeBankTileToSelected(bankId);
+              }
+            };
+          }
+
+          gridEl.appendChild(div);
+        }
+      }
+    }
+
+    function renderBank() {
+      const bankEl = document.getElementById('number-bank');
+      bankEl.innerHTML = "";
+
+      let remaining = 0;
+      game.bank.forEach(item => {
+        if (item.usedByCellKey === null) remaining++;
+
+        const btn = document.createElement('button');
+        btn.className = `bank-card w-10 h-10 sm:w-11 sm:h-11 text-base sm:text-lg flex items-center justify-center ${item.usedByCellKey !== null ? 'used' : ''}`;
+        btn.textContent = item.value;
+        btn.draggable = item.usedByCellKey === null;
+
+        btn.onclick = () => placeBankTileToSelected(item.id);
+        btn.ondragstart = (e) => {
+          e.dataTransfer.setData('text/plain', String(item.id));
+        };
+
+        bankEl.appendChild(btn);
+      });
+
+      document.getElementById('remaining-tiles-text').textContent = `Còn: ${remaining} thẻ`;
+    }
+
+    /* =========================================================================
+       8. TƯƠNG TÁC ĐIỀN SỐ, KIỂM TRA PHƯƠNG TRÌNH & COMBO GỢI Ý
+       ========================================================================= */
+    function handleCellClick(r, c) {
+      if (game.isPaused || game.isWon) return;
+      const cell = game.grid[r][c];
+      if (!cell || !cell.isBlank) return;
+
+      const key = `${r},${c}`;
+      AudioFX.click();
+
+      // Nếu ô đang chọn đã có giá trị và người chơi bấm lại vào nó -> thu hồi thẻ về khay
+      if (game.selectedCellKey === key && cell.userVal !== null) {
+        releaseCellValue(cell);
+        revalidateBoard();
+        renderBoard();
+        renderBank();
+        return;
+      }
+
+      game.selectedCellKey = key;
+      renderBoard();
+    }
+
+    function releaseCellValue(cell) {
+      if (cell.bankId !== null) {
+        const bItem = game.bank.find(b => b.id === cell.bankId);
+        if (bItem) bItem.usedByCellKey = null;
+      }
+      cell.userVal = null;
+      cell.bankId = null;
+      cell.status = 'normal';
+    }
+
+    function clearAllUserInputs() {
+      if (game.isPaused || game.isWon) return;
+      AudioFX.click();
+      for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          if (cell && cell.isBlank && cell.userVal !== null) {
+            releaseCellValue(cell);
+          }
+        }
+      }
+      revalidateBoard();
+      renderBoard();
+      renderBank();
+    }
+
+    function placeBankTileToSelected(bankId) {
+      if (game.isPaused || game.isWon) return;
+      const bankItem = game.bank.find(b => b.id === bankId);
+      if (!bankItem || bankItem.usedByCellKey !== null) return;
+
+      if (!game.selectedCellKey) {
+        showToast("Hãy chạm chọn một ô trống trên bảng trước!");
+        return;
+      }
+
+      const [r, c] = game.selectedCellKey.split(',').map(Number);
+      const cell = game.grid[r][c];
+      if (!cell || !cell.isBlank) return;
+
+      // Nếu ô đích đã có thẻ cũ thì trả thẻ cũ về khay
+      if (cell.userVal !== null) {
+        releaseCellValue(cell);
+      }
+
+      cell.userVal = bankItem.value;
+      cell.bankId = bankItem.id;
+      bankItem.usedByCellKey = game.selectedCellKey;
+
+      AudioFX.place();
+
+      // Tự động nhảy sang ô trống chưa điền gần nhất để học sinh làm bài liên tục
+      selectNextEmptyCell(r, c);
+
+      revalidateBoard();
+      renderBoard();
+      renderBank();
+      checkWinCondition();
+    }
+
+    function selectNextEmptyCell(fromR, fromC) {
+      // Tìm từ vị trí hiện tại trở đi
+      for (let r = fromR; r < game.rows; r++) {
+        for (let c = (r === fromR ? fromC + 1 : 0); c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          if (cell && cell.isBlank && cell.userVal === null) {
+            game.selectedCellKey = `${r},${c}`;
+            return;
+          }
+        }
+      }
+      // Quét lại từ đầu bảng
+      for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          if (cell && cell.isBlank && cell.userVal === null) {
+            game.selectedCellKey = `${r},${c}`;
+            return;
+          }
+        }
+      }
+    }
+
+    function evaluateEquationTokens(tokens) {
+      // tokens: ['8', '-', '7', '+', '6', '=', '7']
+      const eqIdx = tokens.indexOf('=');
+      if (eqIdx === -1) return false;
+      const lhs = tokens.slice(0, eqIdx);
+      const rhs = Number(tokens[eqIdx + 1]);
+      if (isNaN(rhs) || lhs.length < 3) return false;
+
+      let acc = Number(lhs[0]);
+      if (isNaN(acc)) return false;
+
+      for (let i = 1; i < lhs.length; i += 2) {
+        const op = lhs[i];
+        const num = Number(lhs[i + 1]);
+        if (isNaN(num)) return false;
+        if (op === '+') acc += num;
+        else if (op === '-') acc -= num;
+        else if (op === '×') acc *= num;
+        else if (op === '÷') {
+          if (num === 0 || acc % num !== 0) return false;
+          acc = acc / num;
+        } else {
+          return false;
+        }
+      }
+      return Math.abs(acc - rhs) < 1e-9;
+    }
+
+    function revalidateBoard() {
+      // Đặt lại trạng thái mặc định cho các ô đã điền
+      for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          if (cell && cell.isBlank && cell.userVal !== null) {
+            cell.status = 'normal';
+          }
+        }
+      }
+
+      let newlySolvedCount = 0;
+      let hasWrongEquation = false;
+
+      game.equations.forEach(eq => {
+        const tokens = [];
+        let isComplete = true;
+
+        for (const [r, c] of eq.cells) {
+          const cell = game.grid[r][c];
+          const val = cell.isBlank ? cell.userVal : cell.value;
+          if (val === null) {
+            isComplete = false;
+            break;
+          }
+          tokens.push(val);
+        }
+
+        if (isComplete) {
+          const isValid = evaluateEquationTokens(tokens);
+          if (isValid) {
+            eq.cells.forEach(([r, c]) => {
+              if (game.grid[r][c].isBlank) {
+                game.grid[r][c].status = 'correct';
+              }
+            });
+            if (!game.solvedEqIds.has(eq.id)) {
+              game.solvedEqIds.add(eq.id);
+              newlySolvedCount++;
+            }
+          } else {
+            hasWrongEquation = true;
+            eq.cells.forEach(([r, c]) => {
+              if (game.grid[r][c].isBlank && game.grid[r][c].status !== 'correct') {
+                game.grid[r][c].status = 'wrong';
+              }
+            });
+          }
+        }
+      });
+
+      if (hasWrongEquation) {
+        AudioFX.wrong();
+        if (appState.combo > 0) {
+          appState.combo = 0;
+          saveProgress();
+          updateHintAndComboUI();
+          showToast("Phép tính chưa đúng! Chuỗi Combo đặt lại 0/3");
+        }
+      } else if (newlySolvedCount > 0) {
+        appState.combo += newlySolvedCount;
+        if (appState.combo >= 3) {
+          const bonusHints = Math.floor(appState.combo / 3);
+          appState.hints += bonusHints;
+          appState.combo = appState.combo % 3;
+          AudioFX.comboBonus();
+          showToast(`🔥 Combo 3 phép tính đúng! Bạn nhận thêm +${bonusHints} Gợi ý!`);
+        } else {
+          AudioFX.correct();
+        }
+        saveProgress();
+        updateHintAndComboUI();
+      }
+    }
+
+    function updateHintAndComboUI() {
+      document.getElementById('hint-badge').textContent = appState.hints;
+      document.getElementById('combo-text').textContent = `${appState.combo}/3`;
+
+      const dots = document.getElementById('combo-dots').children;
+      for (let i = 0; i < 3; i++) {
+        if (i < appState.combo) {
+          dots[i].className = "w-2.5 h-2.5 rounded-full bg-orange-500 scale-110 transition-all";
+        } else {
+          dots[i].className = "w-2.5 h-2.5 rounded-full bg-slate-200 transition-all";
+        }
+      }
+    }
+
+    /* =========================================================================
+       9. CHỨC NĂNG GỢI Ý (HINT) & KIỂM TRA THẮNG CUỘC
+       ========================================================================= */
+    function useHint() {
+      if (game.isPaused || game.isWon) return;
+
+      if (appState.hints <= 0) {
+        AudioFX.wrong();
+        showToast("Hết lượt gợi ý! Hãy giải đúng liên tiếp 3 phép tính (Combo 3/3) để nhận thêm +1 gợi ý.");
+        return;
+      }
+
+      // Ưu tiên gợi ý ô đang chọn nếu ô đó trống hoặc điền sai
+      let targetCell = null;
+      if (game.selectedCellKey) {
+        const [sr, sc] = game.selectedCellKey.split(',').map(Number);
+        const sel = game.grid[sr][sc];
+        if (sel && sel.isBlank && sel.userVal !== sel.value) {
+          targetCell = sel;
+        }
+      }
+
+      // Nếu không thì tìm bất kỳ ô trống hoặc ô điền sai nào
+      if (!targetCell) {
+        const candidates = [];
+        for (let r = 0; r < game.rows; r++) {
+          for (let c = 0; c < game.cols; c++) {
+            const cell = game.grid[r][c];
+            if (cell && cell.isBlank && cell.userVal !== cell.value) {
+              candidates.push(cell);
+            }
+          }
+        }
+        if (candidates.length === 0) return;
+        targetCell = candidates[Math.floor(Math.random() * candidates.length)];
+      }
+
+      // Nếu ô mục tiêu đang chứa thẻ sai -> trả thẻ sai về khay
+      if (targetCell.userVal !== null) {
+        releaseCellValue(targetCell);
+      }
+
+      // Tìm thẻ có giá trị khớp đáp án trong khay (nếu thẻ đó đang nằm nhầm ở ô khác thì thu hồi luôn)
+      let matchingBank = game.bank.find(b => b.value === targetCell.value && b.usedByCellKey === null);
+      if (!matchingBank) {
+        matchingBank = game.bank.find(b => b.value === targetCell.value);
+        if (matchingBank && matchingBank.usedByCellKey) {
+          const [or, oc] = matchingBank.usedByCellKey.split(',').map(Number);
+          releaseCellValue(game.grid[or][oc]);
+        }
+      }
+
+      if (!matchingBank) return;
+
+      const tKey = `${targetCell.r},${targetCell.c}`;
+      targetCell.userVal = matchingBank.value;
+      targetCell.bankId = matchingBank.id;
+      matchingBank.usedByCellKey = tKey;
+
+      appState.hints--;
+      saveProgress();
+      updateHintAndComboUI();
+
+      AudioFX.hint();
+      selectNextEmptyCell(targetCell.r, targetCell.c);
+      revalidateBoard();
+      renderBoard(tKey);
+      renderBank();
+      checkWinCondition();
+    }
+
+    function checkWinCondition() {
+      // Kiểm tra mọi ô trống đã được điền và toàn bộ phương trình đều đúng
+      for (let r = 0; r < game.rows; r++) {
+        for (let c = 0; c < game.cols; c++) {
+          const cell = game.grid[r][c];
+          if (cell && cell.isBlank && cell.userVal === null) return;
+        }
+      }
+
+      for (const eq of game.equations) {
+        const tokens = eq.cells.map(([r, c]) => {
+          const cell = game.grid[r][c];
+          return cell.isBlank ? cell.userVal : cell.value;
+        });
+        if (!evaluateEquationTokens(tokens)) return;
+      }
+
+      // Thắng cuộc!
+      game.isWon = true;
+      stopTimer();
+      AudioFX.win();
+
+      const key = `${appState.currentLevel}-${appState.currentStage}`;
+      const prevBest = appState.completed[key];
+      const bestTime = prevBest === undefined ? game.timerSeconds : Math.min(prevBest, game.timerSeconds);
+      appState.completed[key] = bestTime;
+      saveProgress();
+
+      document.getElementById('win-subtitle').textContent =
+        `Bạn đã hoàn thành Cấp độ ${appState.currentLevel} - Bài ${appState.currentStage}`;
+      document.getElementById('win-time').textContent = formatTime(game.timerSeconds);
+      document.getElementById('win-best').textContent = formatTime(bestTime);
+
+      const nextBtn = document.getElementById('btn-next-stage');
+      if (appState.currentLevel === 5 && appState.currentStage === 10) {
+        nextBtn.innerHTML = `Hoàn tất tất cả <i class="fa-solid fa-star ml-1"></i>`;
+      } else {
+        nextBtn.innerHTML = `Bài tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>`;
+      }
+
+      setTimeout(() => {
+        document.getElementById('modal-win').classList.remove('hidden');
+      }, 350);
+    }
+
+    // Tự động co giãn kích thước ô khi xoay màn hình hoặc đổi cỡ cửa sổ
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('screen-game').classList.contains('hidden')) {
+        renderBoard();
+      }
+    });
+
+    // Khởi chạy ứng dụng
+    loadProgress();
+    renderHome();
+  </script>
+</body>
+</html>
