@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Toán Nhẩm Ô Chữ - Crossmath Master</title>
+  <title>Crossmath Master</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
@@ -213,7 +213,7 @@
             class="flex items-center gap-2 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-2 rounded-xl transition active:scale-95">
             <i class="fa-solid fa-lightbulb text-amber-500 text-xl"></i>
             <div class="text-left">
-              <div class="text-[10px] font-extrabold text-amber-700 uppercase">Gợi ý (+Combo)</div>
+              <div class="text-[10px] font-extrabold text-amber-700 uppercase">Gợi ý (+Combo 3)</div>
               <div id="home-hints-count" class="text-base font-black text-amber-600 leading-none">3</div>
             </div>
           </button>
@@ -242,8 +242,8 @@
   <!-- ================= MÀN HÌNH CHƠI GAME ================= -->
   <main id="screen-game" class="hidden flex-1 w-full max-w-3xl mx-auto px-2 sm:px-4 pb-4 flex flex-col justify-between">
     
-    <!-- Thanh trạng thái: Bài số + Combo + Đồng hồ -->
-    <div class="flex items-center justify-between px-1 py-1.5 mb-1 gap-1">
+    <!-- Thanh trạng thái: Bài số + Lượt sai (3 trái tim) + Đồng hồ -->
+    <div class="flex items-center justify-between px-1 py-1.5 mb-1 gap-1.5">
       <div class="flex items-center gap-1.5">
         <span id="stage-badge" class="bg-slate-800 text-white text-xs sm:text-sm font-extrabold px-3 py-1 rounded-full shadow-xs">
           Bài 1 / 10
@@ -254,19 +254,17 @@
         </button>
       </div>
 
-      <!-- Thanh tiến trình Combo 3 câu hỏi -->
-      <button onclick="openBonusQuizModal()"
-        class="flex items-center gap-1.5 bg-white hover:bg-orange-50 border border-slate-200 hover:border-orange-300 px-2.5 py-1 rounded-full shadow-xs transition"
-        title="Giải đúng 3 phép tính liên tiếp trên bảng HOẶC bấm vào đây để trả lời Combo 3 câu hỏi nhận +1 Gợi ý">
-        <i class="fa-solid fa-fire text-orange-500 text-xs"></i>
-        <span class="text-[11px] font-extrabold text-slate-600 hidden sm:inline">Combo:</span>
-        <div id="combo-dots" class="flex items-center gap-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-colors"></span>
+      <!-- Hiển thị 3 lượt làm sai tối đa mỗi bài -->
+      <div class="flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-full shadow-xs"
+           title="Mỗi bài có tối đa 3 lần làm sai">
+        <span class="text-[11px] font-extrabold text-slate-500 hidden sm:inline">Lượt thử:</span>
+        <div id="lives-container" class="flex items-center gap-1 text-rose-500 text-xs sm:text-sm">
+          <i class="fa-solid fa-heart"></i>
+          <i class="fa-solid fa-heart"></i>
+          <i class="fa-solid fa-heart"></i>
         </div>
-        <span id="combo-text" class="text-[11px] font-black text-orange-600 ml-0.5">0/3</span>
-      </button>
+        <span id="lives-text" class="text-[11px] font-black text-rose-600 ml-0.5">3/3</span>
+      </div>
 
       <!-- Đồng hồ tính thời gian -->
       <button onclick="togglePause()" id="timer-btn"
@@ -319,7 +317,8 @@
               3
             </span>
           </button>
-          <button onclick="openBonusQuizModal()" class="text-[10px] font-extrabold text-blue-600 hover:underline">
+          <button onclick="openBonusQuizModal()"
+            class="text-[10px] font-extrabold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded-full transition">
             +Thêm gợi ý
           </button>
         </div>
@@ -355,7 +354,7 @@
           </span>
           <div>
             <h3 class="text-base sm:text-lg font-black text-slate-800">Thử thách Combo 3 câu</h3>
-            <p class="text-xs text-slate-500 font-semibold">Trả lời đúng liên tiếp 3 câu để nhận +1 Gợi ý</p>
+            <p class="text-xs text-slate-500 font-semibold">Trả lời đúng đủ 3 câu liên tiếp để nhận +1 Gợi ý</p>
           </div>
         </div>
         <button onclick="closeBonusQuizModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
@@ -392,7 +391,7 @@
     <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl animate-pop">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-lg font-black text-slate-800">
-          <i class="fa-solid fa-circle-info text-blue-600 mr-1.5"></i>Luật chơi & Mở khóa
+          <i class="fa-solid fa-circle-info text-blue-600 mr-1.5"></i>Luật chơi & Quy định
         </h3>
         <button onclick="closeHelpModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
@@ -401,20 +400,46 @@
       <div class="space-y-3 text-sm text-slate-600 leading-relaxed">
         <div class="flex items-start gap-2.5">
           <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-          <p><strong>Mở khóa tuần tự:</strong> Bạn cần giải xong <strong>Bài 1</strong> để mở <strong>Bài 2</strong>... Hoàn thành đủ 10 bài của Cấp độ 1 mới mở khóa Cấp độ 2 và các cấp cao hơn.</p>
+          <p><strong>Mở khóa tuần tự:</strong> Giải xong <strong>Bài 1</strong> mới mở <strong>Bài 2</strong>... Hoàn thành đủ 10 bài của Cấp độ 1 mới mở khóa Cấp độ 2 và các cấp cao hơn.</p>
         </div>
         <div class="flex items-start gap-2.5">
-          <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-          <p><strong>4 phép tính ngẫu nhiên:</strong> Cả 4 phép tính <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code> xuất hiện ngẫu nhiên với phạm vi số mở rộng tự do. Thực hiện phép tính từ <strong>trái sang phải</strong> và từ <strong>trên xuống dưới</strong>.</p>
+          <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <p><strong>Tối đa 3 lần làm sai:</strong> Mỗi bài có <strong>3 lượt thử (3 trái tim)</strong>. Nếu điền sai phép tính quá 3 lần, bạn sẽ phải làm lại bài đó từ đầu.</p>
         </div>
         <div class="flex items-start gap-2.5">
-          <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
-          <p><strong>Nhận thêm Gợi ý:</strong> Mặc định có <strong>3 gợi ý</strong>. Giải đúng liên tiếp <strong>3 phép tính trên bảng</strong> hoặc bấm <strong>"+Thêm gợi ý"</strong> để vượt qua <strong>Combo 3 câu hỏi nhẩm nhanh</strong> sẽ được cộng thêm <strong>+1 Gợi ý</strong>.</p>
+          <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <p><strong>Phạm vi kết quả:</strong> Ở Cấp 1, 2, 3 (1–3 sao), kết quả cuối mỗi phép tính đều là <strong>số có 2 chữ số</strong> (10–99). Ở Cấp 4 và Cấp 5 (4–5 sao), kết quả có thêm <strong>số có 3 chữ số</strong> (100–999).</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-700 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">4</span>
+          <p><strong>Nhận thêm Gợi ý:</strong> Mặc định có sẵn <strong>3 gợi ý</strong>. Để nhận thêm <strong>+1 Gợi ý</strong>, bạn phải bấm nút <strong>"+Thêm gợi ý"</strong> và trả lời đúng liên tiếp <strong>Combo 3 câu hỏi</strong>.</p>
         </div>
       </div>
       <button onclick="closeHelpModal()" class="w-full mt-5 bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-2.5 rounded-xl transition">
         Đã hiểu, vào giải toán!
       </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL HẾT 3 LƯỢT SAI (GAME OVER) ================= -->
+  <div id="modal-gameover" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl animate-pop">
+      <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-3xl shadow-inner">
+        <i class="fa-solid fa-heart-crack"></i>
+      </div>
+      <h3 class="text-2xl font-black text-slate-800">Hết lượt thử!</h3>
+      <p class="text-sm font-bold text-slate-500 mt-1">
+        Bạn đã làm sai đủ 3 lần ở bài này. Hãy bình tĩnh tính nhẩm lại nhé!
+      </p>
+
+      <div class="flex gap-2.5 mt-6">
+        <button onclick="goHomeFromGameOver()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3 rounded-xl transition">
+          Về trang chủ
+        </button>
+        <button onclick="restartStage()" class="flex-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3 px-5 rounded-xl shadow-md transition active:scale-95">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i>Làm lại bài này
+        </button>
+      </div>
     </div>
   </div>
 
@@ -456,7 +481,9 @@
 
   <script>
     /* =========================================================================
-       1. CẤU HÌNH 5 CẤP ĐỘ (CỘNG, TRỪ, NHÂN, CHIA NGẪU NHIÊN - KHÔNG GIỚI HẠN PHẠM VI)
+       1. CẤU HÌNH 5 CẤP ĐỘ
+          - Cấp 1, 2, 3 (1-3 sao): Kết quả cuối mỗi phép toán là số có 2 chữ số (10 - 99)
+          - Cấp 4, 5 (4-5 sao): Kết quả cuối có thêm số có 3 chữ số (10 - 999)
        ========================================================================= */
     const LEVELS_CONFIG = [
       {
@@ -465,10 +492,11 @@
         name: "Cấp độ 1",
         viLabel: "Dễ",
         enLabel: "Easy",
-        desc: "Cộng, trừ, nhân, chia ngẫu nhiên — lưới 3 đến 4 phép tính giao nhau",
+        desc: "Cộng, trừ, nhân, chia — tổng cuối mỗi phép toán là số có 2 chữ số",
         gridSize: 7,
         targetEquations: 4,
         hideOpChance: 0,
+        allowThreeDigitResult: false,
         color: "emerald"
       },
       {
@@ -477,10 +505,11 @@
         name: "Cấp độ 2",
         viLabel: "Trung bình",
         enLabel: "Medium",
-        desc: "Mở rộng lưới 6 đến 7 phép tính đan chéo với số lớn hơn",
+        desc: "Lưới 6–7 phép tính giao nhau — kết quả cuối là số có 2 chữ số",
         gridSize: 9,
         targetEquations: 7,
         hideOpChance: 0.1,
+        allowThreeDigitResult: false,
         color: "sky"
       },
       {
@@ -489,10 +518,11 @@
         name: "Cấp độ 3",
         viLabel: "Khó",
         enLabel: "Hard",
-        desc: "Lưới 9 đến 10 phép tính đa nhánh kết hợp tìm dấu phép tính",
+        desc: "Mạng lưới 9–10 phép tính đa nhánh — kết quả cuối là số có 2 chữ số",
         gridSize: 11,
         targetEquations: 10,
         hideOpChance: 0.2,
+        allowThreeDigitResult: false,
         color: "amber"
       },
       {
@@ -501,10 +531,11 @@
         name: "Cấp độ 4",
         viLabel: "Nâng cao",
         enLabel: "Advanced",
-        desc: "Mật độ dày đặc 12 đến 14 phép tính & chuỗi 3 số liên tiếp",
+        desc: "Kết hợp kết quả số có 2 chữ số và 3 chữ số & tìm dấu phép tính",
         gridSize: 11,
         targetEquations: 13,
         hideOpChance: 0.28,
+        allowThreeDigitResult: true,
         color: "orange"
       },
       {
@@ -513,20 +544,21 @@
         name: "Cấp độ 5",
         viLabel: "Chuyên gia",
         enLabel: "Expert",
-        desc: "Siêu lưới 15 đến 18 phép tính đan chéo không giới hạn phạm vi",
+        desc: "Siêu lưới ô chữ liên hoàn — tổng cuối có 2 và 3 chữ số",
         gridSize: 13,
         targetEquations: 16,
         hideOpChance: 0.35,
+        allowThreeDigitResult: true,
         color: "rose"
       }
     ];
 
-    const STORAGE_KEY = "crossmath_seq_v2";
+    const STORAGE_KEY = "crossmath_seq_v3";
+    const MAX_MISTAKES = 3;
 
     let appState = {
       hints: 3,
-      combo: 0, // 0 -> 3 (đạt 3 sẽ cộng +1 gợi ý và reset về 0)
-      completed: {}, // { "1-1": 42 (giây tốt nhất) }
+      completed: {}, // { "1-1": 42 }
       currentLevel: 1,
       currentStage: 1
     };
@@ -537,12 +569,15 @@
       grid: [],
       equations: [],
       solvedEqIds: new Set(),
+      wrongEqSignatures: new Set(), // Tránh trừ 2 lần cho cùng 1 tổ hợp điền sai y hệt
+      mistakes: 0,
       bank: [],
       selectedCellKey: null,
       timerSeconds: 0,
       timerInterval: null,
       isPaused: false,
-      isWon: false
+      isWon: false,
+      isGameOver: false
     };
 
     /* =========================================================================
@@ -550,7 +585,6 @@
        ========================================================================= */
     function isLevelUnlocked(levelId) {
       if (levelId === 1) return true;
-      // Phải hoàn thành đủ 10 bài của cấp độ liền trước
       const prevLevel = levelId - 1;
       for (let s = 1; s <= 10; s++) {
         if (appState.completed[`${prevLevel}-${s}`] === undefined) {
@@ -639,7 +673,6 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           hints: appState.hints,
-          combo: appState.combo,
           completed: appState.completed
         }));
       } catch (e) {}
@@ -649,7 +682,6 @@
       if (confirm("Bạn có chắc muốn đặt lại toàn bộ tiến độ mở khóa về Cấp độ 1 - Bài 1 không?")) {
         appState.completed = {};
         appState.hints = 3;
-        appState.combo = 0;
         saveProgress();
         renderHome();
         showToast("Đã đặt lại tiến độ về ban đầu!");
@@ -668,11 +700,13 @@
       el.textContent = msg;
       el.classList.remove('opacity-0');
       clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => el.classList.add('opacity-0'), 2400);
+      toastTimeout = setTimeout(() => el.classList.add('opacity-0'), 2500);
     }
 
     /* =========================================================================
-       5. BỘ SINH ĐỀ TOÁN CỘNG, TRỪ, NHÂN, CHIA NGẪU NHIÊN KHÔNG GIỚI HẠN PHẠM VI
+       5. BỘ SINH PHƯƠNG TRÌNH THEO QUY TẮC CHỮ SỐ CỦA KẾT QUẢ CUỐI:
+          - Cấp 1, 2, 3: Kết quả cuối C luôn là số có 2 chữ số (10 <= C <= 99)
+          - Cấp 4, 5: Kết quả cuối C là số có 2 hoặc 3 chữ số (10 <= C <= 999)
        ========================================================================= */
     function randInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -686,13 +720,36 @@
       return arr;
     }
 
-    // Sinh ngẫu nhiên một phương trình A op B = C với cả 4 phép tính (+, -, ×, ÷) và số không giới hạn phạm vi
-    function generateRandomEquation(levelId, fixedA = null, fixedC = null) {
-      const allOps = ['+', '-', '×', '÷'];
-      // Quy mô số tăng dần tự do theo cấp độ nhưng không bị đóng khung trần cứng
-      const baseScale = levelId === 1 ? 35 : levelId === 2 ? 120 : levelId === 3 ? 350 : levelId === 4 ? 900 : 2500;
+    function isValidFinalResult(c, allowThreeDigits) {
+      if (!Number.isInteger(c)) return false;
+      if (allowThreeDigits) {
+        return c >= 10 && c <= 999;
+      }
+      return c >= 10 && c <= 99;
+    }
 
-      for (let attempt = 0; attempt < 80; attempt++) {
+    function pickTargetResultC(levelId, allowThreeDigits) {
+      if (!allowThreeDigits) {
+        return randInt(10, 99);
+      }
+      // Ở cấp 4 và 5: 65% kết quả có 3 chữ số (100-999), 35% kết quả có 2 chữ số (12-99)
+      if (Math.random() < 0.65) {
+        return levelId === 4 ? randInt(100, 450) : randInt(100, 999);
+      }
+      return randInt(12, 99);
+    }
+
+    function generateRandomEquation(levelId, fixedA = null, fixedC = null) {
+      const cfg = LEVELS_CONFIG.find(l => l.id === levelId);
+      const allowThree = cfg.allowThreeDigitResult;
+      const allOps = ['+', '-', '×', '÷'];
+
+      // Nếu fixedC đã có sẵn nhưng không nằm trong miền cho phép làm kết quả cuối thì loại bỏ
+      if (fixedC !== null && !isValidFinalResult(fixedC, allowThree)) {
+        return null;
+      }
+
+      for (let attempt = 0; attempt < 90; attempt++) {
         const op = allOps[Math.floor(Math.random() * allOps.length)];
         let a = fixedA, b = null, c = fixedC;
 
@@ -709,37 +766,44 @@
               return { a, op, b, c };
             }
           } else if (op === '÷') {
-            if (c > 1 && a % c === 0 && a / c >= 2) {
+            if (c >= 10 && a % c === 0 && a / c >= 2) {
               b = a / c;
               return { a, op, b, c };
             }
           }
         } else if (a !== null) {
           if (op === '+') {
-            b = randInt(2, baseScale);
-            c = a + b;
-            return { a, op, b, c };
+            const targetC = pickTargetResultC(levelId, allowThree);
+            b = targetC - a;
+            if (b >= 1) return { a, op, b, c: targetC };
           } else if (op === '-') {
-            if (a >= 3) {
-              b = randInt(1, a - 1);
-              c = a - b;
-              return { a, op, b, c };
+            const maxC = allowThree ? Math.min(a - 1, 999) : Math.min(a - 1, 99);
+            if (maxC >= 10) {
+              c = randInt(10, maxC);
+              b = a - c;
+              if (b >= 1) return { a, op, b, c };
             }
           } else if (op === '×') {
             if (a >= 2) {
-              b = randInt(2, 15 + levelId * 5);
-              c = a * b;
-              return { a, op, b, c };
+              const minB = Math.max(2, Math.ceil(10 / a));
+              const maxB = Math.floor((allowThree ? 999 : 99) / a);
+              if (maxB >= minB) {
+                b = randInt(minB, Math.min(maxB, 45));
+                c = a * b;
+                if (isValidFinalResult(c, allowThree)) return { a, op, b, c };
+              }
             }
           } else if (op === '÷') {
-            if (a >= 4) {
-              const divs = [];
-              const limit = Math.min(a - 1, 50);
-              for (let d = 2; d <= limit; d++) {
-                if (a % d === 0) divs.push(d);
+            if (a >= 20) {
+              const validB = [];
+              const maxDiv = Math.floor(a / 10);
+              for (let d = 2; d <= Math.min(maxDiv, 50); d++) {
+                if (a % d === 0 && isValidFinalResult(a / d, allowThree)) {
+                  validB.push(d);
+                }
               }
-              if (divs.length > 0) {
-                b = divs[Math.floor(Math.random() * divs.length)];
+              if (validB.length > 0) {
+                b = validB[Math.floor(Math.random() * validB.length)];
                 c = a / b;
                 return { a, op, b, c };
               }
@@ -747,65 +811,79 @@
           }
         } else if (c !== null) {
           if (op === '+') {
-            if (c >= 3) {
+            if (c >= 11) {
               a = randInt(1, c - 1);
               b = c - a;
               return { a, op, b, c };
             }
           } else if (op === '-') {
-            b = randInt(2, baseScale);
+            b = randInt(2, allowThree ? 250 : 85);
             a = c + b;
             return { a, op, b, c };
           } else if (op === '×') {
-            if (c >= 4) {
-              const divs = [];
-              const limit = Math.min(c - 1, 50);
-              for (let d = 2; d <= limit; d++) {
-                if (c % d === 0) divs.push(d);
-              }
-              if (divs.length > 0) {
-                a = divs[Math.floor(Math.random() * divs.length)];
-                b = c / a;
-                return { a, op, b, c };
-              }
+            const validA = [];
+            for (let d = 2; d <= Math.min(c - 1, 60); d++) {
+              if (c % d === 0 && c / d >= 2) validA.push(d);
             }
-          } else if (op === '÷') {
-            if (c >= 2) {
-              b = randInt(2, 15 + levelId * 5);
-              a = c * b;
+            if (validA.length > 0) {
+              a = validA[Math.floor(Math.random() * validA.length)];
+              b = c / a;
               return { a, op, b, c };
             }
+          } else if (op === '÷') {
+            b = randInt(2, allowThree ? 12 : 9);
+            a = c * b;
+            return { a, op, b, c };
           }
         } else {
-          // Tự do hoàn toàn cả A, B, C
+          // Tự do cả A, B, C -> Chọn C trước để bảo đảm đúng quy tắc 2 chữ số / 3 chữ số
+          c = pickTargetResultC(levelId, allowThree);
           if (op === '+') {
-            a = randInt(3, baseScale);
-            b = randInt(2, baseScale);
-            c = a + b;
+            a = randInt(2, c - 2);
+            b = c - a;
             return { a, op, b, c };
           } else if (op === '-') {
-            c = randInt(2, baseScale);
-            b = randInt(2, baseScale);
+            b = randInt(2, allowThree ? 250 : 80);
             a = c + b;
             return { a, op, b, c };
           } else if (op === '×') {
-            a = randInt(2, 12 + levelId * 6);
-            b = randInt(2, 12 + levelId * 6);
-            c = a * b;
-            return { a, op, b, c };
+            const validA = [];
+            for (let d = 2; d <= Math.min(c - 1, 60); d++) {
+              if (c % d === 0 && c / d >= 2) validA.push(d);
+            }
+            if (validA.length > 0) {
+              a = validA[Math.floor(Math.random() * validA.length)];
+              b = c / a;
+              return { a, op, b, c };
+            }
           } else if (op === '÷') {
-            c = randInt(2, 12 + levelId * 6);
-            b = randInt(2, 12 + levelId * 6);
+            b = randInt(2, allowThree ? 12 : 9);
             a = c * b;
             return { a, op, b, c };
           }
         }
       }
-      // Fallback cộng an toàn tuyệt đối
-      const fa = fixedA !== null ? fixedA : randInt(5, 50);
-      const fb = fixedC !== null && fixedC > fa ? fixedC - fa : randInt(3, 40);
-      const fc = fa + fb;
-      return { a: fa, op: '+', b: fb, c: fc };
+
+      // Fallback an toàn luôn bảo đảm C là 2 chữ số (hoặc 3 chữ số ở cấp 4-5)
+      if (fixedA !== null && fixedC === null) {
+        const targetC = pickTargetResultC(levelId, allowThree);
+        if (targetC > fixedA) {
+          return { a: fixedA, op: '+', b: targetC - fixedA, c: targetC };
+        }
+        if (fixedA - targetC >= 1) {
+          return { a: fixedA, op: '-', b: fixedA - targetC, c: targetC };
+        }
+      }
+      if (fixedC !== null && fixedA === null) {
+        const fb = randInt(2, 40);
+        return { a: fixedC + fb, op: '-', b: fb, c: fixedC };
+      }
+      if (fixedA === null && fixedC === null) {
+        const fc = pickTargetResultC(levelId, allowThree);
+        const fa = randInt(2, fc - 2);
+        return { a: fa, op: '+', b: fc - fa, c: fc };
+      }
+      return null;
     }
 
     function buildCrossmathPuzzle(levelId) {
@@ -859,7 +937,7 @@
         });
       }
 
-      // 1. Đặt phương trình hạt giống ở trung tâm bàn cờ để mở rộng ra 4 phía đều đặn
+      // 1. Đặt phương trình hạt giống ở trung tâm bàn cờ
       const mid = Math.floor(N / 2) % 2 === 0 ? Math.floor(N / 2) : Math.floor(N / 2) - 1;
       const startRow = Math.max(0, mid - 2);
       const startCol = Math.max(0, mid - 2);
@@ -877,7 +955,7 @@
 
       // 2. Phát triển mạng lưới phương trình đan chéo
       let tries = 0;
-      while (equations.length < cfg.targetEquations && tries < 900) {
+      while (equations.length < cfg.targetEquations && tries < 950) {
         tries++;
         const numAnchors = [];
         for (let r = 0; r < N; r += 2) {
@@ -944,6 +1022,7 @@
       }
 
       // 3. Cấp độ 4 & 5: Mở rộng thêm chuỗi phương trình 3 toán hạng liên hoàn (A op1 B op2 C = D)
+      //    và bảo đảm tổng cuối D vẫn là số có 2 chữ số hoặc 3 chữ số (10 <= D <= 999)
       if (levelId >= 4) {
         equations.forEach(eq => {
           if (Math.random() > 0.45) return;
@@ -953,9 +1032,9 @@
 
           const oldC = Number(cells[r4][c4].value);
           const op2 = Math.random() < 0.5 ? '+' : '-';
-          const b2 = op2 === '+' ? randInt(3, 45) : (oldC > 5 ? randInt(2, oldC - 2) : 0);
-          if (b2 <= 0) return;
-          const newD = op2 === '+' ? oldC + b2 : oldC - b2;
+          const newD = pickTargetResultC(levelId, true);
+          const b2 = op2 === '+' ? newD - oldC : oldC - newD;
+          if (b2 < 1) return;
 
           const extraCoords = [[r4, c4+1], [r4, c4+2], [r4, c4+3], [r4, c4+4]];
           const extraVals = [
@@ -993,7 +1072,7 @@
         });
       }
 
-      // 4. Cắt gọn viền trống để bảng cân đối tuyệt đối
+      // 4. Cắt gọn viền trống để bảng cân đối chính giữa
       let minR = N, maxR = 0, minC = N, maxC = 0;
       for (let r = 0; r < N; r++) {
         for (let c = 0; c < N; c++) {
@@ -1173,6 +1252,11 @@
       renderHome();
     }
 
+    function goHomeFromGameOver() {
+      document.getElementById('modal-gameover').classList.add('hidden');
+      goHome();
+    }
+
     /* =========================================================================
        7. MODAL CHỌN BÀI 1 - 10 (MỞ KHÓA TUẦN TỰ TỪ BÀI 1 -> BÀI 10)
        ========================================================================= */
@@ -1268,10 +1352,13 @@
       game.grid = puzzle.grid;
       game.equations = puzzle.equations;
       game.solvedEqIds = new Set();
+      game.wrongEqSignatures = new Set();
+      game.mistakes = 0;
       game.bank = puzzle.bank;
       game.timerSeconds = 0;
       game.isPaused = false;
       game.isWon = false;
+      game.isGameOver = false;
 
       // Tự động chọn ô trống đầu tiên
       game.selectedCellKey = null;
@@ -1290,6 +1377,7 @@
       document.getElementById('btn-stages').classList.remove('hidden');
       document.getElementById('pause-overlay').classList.add('hidden');
       document.getElementById('modal-win').classList.add('hidden');
+      document.getElementById('modal-gameover').classList.add('hidden');
 
       document.getElementById('header-title').textContent = `${lvl.name}`;
       let starsHtml = "";
@@ -1299,7 +1387,8 @@
 
       document.getElementById('stage-badge').textContent = `Bài ${stageNum} / 10`;
 
-      updateHintAndComboUI();
+      updateHintUI();
+      updateLivesUI();
       renderBoard();
       renderBank();
       startTimer();
@@ -1327,7 +1416,7 @@
       document.getElementById('timer-display').textContent = formatTime(game.timerSeconds);
       document.getElementById('pause-icon').className = "fa-solid fa-pause text-xs text-slate-500";
       game.timerInterval = setInterval(() => {
-        if (!game.isPaused && !game.isWon) {
+        if (!game.isPaused && !game.isWon && !game.isGameOver) {
           game.timerSeconds++;
           document.getElementById('timer-display').textContent = formatTime(game.timerSeconds);
         }
@@ -1342,7 +1431,7 @@
     }
 
     function togglePause() {
-      if (game.isWon) return;
+      if (game.isWon || game.isGameOver) return;
       AudioFX.click();
       game.isPaused = !game.isPaused;
       const overlay = document.getElementById('pause-overlay');
@@ -1386,11 +1475,9 @@
 
           const key = `${r},${c}`;
           const displayText = cell.isBlank ? (cell.userVal || "") : cell.value;
-          // Tự động thu nhỏ cỡ chữ nếu số có 4-5 chữ số
           const len = displayText.length;
           let fontClass = cellPx <= 34 ? 'text-xs' : 'text-sm sm:text-base';
-          if (len >= 5) fontClass = 'text-[10px]';
-          else if (len === 4) fontClass = 'text-[11px] sm:text-xs';
+          if (len >= 4) fontClass = 'text-[10px] sm:text-xs';
 
           div.className = `cell-box ${fontClass}`;
 
@@ -1441,7 +1528,7 @@
 
         const btn = document.createElement('button');
         const textLen = item.value.length;
-        const sizeClass = textLen >= 4 ? "px-2.5 min-w-[44px] text-xs sm:text-sm" : "w-10 sm:w-11 text-base sm:text-lg";
+        const sizeClass = textLen >= 3 ? "px-2 min-w-[42px] text-xs sm:text-sm" : "w-10 sm:w-11 text-base sm:text-lg";
 
         btn.className = `bank-card h-10 sm:h-11 ${sizeClass} flex items-center justify-center ${item.usedByCellKey !== null ? 'used' : ''}`;
         btn.textContent = item.value;
@@ -1459,10 +1546,10 @@
     }
 
     /* =========================================================================
-       9. ĐIỀN SỐ, KIỂM TRA PHƯƠNG TRÌNH & TÍNH COMBO
+       9. ĐIỀN SỐ, KIỂM TRA PHƯƠNG TRÌNH & ĐẾM TỐI ĐA 3 LƯỢT LÀM SAI MỖI BÀI
        ========================================================================= */
     function handleCellClick(r, c) {
-      if (game.isPaused || game.isWon) return;
+      if (game.isPaused || game.isWon || game.isGameOver) return;
       const cell = game.grid[r][c];
       if (!cell || !cell.isBlank) return;
 
@@ -1492,7 +1579,7 @@
     }
 
     function clearAllUserInputs() {
-      if (game.isPaused || game.isWon) return;
+      if (game.isPaused || game.isWon || game.isGameOver) return;
       AudioFX.click();
       for (let r = 0; r < game.rows; r++) {
         for (let c = 0; c < game.cols; c++) {
@@ -1508,7 +1595,7 @@
     }
 
     function placeBankTileToSelected(bankId) {
-      if (game.isPaused || game.isWon) return;
+      if (game.isPaused || game.isWon || game.isGameOver) return;
       const bankItem = game.bank.find(b => b.id === bankId);
       if (!bankItem || bankItem.usedByCellKey !== null) return;
 
@@ -1534,7 +1621,10 @@
       revalidateBoard();
       renderBoard();
       renderBank();
-      checkWinCondition();
+
+      if (!game.isGameOver) {
+        checkWinCondition();
+      }
     }
 
     function selectNextEmptyCell(fromR, fromC) {
@@ -1596,7 +1686,7 @@
       }
 
       let newlySolvedCount = 0;
-      let hasWrongEquation = false;
+      let newMistakeTriggered = false;
 
       game.equations.forEach(eq => {
         const tokens = [];
@@ -1625,63 +1715,73 @@
               newlySolvedCount++;
             }
           } else {
-            hasWrongEquation = true;
             eq.cells.forEach(([r, c]) => {
               if (game.grid[r][c].isBlank && game.grid[r][c].status !== 'correct') {
                 game.grid[r][c].status = 'wrong';
               }
             });
+
+            // Chỉ tính 1 lần sai cho mỗi tổ hợp điền sai mới trên phương trình đó
+            const sig = `${eq.id}:${tokens.join('|')}`;
+            if (!game.wrongEqSignatures.has(sig)) {
+              game.wrongEqSignatures.add(sig);
+              newMistakeTriggered = true;
+            }
           }
         }
       });
 
-      if (hasWrongEquation) {
+      if (newMistakeTriggered) {
+        game.mistakes++;
+        updateLivesUI();
         AudioFX.wrong();
-        if (appState.combo > 0) {
-          appState.combo = 0;
-          saveProgress();
-          updateHintAndComboUI();
-          showToast("Phép tính chưa chính xác! Chuỗi Combo đặt lại 0/3");
+
+        if (game.mistakes >= MAX_MISTAKES) {
+          game.isGameOver = true;
+          stopTimer();
+          setTimeout(() => {
+            document.getElementById('modal-gameover').classList.remove('hidden');
+          }, 350);
+        } else {
+          const left = MAX_MISTAKES - game.mistakes;
+          showToast(`Phép tính chưa đúng! Bạn còn ${left} lượt làm sai.`);
         }
       } else if (newlySolvedCount > 0) {
-        appState.combo += newlySolvedCount;
-        if (appState.combo >= 3) {
-          const bonusHints = Math.floor(appState.combo / 3);
-          appState.hints += bonusHints;
-          appState.combo = appState.combo % 3;
-          AudioFX.comboBonus();
-          showToast(`🔥 Đạt Combo 3 phép tính đúng! Thưởng thêm +${bonusHints} Gợi ý!`);
-        } else {
-          AudioFX.correct();
-        }
-        saveProgress();
-        updateHintAndComboUI();
+        // Giải đúng phép tính trên bảng chỉ phát âm thanh xác nhận, KHÔNG tự cộng gợi ý
+        AudioFX.correct();
       }
     }
 
-    function updateHintAndComboUI() {
+    function updateLivesUI() {
+      const remaining = Math.max(0, MAX_MISTAKES - game.mistakes);
+      document.getElementById('lives-text').textContent = `${remaining}/${MAX_MISTAKES}`;
+      const container = document.getElementById('lives-container');
+      let html = "";
+      for (let i = 0; i < MAX_MISTAKES; i++) {
+        if (i < remaining) {
+          html += `<i class="fa-solid fa-heart text-rose-500 transition-transform scale-100"></i>`;
+        } else {
+          html += `<i class="fa-regular fa-heart text-slate-300 transition-transform scale-90"></i>`;
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    function updateHintUI() {
       document.getElementById('hint-badge').textContent = appState.hints;
       document.getElementById('home-hints-count').textContent = appState.hints;
-      document.getElementById('combo-text').textContent = `${appState.combo}/3`;
-
-      const dots = document.getElementById('combo-dots').children;
-      for (let i = 0; i < 3; i++) {
-        dots[i].className = i < appState.combo
-          ? "w-2.5 h-2.5 rounded-full bg-orange-500 scale-110 transition-all"
-          : "w-2.5 h-2.5 rounded-full bg-slate-200 transition-all";
-      }
     }
 
     /* =========================================================================
-       10. DÙNG GỢI Ý & MODAL THỬ THÁCH COMBO 3 CÂU HỎI NHẬN THÊM +1 GỢI Ý
+       10. DÙNG GỢI Ý & CHỈ THÊM GỢI Ý KHI TRẢ LỜI ĐỦ COMBO 3 CÂU HỎI
        ========================================================================= */
     function useHint() {
-      if (game.isPaused || game.isWon) return;
+      if (game.isPaused || game.isWon || game.isGameOver) return;
 
       if (appState.hints <= 0) {
         AudioFX.wrong();
         openBonusQuizModal();
-        showToast("Hết gợi ý! Trả lời đúng Combo 3 câu hỏi để nhận thêm +1 Gợi ý.");
+        showToast("Đã hết gợi ý! Hãy trả lời đúng đủ Combo 3 câu hỏi để nhận thêm +1 Gợi ý.");
         return;
       }
 
@@ -1730,7 +1830,7 @@
 
       appState.hints--;
       saveProgress();
-      updateHintAndComboUI();
+      updateHintUI();
 
       AudioFX.hint();
       selectNextEmptyCell(targetCell.r, targetCell.c);
@@ -1740,7 +1840,7 @@
       checkWinCondition();
     }
 
-    // Mini-game Combo 3 câu hỏi toán nhẩm ngẫu nhiên để nhận +1 Gợi ý
+    // Mini-game Combo 3 câu hỏi toán nhẩm: Phải trả lời đúng đủ 3 câu liên tiếp mới được +1 Gợi ý
     let bonusQuizState = {
       streak: 0,
       answer: 0
@@ -1759,7 +1859,7 @@
 
     function renderBonusQuizQuestion() {
       const step = bonusQuizState.streak + 1;
-      document.getElementById('quiz-progress-label').textContent = `Câu hỏi ${step} / 3 (Đúng liên tiếp 3 câu nhận +1 Gợi ý)`;
+      document.getElementById('quiz-progress-label').textContent = `Câu hỏi ${step} / 3 (Đúng đủ 3 câu liên tiếp nhận +1 Gợi ý)`;
 
       for (let i = 1; i <= 3; i++) {
         const bar = document.getElementById(`quiz-step-${i}`);
@@ -1771,7 +1871,7 @@
       }
 
       const eq = generateRandomEquation(appState.currentLevel);
-      const hideType = randInt(0, 2); // 0: ẩn A, 1: ẩn B, 2: ẩn C
+      const hideType = randInt(0, 2);
       let qText = "";
       let correctVal = 0;
 
@@ -1789,7 +1889,6 @@
       bonusQuizState.answer = correctVal;
       document.getElementById('quiz-question-text').textContent = qText;
 
-      // Tạo 3 đáp án nhiễu gần với đáp án đúng
       const optionsSet = new Set([correctVal]);
       while (optionsSet.size < 4) {
         const delta = randInt(-12, 12);
@@ -1818,10 +1917,10 @@
         if (bonusQuizState.streak >= 3) {
           appState.hints++;
           saveProgress();
-          updateHintAndComboUI();
+          updateHintUI();
           AudioFX.comboBonus();
           closeBonusQuizModal();
-          showToast("🎉 Xuất sắc! Bạn đã trả lời đúng Combo 3 câu và nhận được +1 Gợi ý!");
+          showToast("🎉 Hoàn thành Combo 3 câu! Bạn nhận được +1 Gợi ý!");
         } else {
           AudioFX.correct();
           renderBonusQuizQuestion();
@@ -1829,7 +1928,7 @@
       } else {
         AudioFX.wrong();
         bonusQuizState.streak = 0;
-        showToast("Chưa chính xác! Chuỗi Combo đặt lại từ câu 1/3.");
+        showToast("Sai rồi! Chuỗi Combo đặt lại từ câu 1/3.");
         renderBonusQuizQuestion();
       }
     }
@@ -1838,6 +1937,8 @@
        11. KIỂM TRA CHIẾN THẮNG & MỞ KHÓA BÀI TIẾP THEO
        ========================================================================= */
     function checkWinCondition() {
+      if (game.isGameOver) return;
+
       for (let r = 0; r < game.rows; r++) {
         for (let c = 0; c < game.cols; c++) {
           const cell = game.grid[r][c];
