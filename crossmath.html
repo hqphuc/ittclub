@@ -26,6 +26,9 @@ button:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
 .lr i{width:var(--s);height:var(--s);border:1px solid #000;margin:0 -1px -1px 0;background:#ffe066;color:#000;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:calc(var(--s)*.58)}
 .lr i.w{background:#fff;color:#1d4ed8}
 .lr i.e{background:none;border-color:transparent}
+.die{width:104px;height:104px;border:2px solid var(--ink);background:var(--card);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:12px}
+.die i{width:18px;height:18px;background:var(--ink);place-self:center}
+.die.r{animation:sk .18s}
 .by{display:flex;margin-top:14px}
 .by b{width:24px;height:24px;border:1px solid var(--ink);margin-right:-1px;display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--ink)}.ttl h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.08em}
 #hS{display:flex;gap:2px;justify-content:center;align-items:center;color:#f59e0b;font-size:12px;min-height:16px}
@@ -104,6 +107,7 @@ main{flex:1;display:flex;flex-direction:column;gap:10px}
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
 <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h.01M16 8h.01M12 12h.01M8 16h.01M16 16h.01"/></symbol>
 </defs></svg>
 <div id="app">
 <header class="top">
@@ -125,7 +129,7 @@ main{flex:1;display:flex;flex-direction:column;gap:10px}
   
   <div id="bank"></div>
   <div class="tools">
-   <button class="tb" onclick="stages()"><svg class="ic"><use href="#i-grid"/></svg>Bài tập</button>
+   <button class="tb" id="tb1" onclick="stages()"><svg class="ic"><use href="#i-grid"/></svg>Bài tập</button>
    <button class="tb" onclick="again()"><svg class="ic"><use href="#i-redo"/></svg>Làm lại</button>
    <button class="tb" onclick="clr()"><svg class="ic"><use href="#i-eraser"/></svg>Xóa hết</button>
    <button class="tb main" onclick="hint()"><svg class="ic"><use href="#i-bulb"/></svg>Gợi ý<span class="bd" id="hb">3</span></button>
@@ -152,7 +156,8 @@ try{const p=JSON.parse(localStorage.getItem(KEY));if(p)S={...S,hints:p.hints??3,
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({hints:S.hints,done:S.done}))}catch(e){}};
 const dn=(l,s)=>S.done[l+'-'+s]!==undefined,
 lvOpen=l=>l===1||[1,2,3,4,5,6,7,8,9,10].every(s=>dn(l-1,s)),
-stOpen=(l,s)=>lvOpen(l)&&(s===1||dn(l,s-1));
+stOpen=(l,s)=>lvOpen(l)&&(s===1||dn(l,s-1)),
+diceOpen=()=>lvOpen(6);
 let AC;const tone=(f,ty,d,dl=0,g=.1)=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.state==='suspended'&&AC.resume();const o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime+dl;o.type=ty;o.frequency.value=f;v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(v);v.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}};
 const FX={click:()=>tone(520,'sine',.06),place:()=>tone(640,'triangle',.09),ok:()=>{tone(587,'sine',.12);tone(880,'sine',.2,.09)},bad:()=>{tone(220,'sawtooth',.15);tone(180,'sawtooth',.18,.1)},win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,'triangle',.22,i*.1,.14))};
 const modal=h=>{$('mc').innerHTML=h;$('md').hidden=false},closeM=()=>{$('md').hidden=true};
@@ -247,12 +252,26 @@ function buildOnce(lv){
 const LOGO=`<div class="logo"><div class="lr">${[...'CROSS'].map(c=>`<i>${c}</i>`).join('')}</div><div class="lr"><i class="e"></i>${[...'MATH'].map(c=>`<i class="w">${c}</i>`).join('')}</div><div class="by">${[...'HQPHUC'].map(c=>`<b>${c}</b>`).join('')}</div></div>`;
 function home(){
  stopT();closeM();$('home').hidden=false;$('game').hidden=true;$('bB').style.visibility='hidden';$('hT').textContent='';$('hS').innerHTML='';
- $('home').innerHTML=LOGO+`<div><button class="pill" onclick="quiz()" aria-label="Nhận thêm gợi ý">${ic('bulb')} Gợi ý: <b>${S.hints}</b> ${ic('plus')}</button></div>`+
+ $('home').innerHTML=LOGO+`<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="pill" onclick="quiz()" aria-label="Nhận thêm gợi ý">${ic('bulb')} Gợi ý: <b>${S.hints}</b> ${ic('plus')}</button> <button class="pill" onclick="roll()" aria-label="Chọn ngẫu nhiên"${diceOpen()?'':' style="opacity:.55"'}>${ic('dice')} Chọn ngẫu nhiên${diceOpen()?'':' '+ic('lock')}</button></div>`+
  LV.map(l=>{const o=lvOpen(l.n),d=[1,2,3,4,5,6,7,8,9,10].filter(s=>dn(l.n,s)).length;
   return `<button class="lv ${o?'':'k'}" style="--c:${l.c}" onclick="${o?`pickLv(${l.n})`:`toast('Hoàn thành 10 bài Cấp ${l.n-1} để mở khóa')`}"><span class="lb">${o?l.n:ic('lock')}</span><span style="flex:1"><b>${l.vi}</b> <span class="st">${ic('star','f').repeat(l.s)}</span><br><small>${o?l.d:'Đang khóa'}</small><span class="bar"><i style="width:${d*10}%"></i></span></span><b>${d}/10</b></button>`}).join('')+
  `<button class="pill" style="align-self:center;box-shadow:none;border-color:transparent;background:none;color:var(--mut);font-size:13px" onclick="resetAsk()">${ic('redo')} Đặt lại tiến độ</button>`;
 }
 const pickLv=n=>{S.lv=n;stages()};
+let RT=0;
+const LIM=[120,120,180,300,600,600],DOTS=[0,[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]],
+rollStars=()=>{let r=Math.random()*100,a=0;for(let i=0;i<6;i++){a+=[25,25,20,15,10,5][i];if(r<a)return i+1}return 1},
+face=(v,r)=>`<div class="die${r?' r':''}">${[0,1,2,3,4,5,6,7,8].map(i=>`<i style="visibility:${DOTS[v].includes(i)?'visible':'hidden'}"></i>`).join('')}</div>`;
+function roll(){
+ if(!diceOpen()){FX.bad();toast('Hoàn thành 10 bài Cấp 5 để mở Chọn ngẫu nhiên');return}
+ const n=rollStars(),tk=RT=Date.now();
+ modal(`<h3>${ic('dice')} Chọn ngẫu nhiên</h3><div id="dz" style="display:flex;justify-content:center;margin:18px 0">${face(ri(1,6),1)}</div><p id="dr" style="text-align:center">Đang đổ xúc xắc...</p><div class="row" id="db"></div>`);
+ const iv=setInterval(()=>{const z=$('dz');if(z&&tk===RT)z.innerHTML=face(ri(1,6),1);else clearInterval(iv)},90);
+ setTimeout(()=>{clearInterval(iv);const z=$('dz');if(!z||tk!==RT)return;FX.win();z.innerHTML=face(n);
+  $('dr').innerHTML=`<span class="st" style="font-size:18px">${ic('star','f').repeat(n)}</span><br><b>${n} sao · ${LV[n-1].vi}</b><br>Thời gian: ${LIM[n-1]/60} phút`;
+  $('db').innerHTML=`<button class="btn" onclick="closeM()">Hủy</button><button class="btn p" onclick="play(${n},0,1)">Bắt đầu</button>`},1300)
+}
+function timeUp(){G.over=1;stopT();FX.bad();modal(`<div style="text-align:center;font-size:52px">${ic('clock')}</div><h3 style="justify-content:center">Hết giờ</h3><p style="text-align:center">Bạn chưa kịp hoàn thành đề ${LV[S.lv-1].s} sao.</p><div class="row"><button class="btn" onclick="home()">Trang chủ</button><button class="btn p" onclick="roll()">${ic('dice')} Đổ lại</button></div>`)}
 function stages(){
  const l=LV[S.lv-1];
  modal(`<h3>Cấp ${l.n} · ${l.vi}</h3><p>Hoàn thành lần lượt từ bài 1 đến bài 10</p><div class="sg">`+
@@ -260,23 +279,23 @@ function stages(){
   return o?`<button class="${d?'d':'n'}" onclick="play(${l.n},${s})">${d?ic('check'):s}<small>${d?fmt(S.done[l.n+'-'+s]):'Chơi'}</small></button>`:`<button style="opacity:.5" onclick="toast('Hãy hoàn thành Bài ${s-1} trước')">${ic('lock')}<small>Bài ${s}</small></button>`}).join('')+
  `</div><div class="row"><button class="btn" onclick="closeM()">Đóng</button></div>`);
 }
-const help=()=>modal(`<h3>${ic('help')} Luật chơi</h3><p>1. Điền số và dấu từ khay vào ô trống để mọi phép tính, ngang và dọc, đều đúng. Ô trống có thể là số hoặc dấu + − × :.</p><p>2. Mỗi bài có 3 lượt sai (3 trái tim). Hết lượt phải làm lại bài.</p><p>3. Cấp 1–3: số hạng và kết quả đều có 2 chữ số. Cấp 4–6: có thêm × và : (chia), kết quả 3 chữ số và phép tính nối dài.</p><p>4. Giải xong bài trước mới mở bài sau; xong 10 bài mở cấp kế tiếp.</p><p>5. Có sẵn 3 gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm 1 gợi ý. Ô được gợi ý sẽ bị khóa.</p><div class="row"><button class="btn p" onclick="closeM()">Đã hiểu</button></div>`);
+const help=()=>modal(`<h3>${ic('help')} Luật chơi</h3><p>1. Điền số và dấu từ khay vào ô trống để mọi phép tính, ngang và dọc, đều đúng. Ô trống có thể là số hoặc dấu + − × :.</p><p>2. Mỗi bài có 3 lượt sai (3 trái tim). Hết lượt phải làm lại bài.</p><p>3. Cấp 1–3: số hạng và kết quả đều có 2 chữ số. Cấp 4–6: có thêm × và : (chia), kết quả 3 chữ số và phép tính nối dài.</p><p>4. Giải xong bài trước mới mở bài sau; xong 10 bài mở cấp kế tiếp.</p><p>5. Có sẵn 3 gợi ý. Trả lời đúng 3 câu liên tiếp để nhận thêm 1 gợi ý. Ô được gợi ý sẽ bị khóa.</p><p>6. Xong 10 bài Cấp 5 sẽ mở nút Chọn ngẫu nhiên: đổ xúc xắc ra 1–6 sao, chơi một đề của cấp đó với đồng hồ đếm ngược (2 phút cho 1–2 sao, 3 phút cho 3 sao, 5 phút cho 4 sao, 10 phút cho 5–6 sao).</p><div class="row"><button class="btn p" onclick="closeM()">Đã hiểu</button></div>`);
 const resetAsk=()=>modal(`<h3>Đặt lại tiến độ?</h3><p>Toàn bộ bài đã giải sẽ bị xóa và bạn quay về Cấp 1, Bài 1.</p><div class="row"><button class="btn" onclick="closeM()">Hủy</button><button class="btn p" onclick="S.done={};S.hints=3;save();home()">Đặt lại</button></div>`);
 
 /* ---- Vào bài ---- */
-function play(l,s){
- if(!stOpen(l,s))return;closeM();S.lv=l;S.st=s;const L=LV[l-1];
- G={...build(l),solved:new Set(),wrong:new Set(),miss:0,t:0,paused:0,won:0,over:0,sel:null,timer:null};
+function play(l,s,rd){
+ if(!rd&&!stOpen(l,s))return;closeM();S.lv=l;S.st=s;const L=LV[l-1];
+ G={...build(l),solved:new Set(),wrong:new Set(),miss:0,t:0,paused:0,won:0,over:0,sel:null,timer:null,rd:rd,lim:rd?LIM[l-1]:0};
  G.sel=nextEmpty(null);
  $('home').hidden=true;$('game').hidden=false;$('bB').style.visibility='visible';$('pov').hidden=true;$('pi').innerHTML=ic('pause');
  $('hT').textContent='Cấp '+l;$('hS').innerHTML=ic('star','f').repeat(L.s)+`<span style="color:var(--mut);margin-left:4px">${L.vi}</span>`;
- $('sb').textContent=`Bài ${s}/10`;$('tm').textContent='00:00';
+ $('sb').textContent=rd?'Ngẫu nhiên':`Bài ${s}/10`;$('tm').textContent=fmt(G.lim);$('tb1').hidden=!!rd;
  hintUI();lives();board();bankR();startT();
 }
-const again=()=>{FX.click();play(S.lv,S.st)};
+const again=()=>{FX.click();play(S.lv,S.st,G.rd)};
 const nextEmpty=cur=>{const b=G.blanks,i=cur?b.indexOf(cur):-1;for(let k=1;k<=b.length;k++){const x=b[(i+k)%b.length];if(x.val===null)return x}return null};
 let TM=null,TL=0;
-const startT=()=>{stopT();TL=Date.now();G.ms=0;TM=setInterval(()=>{const n=Date.now();if(!G.paused&&!G.won&&!G.over){G.ms+=n-TL;G.t=G.ms/1000|0;$('tm').textContent=fmt(G.t)}TL=n},250)},
+const startT=()=>{stopT();TL=Date.now();G.ms=0;TM=setInterval(()=>{const n=Date.now();if(!G.paused&&!G.won&&!G.over){G.ms+=n-TL;G.t=G.ms/1000|0;$('tm').textContent=fmt(G.lim?Math.max(0,Math.ceil(G.lim-G.ms/1000)):G.t);if(G.lim&&G.ms>=G.lim*1000)timeUp()}TL=n},250)},
 stopT=()=>{clearInterval(TM);TM=null};
 function pause(){if(G.won||G.over)return;FX.click();G.paused=!G.paused;$('pov').hidden=!G.paused;$('pi').innerHTML=ic(G.paused?'play':'pause')}
 const lives=()=>{$('hr').innerHTML=Array.from({length:MAX},(_,i)=>ic('heart',i<MAX-G.miss?'f':'e')).join('')},
@@ -348,6 +367,7 @@ function validate(){
 function win(){
  if(G.over||G.won||G.blanks.some(x=>x.val===null)||!G.eqs.every(q=>evalTok(tok(q))))return;
  G.ms+=Date.now()-TL;G.t=G.ms/1000|0;G.won=1;stopT();FX.win();
+ if(G.rd){setTimeout(()=>modal(`<div style="text-align:center;font-size:52px;color:#f59e0b">${ic('star','f')}</div><h3 style="justify-content:center">Hoàn thành!</h3><p style="text-align:center">Ngẫu nhiên · ${LV[S.lv-1].s} sao</p><div class="row"><div class="bx">Đã dùng<b>${fmt(G.t)}</b></div><div class="bx">Còn lại<b>${fmt(Math.max(0,G.lim-G.t))}</b></div></div><div class="row"><button class="btn" onclick="home()">Trang chủ</button><button class="btn p" onclick="roll()">${ic('dice')} Đổ tiếp</button></div>`),320);return}
  const k=S.lv+'-'+S.st,b=S.done[k]===undefined?G.t:Math.min(S.done[k],G.t);S.done[k]=b;save();
  const last=S.st===10,fin=last&&S.lv===LV.length,nx=fin?'Về trang chủ':last?`Sang Cấp ${S.lv+1}`:`Bài ${S.st+1}`;
  setTimeout(()=>modal(`<div style="text-align:center;font-size:52px;color:#f59e0b">${ic('star','f')}</div><h3 style="justify-content:center">Hoàn thành!</h3><p style="text-align:center">Cấp ${S.lv} · Bài ${S.st}${fin?'. Bạn đã giải hết mọi cấp độ!':last?`. Đã mở khóa Cấp ${S.lv+1}`:`. Đã mở khóa Bài ${S.st+1}`}</p><div class="row"><div class="bx">Thời gian<b>${fmt(G.t)}</b></div><div class="bx">Kỷ lục<b>${fmt(b)}</b></div></div><div class="row"><button class="btn" onclick="stages()">${ic('grid')} Bài tập</button><button class="btn p" onclick="nextSt()">${nx}</button></div>`),320);
